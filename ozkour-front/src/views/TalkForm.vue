@@ -30,7 +30,7 @@ export default {
             <EventList />
         </section>
 
-        <section class="section">
+        <section class="section lastSection">
             <ValidateButton />
             <GenerateButton />
         </section>
@@ -69,6 +69,10 @@ h1 {
     align-items: center;
     background: rgba(242, 242, 242, 0.4);
     border-radius: 20px;
+}
+
+.lastSection {
+    margin-bottom: 50px;
 }
 
 </style>
