@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <button class="generate-btn">GÉNÉRER UN VISUEL</button>
+    <button type="submit" class="generate-btn">GÉNÉRER UN VISUEL</button>
 </template>
 
 <style scoped>
