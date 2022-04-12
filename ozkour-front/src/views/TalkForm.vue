@@ -42,4 +42,9 @@ export default {
     gap: 20px;
 }
 
+h1 {
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+}
+
 </style>
