@@ -1,63 +1,51 @@
-<script>
-// import { ref, watch } from 'vue';
-// import { Form, Field, useField, ErrorMessage} from 'vee-validate';
-// import * as Yup from 'yup'
-
-// export default {
-//   //  setup() {
-//   //     const usr= useField('username', Yup.string()
-//   //             .required("Username is required")
-//   //             .max(15, "Username is too long"));
-//   //     const username = usr.value
-//   //     const errorUsr = usr.errorMessage
-//   //     const pwd= useField('password', Yup.string()
-//   //             .required("Password is required")
-//   //             .min(6, "Password must contain a minimum of 6 characters"));
-//   //     const password = pwd.value
-//   //     const errorPwd = pwd.errorMessage
-//   //   return {
-//   //     username,
-//   //     errorUsr,
-//   //     password,
-//   //     errorPwd,
-//   //   };
-//   // },
-//   components: {
-//     Form,
-//     Field,
-//     ErrorMessage,
-//   },
-//   data(){
-//     const validUsr = Yup.string()
-//               .required("Username is required")
-//               .max(15, "Username is too long")
-//     const validPwd = Yup.string()
-//               .required("Password is required")
-//               .min(6, "Password must contain a minimum of 6 characters")
-//     //const validUsr = this.usename;
-//     console.log(validUsr)
-//     // const validPwd = this.password;
-//     return {
-//       validUsr,
-//       validPwd,
-//     };
-//   },
-
-//   methods: {
-//     onSubmit(values) {
-//       //console.log(values)
-//       this.$router.push(`/generator`);
-//     },
-//   },
-// };
-// </script>
-
 <template>
     <h1>Generateur de Visuel</h1>
-    <button>talk</button>
-    <button>training</button>
+    <div id="buttons">
+        <a href="./talkform" class="btnChoixForm">TALK</a>
+        <a href="./" class="btnChoixForm">TRAINING</a>
+    </div>
 </template>
 
 <style scoped>
+    @font-face{
+        font-family: 'OpenSans-ExtraBold';
+        src: url('../assets/fonts/OpenSans-ExtraBold.ttf')
+    }
+    @font-face{
+        font-family: 'Nunito-Bold';
+        src: url('../assets/fonts/Nunito-Bold.ttf')
+    }
 
+    .btnChoixForm{
+        background: linear-gradient(90deg, #EE2238 0%, #C21E65 100%);
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 30px;
+        padding-top: 1%;
+        padding-bottom: 1%;
+        width: 20%;
+        margin: 1%;
+        margin-bottom: 3%;
+        border-width: 0;
+        color:white;
+        font-family: 'OpenSans-ExtraBold';
+        font-style: bold;
+        font-size: 100%;
+        text-align: center;
+        text-decoration: none;
+    }
+    .btnChoixForm:hover{
+        background: linear-gradient(90deg, #921623 0%, #94184e 100%);
+    }
+    h1{
+        font-family: 'Nunito-Bold';
+        color:white;
+        font-size: 300%;
+        text-align: center;
+    }
+    #buttons{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+    }
 </style>
