@@ -1,15 +1,19 @@
 <script>
+
 import ChoosingTemplate from '../components/ChoosingTemplate.vue';
-import ChoosingDate from '../components/ChoosingDate.vue'
+import ChoosingDate from '../components/ChoosingDate.vue';
+import ValidateButton from '../components/ValidateBtn.vue'
+import GenerateButton from '../components/GenerateBtn.vue'
 
 export default {
   components: {
     ChoosingTemplate,
-    ChoosingDate
+    ChoosingDate,
+    ValidateButton,
+    GenerateButton
   },
 }
 </script>
-
 
 <template>
     <main class="flex-column">
@@ -21,13 +25,13 @@ export default {
             
         </section>
 
-        <section class="">
+        <section class="section">
             <h2>Liste des événements sélectionnés</h2>
         </section>
 
-        <section class="">
-            <button>VALIDER</button>
-            <button>GENERER UN VISUEL</button>
+        <section class="section">
+            <ValidateButton />
+            <GenerateButton />
         </section>
         
     </main> 
@@ -46,5 +50,4 @@ h1 {
     font-family: 'Nunito', sans-serif;
     text-align: center;
 }
-
 </style>
