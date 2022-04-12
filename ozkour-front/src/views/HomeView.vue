@@ -1,8 +1,8 @@
 <template>
     <h1>Generateur de Visuel</h1>
     <div id="buttons">
-        <button class='btnChoixForm'>TALK</button>
-        <button class='btnChoixForm'>TRAINING</button>
+        <a href="./talkform" class="btnChoixForm">TALK</a>
+        <a href="./" class="btnChoixForm">TRAINING</a>
     </div>
 </template>
 
@@ -30,6 +30,8 @@
         font-family: 'OpenSans-ExtraBold';
         font-style: bold;
         font-size: 100%;
+        text-align: center;
+        text-decoration: none;
     }
     .btnChoixForm:hover{
         background: linear-gradient(90deg, #921623 0%, #94184e 100%);
@@ -38,6 +40,7 @@
         font-family: 'Nunito-Bold';
         color:white;
         font-size: 300%;
+        text-align: center;
     }
     #buttons{
         display: flex;

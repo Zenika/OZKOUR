@@ -21,7 +21,7 @@ body {
   box-sizing: border-box;
 }
 #app {
-  background: #1E1E1E;
+  /* background: #1E1E1E; */
   color: #FFFFFF;
   font-family: 'Open Sans', sans-serif;
 }

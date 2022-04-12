@@ -24,7 +24,6 @@
         width: 10%;
         margin: 2%;
         right:0px;
-        display: inline;
     }
     #header{
         text-align: right;
