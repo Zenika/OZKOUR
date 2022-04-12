@@ -1,32 +1,33 @@
 <script>
-
 import ChoosingTemplate from '../components/ChoosingTemplate.vue';
 import ChoosingDate from '../components/ChoosingDate.vue';
-import ValidateButton from '../components/ValidateBtn.vue'
-import GenerateButton from '../components/GenerateBtn.vue'
+import ValidateButton from '../components/Buttons/ValidateBtn.vue'
+import GenerateButton from '../components/Buttons/GenerateBtn.vue'
+import EventList from '../components/EventList.vue'
 
 export default {
   components: {
     ChoosingTemplate,
     ChoosingDate,
     ValidateButton,
-    GenerateButton
+    GenerateButton,
+    EventList
   },
 }
 </script>
 
 <template>
-    <main class="flex-column">
+    <main class="container">
         <h1>VISUELS TALK</h1>
 
         <section class="section">
             <ChoosingTemplate />
             <ChoosingDate />
-            
         </section>
 
-        <section class="section">
+        <section class="eventList">
             <h2>Liste des événements sélectionnés</h2>
+            <EventList />
         </section>
 
         <section class="section">
@@ -38,16 +39,36 @@ export default {
 </template>
 
 <style scoped>
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
 .section {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 50px;
 }
 
 h1 {
     font-family: 'Nunito', sans-serif;
     text-align: center;
 }
+
+.eventList {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(242, 242, 242, 0.4);
+    border-radius: 20px;
+}
+
 </style>
