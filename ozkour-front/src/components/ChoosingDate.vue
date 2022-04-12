@@ -10,7 +10,7 @@
             <input type="date" id="end" name="talk-end" value="2022-04-12" min="2022-01-01" max="2023-12-01">
         </div>
 
-        <button class="next-week-btn">Semaine prochaine</button>
+        <button type="button" class="next-week-btn">Semaine prochaine</button>
     </div>
 </template>
 
@@ -27,18 +27,17 @@
     align-items: flex-start;
 }
 
-.label, #start, #end {
+label, #start, #end {
     font-family: 'Open Sans', sans-serif;
-    font-size: 28px;
+    font-size: 16px;
+    padding-bottom: 5px;
+    font-weight: 400;
 }
 
 #start, #end {
     width: 80%;
     background: rgba(242, 242, 242, 0.4);
     color: #FFFFFF;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 27px;
     letter-spacing: .1rem;
     display: flex;
     align-items: center;
