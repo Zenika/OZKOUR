@@ -12,7 +12,6 @@
   "dependencies": {
     "@hapi/hapi": "^20.2.1",
     "dotenv": "^16.0.0",
-    "googleapis": "^39.2.0",
-    "moment": "^2.29.2"
+    "googleapis": "^39.2.0"
   }
 }
