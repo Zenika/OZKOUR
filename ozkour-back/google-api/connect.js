@@ -10,6 +10,9 @@ const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
 // time.
 const TOKEN_PATH = "config/auth/token.json";
 
+/**
+ * Execute all the functions used to authenticate
+ */
 function auth() {
   // Load client secrets from a local file.
   fs.readFile("config/auth/credentials.json", (err, content) => {
@@ -21,10 +24,8 @@ function auth() {
 }
 
 /**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
+ * Create an OAuth2 client with the given credentials
  * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials) {
   const { client_secret, client_id, redirect_uris } = credentials.web;
@@ -45,9 +46,8 @@ function authorize(credentials) {
  * Get and store new token after prompting for user authorization, and then
  * execute the given callback with the authorized OAuth2 client.
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
  */
-function getNewToken(oAuth2Client, callback, res) {
+function getNewToken(oAuth2Client) {
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline",
     scope: SCOPES,
@@ -75,6 +75,11 @@ function getNewToken(oAuth2Client, callback, res) {
   });
 }
 
+/**
+ * Create an OAuth2 using the Token, then execute the callback and return the result of the callback
+ * @param {getEventsCallback} callback The callback for the authorized client.
+ * @param {Object} params the parameters used in the callback
+ */
 async function authMethode(callback, params) {
   const content = await fs.readFile(
     "config/auth/credentials.json",

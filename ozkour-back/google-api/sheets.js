@@ -2,28 +2,25 @@ const fs = require("fs");
 const readline = require("readline");
 const { google } = require("googleapis");
 require("dotenv").config();
-
 const connect = require("./connect.js");
 
-let dateDeb;
-let dateFin;
-
+/**
+ * Get all the talks between 2 dates
+ * @param {String} start the start of the date range
+ * @param {String} end the end of the date range
+ */
 async function getTalkFromDate(start, end = Date(Date.now()).toLocaleString()) {
-  //to do : faire que cette partie soit plus propre
-  dateDeb = start;
-  dateFin = end;
-  const param = {start,end}
-
-  const res = await connect.authMethode(getData,param)
+  const param = { start, end };
+  const res = await connect.authMethode(getData, param);
   return res;
 }
 
 /**
  * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
+ * @param {Object} params the parameters passed by the connect
  */
- async function getData(auth, params) {
+async function getData(auth, params) {
   const sheets = google.sheets({ version: "v4", auth });
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: "1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE", // TO DO use a variable instead of a link
@@ -32,11 +29,17 @@ async function getTalkFromDate(start, end = Date(Date.now()).toLocaleString()) {
   return dateFilter(res.data.values, params.start, params.end);
 }
 
-function dateFilter(talks, dateDeb, dateFin) {
-  talks = talks.filter(function (talk){
-      return (talk[4] >= dateDeb && talk[4] <= dateFin);
+/**
+ * Filter the talks between 2 dates
+ * @param {String} talks the talks that need to be filtered
+ * @param {String} start the start of the date range
+ * @param {String} end the end of the date range
+ */
+function dateFilter(talks, start, end) {
+  talks = talks.filter(function (talk) {
+    return talk[4] >= start && talk[4] <= end;
   });
-  return talks
+  return talks;
 }
 
 module.exports = {
