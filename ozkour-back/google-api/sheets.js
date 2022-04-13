@@ -1,18 +1,40 @@
-const fs = require("fs");
-const readline = require("readline");
 const { google } = require("googleapis");
-require("dotenv").config();
 const connect = require("./connect.js");
+const dayjs = require('dayjs');
+const utilitary = require('../utilitary')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
 /**
  * Get all the talks between 2 dates
  * @param {String} start the start of the date range
  * @param {String} end the end of the date range
  */
-async function getTalkFromDate(start, end = Date(Date.now()).toLocaleString()) {
-  const param = { start, end };
-  const res = await connect.authMethode(getData, param);
-  return res;
+async function getTalkFromDate(start, end = dayjs().format('DD/MM/YYYY')) {
+  
+  const formatedDateStart = dayjs(start, 'DD-MM-YYYY');
+  const formatedDateEnd = dayjs(end, 'DD-MM-YYYY');
+  if(formatedDateStart.format('MM/YYYY')===formatedDateEnd.format('MM/YYYY')){
+    const param = { "start":start, "end":end };
+    const res = await connect.authMethode(getData, param);
+    return res;
+  }
+  else{
+    let res = [];
+    let tempDateStart = formatedDateStart;
+    let tempDateEnd = formatedDateStart.add(1, 'month');
+    while(tempDateStart.format('MM/YYYY')!==formatedDateEnd.format('MM/YYYY')){
+      const param = { "start":tempDateStart.format('DD/MM/YYYY'), "end":tempDateEnd.format('DD/MM/YYYY') };
+      res = res.concat(await connect.authMethode(getData, param));
+      tempDateStart = tempDateStart.add(1, 'month');
+      tempDateEnd = tempDateStart.add(1, 'month');
+    }
+    const param = { "start":tempDateStart.format('DD/MM/YYYY'), "end":formatedDateEnd.format('DD/MM/YYYY')  };
+    res = res.concat(await connect.authMethode(getData, param));
+
+    return res;
+  }
+  
 }
 
 /**
@@ -24,7 +46,8 @@ async function getData(auth, params) {
   const sheets = google.sheets({ version: "v4", auth });
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: "1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE", // TO DO use a variable instead of a link
-    range: "Feuille-1!A2:H",
+    range:`${utilitary.convDateToMonth(params.start)} ${dayjs(params.start, 'DD/MM/YYYY').format('YYYY')}!A2:H`,
+    //range: "Janvier 2021!A2:H",
   });
   return dateFilter(res.data.values, params.start, params.end);
 }
@@ -36,8 +59,11 @@ async function getData(auth, params) {
  * @param {String} end the end of the date range
  */
 function dateFilter(talks, start, end) {
+  const formatedDateStart = dayjs(start, 'DD-MM-YYYY');
+  const formatedDateEnd = dayjs(end, 'DD-MM-YYYY');
   talks = talks.filter(function (talk) {
-    return talk[4] >= start && talk[4] <= end;
+    const dateTalk = dayjs(talk[4], 'DD-MM-YYYY');
+    return formatedDateStart.isBefore(dateTalk,'day') && formatedDateEnd.isAfter(dateTalk,'day');
   });
   return talks;
 }

@@ -2,7 +2,8 @@
 
 const Hapi = require('@hapi/hapi');
 const connect = require('./google-api/connect.js');
-const sheets = require('./google-api/sheets.js');
+const test = require('./google-api/sheets');
+const test2 = require('./utilitary');
 const routes = require('./config/routes');
 const Qs = require('qs');
 
@@ -18,7 +19,12 @@ const init = async () => {
 
     connect.auth();
     server.route(routes);
+
+    // console.log(test2.convDateToMonth('10/01/2022'))
+    // console.log(await test.getTalkFromDate('01/01/2021','28/02/2021'))
+
     await server.start();
+
     //console.log('Server running on %s', server.info.uri);
 };
 
