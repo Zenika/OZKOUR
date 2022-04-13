@@ -25,36 +25,36 @@
 </template>
 
 <style scoped>
-fieldset {
-    border: none;
-}
+    fieldset {
+        border: none;
+    }
 
-legend {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    color: #1E1E1E;
-    font-size: 18px;
-    font-weight: 800;
-    padding: 10px 20px;
-    margin-bottom: 10px;
-}
+    legend {
+        background-color: #FFFFFF;
+        border-radius: 10px;
+        color: #1E1E1E;
+        font-size: 18px;
+        font-weight: 800;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+    }
 
-.templateChoice {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 16px;
-    letter-spacing: .0.5rem;
-    padding-left: 5px;
-}
+    .templateChoice {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 16px;
+        letter-spacing: .0.5rem;
+        padding-left: 5px;
+    }
 
-.radio-btn {
-    cursor: pointer;
-}
+    .radio-btn {
+        cursor: pointer;
+    }
 
-label {
-    padding-left: 10px;
-}
+    label {
+        padding-left: 10px;
+    }
 </style>
