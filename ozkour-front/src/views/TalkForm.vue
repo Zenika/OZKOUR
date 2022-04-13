@@ -18,7 +18,7 @@ export default {
 
 <template>
     <main class="container">
-        <h1>VISUELS TALK</h1>
+        <h1>Visuels pour les Talks</h1>
 
         <section class="section">
             <ChoosingTemplate />
@@ -39,40 +39,41 @@ export default {
 </template>
 
 <style scoped>
-.container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
-.section {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-}
+    .container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+    }
+    .section {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+    }
 
-h1 {
-    font-family: 'Nunito', sans-serif;
-    text-align: center;
-}
+    h1 {
+        font-family: 'Nunito', sans-serif;
+        font-size: 48px;
+        font-weight: 700;
+        text-align: center;
+    }
 
-.eventList {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(242, 242, 242, 0.4);
-    border-radius: 20px;
-}
+    .eventList {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: rgba(242, 242, 242, 0.4);
+        border-radius: 20px;
+    }
 
-.lastSection {
-    margin-bottom: 50px;
-}
-
+    .lastSection {
+        margin-bottom: 50px;
+    }
 </style>
