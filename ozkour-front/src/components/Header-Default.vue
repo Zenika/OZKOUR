@@ -7,7 +7,7 @@
                 </a>      
             </div>  
             <div id='header-user'>
-                <span>Nom Prénom</span>
+                <span>NOM Prénom</span>
                 <img id="imgLogout" @keyup.enter="test" @click="test" alt="image logout" src="../assets/images/logout.png" tabindex="2">
             </div>
         </div>
@@ -22,10 +22,12 @@
 
 <style scoped>
     #logoZenika{
-        width: 100%;
+        max-width: 80%;
+        max-height: 80%;
     }
     #imgLogout{
-        width: 10%;
+        max-width:50%;
+        max-height:50%;
         cursor: pointer;
     }
     #header{
@@ -50,9 +52,6 @@
         align-items: center;
         margin-left: 2%;
     }
-    header{
-        margin-bottom: 5%;
-    }
     img{
         display: inline;
     }
@@ -60,7 +59,7 @@
         height:100px;
         line-height : 100px;
         color:white;        
-        font-family: 'OpenSans-ExtraBold';
+        font-weight: 600;
         display: inline-block;
     }
     /* a{
