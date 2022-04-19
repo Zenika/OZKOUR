@@ -10,10 +10,10 @@ dayjs.extend(customParseFormat)
  * @param {String} start the start of the date range
  * @param {String} end the end of the date range
  */
-async function getTalkFromDate(start, end = dayjs().format('DD/MM/YYYY')) {
+async function getTalkFromDate(start, end = dayjs()) {
   
-  const formatedDateStart = dayjs(start, 'DD-MM-YYYY');
-  const formatedDateEnd = dayjs(end, 'DD-MM-YYYY');
+  const formatedDateStart = dayjs(start);
+  const formatedDateEnd = dayjs(end);
   if(formatedDateStart.format('MM/YYYY')===formatedDateEnd.format('MM/YYYY')){
     const param = { "start":start, "end":end };
     const res = await connect.authMethode(getData, param);

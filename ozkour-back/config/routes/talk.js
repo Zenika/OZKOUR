@@ -2,6 +2,12 @@ const { getTalkFromDate } = require("../../google-api/sheets");
 
 module.exports = [
     {
+    config: {
+        cors: {
+            origin: ['*'],
+            additionalHeaders: ['cache-control', 'x-requested-with']
+        }
+    },
      method: 'GET',
      path: '/talk',
      handler: function (request, h) {
