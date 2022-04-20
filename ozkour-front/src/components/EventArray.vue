@@ -33,10 +33,8 @@ import { useTalkStore } from '../stores/talks'
 
 const talk = useTalkStore()
 //setInterval(function(){
-    console.log(talk.talks)
+    // console.log(talk.talks)
 //},1000);
-
-
 
 </script>
 
