@@ -39,6 +39,18 @@
     </div>
 </template>
 
+<script setup>
+import { useTalkStore } from '../stores/talks'
+
+const talk = useTalkStore()
+setInterval(function(){
+    console.log(talk.talks)
+},1000);
+
+
+
+</script>
+
 <style scoped>
     .eventDetails {
         width: 100%;

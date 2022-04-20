@@ -1,18 +1,77 @@
 <template>
-    <div class="flex-column">
-        <div class="date">
-            <label for="start">Date de début</label>
-            <input type="date" id="start" name="talk-start" value="2022-04-11" min="2022-01-01" max="2023-12-01">
-        </div>
-
-        <div class="date">
-            <label for="end">Date de fin</label>
-            <input type="date" id="end" name="talk-end" value="2022-04-12" min="2022-01-01" max="2023-12-01">
-        </div>
-
-        <button type="button" class="next-week-btn">Semaine prochaine</button>
+  <div class="flex-column">
+    <div class="date">
+      <label for="start">Date de début</label>
+      <input type="date" id="start" name="talk-start" v-model="dateStart" />
     </div>
+
+    <div class="date">
+      <label for="end">Date de fin</label>
+      <input
+        type="date"
+        id="end"
+        name="talk-end"
+        v-model="dateEnd"
+        v-bind:min="dateStart"
+      />
+    </div>
+
+    <button type="button" class="next-week-btn">Semaine prochaine</button>
+  </div>
 </template>
+
+<script setup>
+import axios from "axios";
+import qs from "qs";
+import { ref, watch } from "vue";
+import { useTalkStore } from '../stores/talks'
+
+const talks = useTalkStore()
+const dateStart = ref("2021-01-01");
+const dateEnd = ref("2021-02-28");
+
+watch(dateStart, async (newDate) => {
+  console.log(newDate);
+  axios
+    .get("http://localhost:3000/talk", {
+      params: {
+        start: newDate,
+        end: dateEnd.value,
+      },
+      paramsSerializer: (params) => qs.stringify(params, { encode: false }),
+    })
+    .then(function (response) {
+      talks.updateTalks(response.data);
+      //console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+});
+
+watch(dateEnd, async (newDate) => {
+  console.log(newDate);
+  axios
+    .get("http://localhost:3000/talk", {
+      params: {
+        start: dateStart.value,
+        end: newDate,
+      },
+    })
+    .then(function (response) {
+      talks.updateTalks(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+});
+</script>
 
 <style scoped>
     .flex-column {

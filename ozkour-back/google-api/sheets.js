@@ -1,70 +1,73 @@
-const fs = require('fs');
-const readline = require('readline');
-const {google} = require('googleapis');
-require('dotenv').config();
+const { google } = require("googleapis");
+const connect = require("./connect.js");
+const dayjs = require('dayjs');
+const utilitary = require('../utilitary')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
-const connect = require('./connect.js');
-
-let talks;
-
-    function getTalkFromDate(dateDeb, dateFin = Date(Date.now()).toLocaleString()){
-        connect.authMethode(getData)
-        // , (err, res) => {
-        //     console.log("rererer")
-        //     if (err) return console.log('The API returned an error: ' + err);
-            
-        //         Timeout(console.log(talks),1000);
-        //         dateFilter(res,dateDeb, dateFin);
-
-        //   };
-        //   setTimeout(console.log(talks),1000);
-        //   console.log("nul")
+/**
+ * Get all the talks between 2 dates
+ * @param {String} start the start of the date range
+ * @param {String} end the end of the date range
+ */
+async function getTalkFromDate(start, end = dayjs()) {
+  
+  const formatedDateStart = dayjs(start);
+  const formatedDateEnd = dayjs(end);
+  if(formatedDateStart.format('MM/YYYY')===formatedDateEnd.format('MM/YYYY')){
+    const param = { "start":start, "end":end };
+    const res = await connect.authMethode(getData, param);
+    return res;
+  }
+  else{
+    let res = [];
+    let tempDateStart = formatedDateStart;
+    let tempDateEnd = formatedDateStart.add(1, 'month');
+    while(tempDateStart.format('MM/YYYY')!==formatedDateEnd.format('MM/YYYY')){
+      const param = { "start":tempDateStart.format('DD/MM/YYYY'), "end":tempDateEnd.format('DD/MM/YYYY') };
+      res = res.concat(await connect.authMethode(getData, param));
+      tempDateStart = tempDateStart.add(1, 'month');
+      tempDateEnd = tempDateStart.add(1, 'month');
     }
-  
-  /**
-   * Prints the names and majors of students in a sample spreadsheet:
-   * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-   * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
-   */
-  async function getData(auth) {
-    const sheets = google.sheets({version: 'v4', auth});
-    sheets.spreadsheets.values.get({
-      spreadsheetId: '1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE',// TO DO use a variable instead of a link
-      range: 'Feuille-1!A2:H',
-    }, (err, res) => {
-      if (err) return console.log('The API returned an error: ' + err);
-      const rows = res.data.values;
-      talks = res.data.values;
-      if (rows.length) {
-        // console.log('Date, Univers, Evenement, Titre, Speaker:');
-        // // Print columns A and E, which correspond to indices 0 and 4.
-        // rows.map((row) => {
-        //   console.log(`${row[4]}, ${row[1]}, ${row[3]}, ${row[7]}, ${row[6]}`);
-        // });
-        //dateFilter('13/01/2022')
-      } else {
-        console.log('No data found.');
-      }
-      console.log(talks)
-      return talks;
-    });
-    
+    const param = { "start":tempDateStart.format('DD/MM/YYYY'), "end":formatedDateEnd.format('DD/MM/YYYY')  };
+    res = res.concat(await connect.authMethode(getData, param));
+
+    return res;
   }
   
-  
-  function dateFilter(talks,dateDeb, dateFin = Date(Date.now()).toLocaleString()){
-    console.log("Filtered")
-    talks.map((talk) => {
-      if(talk[4]>=dateDeb && talk[4]<=dateFin)
-        console.log(`${talk[4]}, ${talk[1]}, ${talk[3]}, ${talk[7]}, ${talk[6]}`);
-    });
-  }
-  
-  
-  
-  
-  // [END sheets_quickstart]
-  
-  module.exports = {
-    getTalkFromDate
-  };
+}
+
+/**
+ * Prints the names and majors of students in a sample spreadsheet:
+ * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
+ * @param {Object} params the parameters passed by the connect
+ */
+async function getData(auth, params) {
+  const sheets = google.sheets({ version: "v4", auth });
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: "1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE", // TO DO use a variable instead of a link
+    range:`${utilitary.convDateToMonth(params.start)} ${dayjs(params.start, 'DD/MM/YYYY').format('YYYY')}!A2:H`,
+    //range: "Janvier 2021!A2:H",
+  });
+  return dateFilter(res.data.values, params.start, params.end);
+}
+
+/**
+ * Filter the talks between 2 dates
+ * @param {String} talks the talks that need to be filtered
+ * @param {String} start the start of the date range
+ * @param {String} end the end of the date range
+ */
+function dateFilter(talks, start, end) {
+  const formatedDateStart = dayjs(start, 'DD-MM-YYYY');
+  const formatedDateEnd = dayjs(end, 'DD-MM-YYYY');
+  talks = talks.filter(function (talk) {
+    const dateTalk = dayjs(talk[4], 'DD-MM-YYYY');
+    return formatedDateStart.isBefore(dateTalk,'day') && formatedDateEnd.isAfter(dateTalk,'day');
+  });
+  return talks;
+}
+
+module.exports = {
+  getTalkFromDate,
+};

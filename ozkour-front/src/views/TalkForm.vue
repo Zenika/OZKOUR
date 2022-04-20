@@ -1,10 +1,10 @@
 <script>
 import ChoosingTemplate from '../components/ChoosingTemplate.vue';
 import ChoosingDate from '../components/ChoosingDate.vue';
-import ValidateButton from '../components/Buttons/ValidateBtn.vue'
-import GenerateButton from '../components/Buttons/GenerateBtn.vue'
-import EventList from '../components/EventList.vue'
-
+import ValidateButton from '../components/Buttons/ValidateBtn.vue';
+import GenerateButton from '../components/Buttons/GenerateBtn.vue';
+import EventArray from '../components/EventArray.vue';
+// import EventList from '../components/EventList.vue';
 import DatPicker2 from '../components/DatePicker2.vue'
 
 export default {
@@ -13,8 +13,9 @@ export default {
     ChoosingDate,
     ValidateButton,
     GenerateButton,
-    EventList,
-    DatPicker2
+    // EventList,
+    DatPicker2,
+    EventArray
   },
 }
 </script>
@@ -31,7 +32,7 @@ export default {
 
         <section class="eventList">
             <h2>Liste des événements sélectionnés</h2>
-            <EventList />
+            <EventArray />
         </section>
 
         <section class="section lastSection">
