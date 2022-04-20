@@ -42,6 +42,7 @@
         display: flex;
         align-items: center;
         text-align: center;
+        border: none;
         border-radius: 10px;
         padding: 10px;
         cursor: text;

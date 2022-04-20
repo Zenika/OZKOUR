@@ -5,13 +5,16 @@ import ValidateButton from '../components/Buttons/ValidateBtn.vue'
 import GenerateButton from '../components/Buttons/GenerateBtn.vue'
 import EventList from '../components/EventList.vue'
 
+import DatPicker2 from '../components/DatePicker2.vue'
+
 export default {
   components: {
     ChoosingTemplate,
     ChoosingDate,
     ValidateButton,
     GenerateButton,
-    EventList
+    EventList,
+    DatPicker2
   },
 }
 </script>
@@ -23,6 +26,7 @@ export default {
         <section class="section">
             <ChoosingTemplate />
             <ChoosingDate />
+            <DatPicker2 />
         </section>
 
         <section class="eventList">
