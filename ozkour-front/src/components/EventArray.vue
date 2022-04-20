@@ -1,5 +1,5 @@
 <template>
-    <h2 v-if="talk.talks==''">Pas de talks entre les dates recherché</h2>
+    <h2 v-if="talk.talks==''">Pas de talks entre les dates recherchées</h2>
     <div v-else>
         <h2>Liste des événements sélectionnés</h2>
         <div class="eventDetails">
