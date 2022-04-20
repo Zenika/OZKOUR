@@ -11,11 +11,10 @@ dayjs.extend(customParseFormat)
  * @param {String} end the end of the date range
  */
 async function getTalkFromDate(start, end = dayjs()) {
-  
   const formatedDateStart = dayjs(start);
   const formatedDateEnd = dayjs(end);
   if(formatedDateStart.format('MM/YYYY')===formatedDateEnd.format('MM/YYYY')){
-    const param = { "start":start, "end":end };
+    const param = { "start":formatedDateStart.format('DD/MM/YYYY'), "end":formatedDateEnd.format('DD/MM/YYYY') };
     const res = await connect.authMethode(getData, param);
     return res;
   }
