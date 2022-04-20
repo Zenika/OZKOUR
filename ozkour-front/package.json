@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^3.1.1",
     "axios": "^0.26.1",
     "vee-validate": "^4.5.10",
     "vue": "^3.2.31",
@@ -21,7 +22,9 @@
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3"
+    "eslint-plugin-vue": "^8.0.3",
+    "sass": "^1.50.1",
+    "sass-loader": "^12.6.0"
   },
   "eslintConfig": {
     "root": true,
