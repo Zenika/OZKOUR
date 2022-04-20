@@ -1,5 +1,4 @@
-'use strict';
-
+require('dotenv').config()
 const Hapi = require('@hapi/hapi');
 const connect = require('./google-api/connect.js');
 const test = require('./google-api/sheets');
@@ -7,10 +6,12 @@ const test2 = require('./utilitary');
 const routes = require('./config/routes');
 const Qs = require('qs');
 
+const port = process.env.PORT
+
 const init = async () => {
 
     const server = Hapi.server({
-        port: 3000,
+        port: port,
         host: 'localhost',
         query: {
             parser: (query) => Qs.parse(query)
