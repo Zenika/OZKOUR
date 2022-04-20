@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.26.1",
+    "pinia": "^2.0.13",
     "vee-validate": "^4.5.10",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12",

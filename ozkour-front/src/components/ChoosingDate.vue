@@ -24,7 +24,9 @@
 import axios from "axios";
 import qs from "qs";
 import { ref, watch } from "vue";
+import { useTalkStore } from '../stores/talks'
 
+const talks = useTalkStore()
 const dateStart = ref("2021-01-01");
 const dateEnd = ref("2021-02-28");
 
@@ -39,7 +41,8 @@ watch(dateStart, async (newDate) => {
       paramsSerializer: (params) => qs.stringify(params, { encode: false }),
     })
     .then(function (response) {
-      console.log(response);
+      talks.updateTalks(response.data);
+      //console.log(response);
     })
     .catch(function (error) {
       console.log(error);
@@ -59,7 +62,7 @@ watch(dateEnd, async (newDate) => {
       },
     })
     .then(function (response) {
-      console.log(response);
+      talks.updateTalks(response.data);
     })
     .catch(function (error) {
       console.log(error);
