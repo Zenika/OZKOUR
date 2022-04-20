@@ -31,7 +31,6 @@ export default {
         </section>
 
         <section class="eventList">
-            <h2>Liste des événements sélectionnés</h2>
             <EventArray />
         </section>
 
