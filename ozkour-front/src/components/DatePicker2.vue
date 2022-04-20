@@ -34,6 +34,7 @@
     autoApply 
     inlineWithInput 
     format="dd/MM/yyyy"
+    locale="fr"
     calendarCellClassName="dp-custom-cell"
   > 
 <!-- ajouter inlineWithInput  dans le Datepicker pour avoit un input date relié au calendrier -->
