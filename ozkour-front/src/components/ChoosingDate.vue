@@ -1,7 +1,8 @@
 <script>
 import axios from "axios";
 import qs from "qs";
-import { ref, watch } from "vue";
+import dateFormat from "dateformat"
+import { ref, watch} from "vue";
 import { useTalkStore } from "../stores/talks";
 
 import Datepicker from "@vuepic/vue-datepicker";
@@ -20,16 +21,23 @@ export default {
     const talks = useTalkStore();
 
 
-    setInterval(function(){
-        console.log("range date", date)
-    },10000)
+    date.value = [dateStart.value,dateEnd.value]
 
-    watch(dateStart, async (newDate) => {
-      console.log(newDate);
+    function updateDateStartCalendar(){
+      date.value[0] = dateStart.value;
+    }
+
+    function updateDateEndCalendar(){
+      date.value[1] = dateEnd.value;
+    }
+
+    watch(date, async (newDate) => {
+      dateStart.value = dateFormat( Date.parse(newDate[0]), "yyyy-mm-dd")
+      dateEnd.value = dateFormat( Date.parse(newDate[1]), "yyyy-mm-dd")
       axios
         .get("http://localhost:3000/talk", {
           params: {
-            start: newDate,
+            start: dateStart.value,
             end: dateEnd.value,
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
@@ -44,33 +52,60 @@ export default {
         .then(function () {
           // always executed
         });
-    });
+      });
 
-    watch(dateEnd, async (newDate) => {
-    // console.log(newDate);
-      axios
-        .get("http://localhost:3000/talk", {
-          params: {
-            start: dateStart.value,
-            end: newDate,
-          },
-        })
-        .then(function (response) {
-          talks.updateTalks(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .then(function () {
-          // always executed
-        });
-    });
+    // watch(dateStart, async (newDate) => {
+    //   console.log(newDate);
+    //   date.value[0] = newDate;
+    //   axios
+    //     .get("http://localhost:3000/talk", {
+    //       params: {
+    //         start: newDate,
+    //         end: dateEnd.value,
+    //       },
+    //       paramsSerializer: (params) => qs.stringify(params, { encode: false }),
+    //     })
+    //     .then(function (response) {
+    //       talks.updateTalks(response.data);
+    //       //console.log(response);
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     })
+    //     .then(function () {
+    //       // always executed
+    //     });
+    // });
+
+    // watch(dateEnd, async (newDate) => {
+    // //   console.log(newDate);
+    //   date.value[1] = newDate;
+    //   axios
+    //     .get("http://localhost:3000/talk", {
+    //       params: {
+    //         start: dateStart.value,
+    //         end: newDate,
+    //       },
+    //     })
+    //     .then(function (response) {
+    //       talks.updateTalks(response.data);
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     })
+    //     .then(function () {
+    //       // always executed
+    //     });
+    // });
+
 
     return {
       date,
       talks,
       dateStart,
-      dateEnd
+      dateEnd,
+      updateDateStartCalendar,
+      updateDateEndCalendar
     };
   },
 };
@@ -79,24 +114,20 @@ export default {
 <template>
   <div class="flex-column">
     <div class="date">
-        <label for="start">Date de début</label>
-        <input 
-            type="date" 
-            id="start" 
-            name="talk-start" 
-            v-model="dateStart" 
-        />
+      <label for="start">Date de début</label>
+      <input type="date" id="start" name="talk-start" v-model="dateStart" @change="updateDateStartCalendar"/>
     </div>
 
     <div class="date">
-        <label for="end">Date de fin</label>
-        <input
-            type="date"
-            id="end"
-            name="talk-end"
-            v-model="dateEnd"
-            v-bind:min="dateStart"
-        />
+      <label for="end">Date de fin</label>
+      <input
+        type="date"
+        id="end"
+        name="talk-end"
+        v-model="dateEnd"
+        @change="updateDateEndCalendar"
+        v-bind:min="dateStart"
+      />
     </div>
 
     <button type="button" class="next-week-btn">Semaine prochaine</button>
@@ -106,7 +137,7 @@ export default {
     range
     inline
     autoApply
-    type="date"
+    format = 'yyyy-mm-dd"'
     locale="fr"
     calendarCellClassName="dp-custom-cell"
   >
