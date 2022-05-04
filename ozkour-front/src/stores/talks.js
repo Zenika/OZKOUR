@@ -4,19 +4,25 @@ import { defineStore } from "pinia";
 export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
-    talks: [],
+    retrived: [],
+    selected: [],
   }),
   getters: {
     items: (state) =>
-      state.talks.reduce((items) => {
+      state.retrived.reduce((items) => {
         return items;
       }, []),
   },
   actions: {
     updateTalks(newTalks) {
-      this.talks = [];
+      this.retrived = newTalks;
       console.log(newTalks)
-      this.talks.push(newTalks);
+      //this.talks.push(newTalks);
     },
+    // updateCheckedTalks(newTalks) {
+    //   this.checkedTalks = [];
+    //   console.log(newTalks)
+    //   this.checkedTalks.push(newTalks);
+    // },
   },
 });

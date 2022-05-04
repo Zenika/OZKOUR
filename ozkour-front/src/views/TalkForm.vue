@@ -1,7 +1,7 @@
 <script>
 import ChoosingTemplate from '../components/ChoosingTemplate.vue';
 import ChoosingDate from '../components/ChoosingDate.vue';
-import ValidateButton from '../components/Buttons/ValidateBtn.vue';
+//import ValidateButton from '../components/Buttons/ValidateBtn.vue';
 import GenerateButton from '../components/Buttons/GenerateBtn.vue';
 import EventArray from '../components/EventArray.vue';
 // import EventList from '../components/EventList.vue';
@@ -11,7 +11,7 @@ export default {
   components: {
     ChoosingTemplate,
     ChoosingDate,
-    ValidateButton,
+    //ValidateButton,
     GenerateButton,
     // EventList,
     // Calendar,
@@ -35,7 +35,7 @@ export default {
         </section>
 
         <section class="section lastSection">
-            <ValidateButton />
+            <!-- <ValidateButton /> -->
             <GenerateButton />
         </section>
         

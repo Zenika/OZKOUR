@@ -11,7 +11,7 @@ const port = process.env.PORT
 const init = async () => {
 
     const server = Hapi.server({
-        port: port,
+        port: 3000,
         host: 'localhost',
         query: {
             parser: (query) => Qs.parse(query)

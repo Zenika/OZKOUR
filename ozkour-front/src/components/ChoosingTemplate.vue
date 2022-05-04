@@ -52,6 +52,7 @@
 
     .radio-btn {
         cursor: pointer;
+        accent-color: #BF1D67;
     }
 
     label {

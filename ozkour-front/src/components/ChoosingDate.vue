@@ -14,9 +14,12 @@ export default {
   },
   setup() {
     const date = ref(new Date());
+    //const dateNow = ref(new Date());
     const dateStart = ref("2021-01-01");
     const dateEnd = ref("2021-01-11");
     date.value = [dateStart, dateEnd];
+
+    //console.log(dateNow)
     
     const talks = useTalkStore();
 
@@ -115,7 +118,7 @@ export default {
   <div class="flex-column">
     <div class="date">
       <label for="start">Date de début</label>
-      <input type="date" id="start" name="talk-start" v-model="dateStart" @change="updateDateStartCalendar"/>
+      <input type="date" id="start" name="talk-start" v-bind:min="dateNow" v-model="dateStart" @change="updateDateStartCalendar"/>
     </div>
 
     <div class="date">
