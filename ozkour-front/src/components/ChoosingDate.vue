@@ -6,7 +6,6 @@ import { ref, watch} from "vue";
 import { useTalkStore } from "../stores/talks";
 
 import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
   components: {
@@ -24,10 +23,14 @@ export default {
     date.value = [dateStart.value,dateEnd.value]
 
     function updateDateStartCalendar(){
+      if(dateEnd.value<dateStart.value)
+        dateStart.value = dateEnd.value;
       date.value[0] = dateStart.value;
     }
 
     function updateDateEndCalendar(){
+      if(dateEnd.value<dateStart.value)
+        dateEnd.value = dateStart.value;
       date.value[1] = dateEnd.value;
     }
 
@@ -137,6 +140,7 @@ export default {
     range
     inline
     autoApply
+    data-test="test"
     format = 'yyyy-mm-dd"'
     locale="fr"
     calendarCellClassName="dp-custom-cell"
