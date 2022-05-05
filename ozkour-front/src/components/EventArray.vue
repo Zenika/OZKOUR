@@ -14,8 +14,15 @@
           <th scope="col">SPEAKER</th>
         </tr>
         <tr v-for="talk in talk.retrived" v-bind:key="talk" data-test="talks">
-         <td>
-            <input type="checkbox" class="red-input" v-bind:value="talk" checked /> 
+          <td>
+            <input
+              type="checkbox"
+              class="red-input"
+              v-bind:value="talk"
+              v-model="checkedTalks"
+              @change="check(talk, $event)"
+              checked
+            />
           </td>
           <td>{{ talk[4] }}</td>
           <td>{{ talk[3] }}</td>
@@ -31,9 +38,36 @@
 </template>
 
 <script setup>
+//import { ref } from 'vue'
 import { useTalkStore } from "../stores/talks";
 
 const talk = useTalkStore();
+
+const checkedTalks = talk.checkedTalks;
+
+//console.log(talk)
+
+function check(oui, event) {
+  const value = {
+    date: oui[4],
+    universe: oui[3],
+    eventType: oui[1],
+    eventName: oui[2],
+    talkTitle: oui[6],
+    speakers: oui[5],
+  };
+
+  if (event.target.checked) {
+    //is selected
+    talk.addCheckedTalk(value);
+  } else {
+    //is not selected
+    talk.removeCheckedTalk(value);
+  }
+  
+  
+  console.log(value);
+}
 //setInterval(function(){
 // console.log(talk.talks)
 //},1000);
@@ -41,7 +75,7 @@ const talk = useTalkStore();
 
 <style scoped>
 .red-input {
-  accent-color: #BF1D67;
+  accent-color: #bf1d67;
   height: 1.3em; /* not needed */
   width: 1.3em; /* not needed */
 }
