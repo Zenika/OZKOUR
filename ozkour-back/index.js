@@ -1,3 +1,5 @@
+'use strict';
+
 require('dotenv').config()
 const Hapi = require('@hapi/hapi');
 const connect = require('./google-api/connect.js');
@@ -6,15 +8,39 @@ const test2 = require('./utilitary');
 const routes = require('./config/routes');
 const Qs = require('qs');
 
-const port = process.env.PORT
-
 const init = async () => {
+    const port = process.env.PORT
 
     const server = Hapi.server({
         port: port,
         host: 'localhost',
+        routes: {
+            cors: {
+                origin: [process.env.ALLOWED_DOMAIN],
+                additionalHeaders: ['cache-control', 'x-requested-with']
+            }
+        },
         query: {
             parser: (query) => Qs.parse(query)
+        }
+    });
+
+    // "Home" Route
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+
+            return 'Hello World!';
+        }
+    });
+
+    // "Error" Route
+    server.route({
+        method: '*',
+        path: '/{any*}',
+        handler: function (request, h) {
+            return '404 Error! Page Not Found!';
         }
     });
 
@@ -25,8 +51,7 @@ const init = async () => {
     // console.log(await test.getTalkFromDate('01/01/2021','28/02/2021'))
 
     await server.start();
-
-    //console.log('Server running on %s', server.info.uri);
+    console.log('Server running on %s', server.info.uri);
 };
 
 process.on('unhandledRejection', (err) => {
