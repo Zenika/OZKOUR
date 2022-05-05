@@ -15,7 +15,7 @@
         </tr>
         <tr v-for="talk in talk.retrived" v-bind:key="talk" data-test="talks">
          <td>
-            <input type="checkbox" class="red-input" v-bind:value="talk" v-model="checkedTalk" checked /> 
+            <input type="checkbox" class="red-input" v-bind:value="talk" checked /> 
           </td>
           <td>{{ talk[4] }}</td>
           <td>{{ talk[3] }}</td>

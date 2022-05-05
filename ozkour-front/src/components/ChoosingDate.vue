@@ -6,7 +6,6 @@ import { ref, watch} from "vue";
 import { useTalkStore } from "../stores/talks";
 
 import Datepicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
   components: {
@@ -14,12 +13,9 @@ export default {
   },
   setup() {
     const date = ref(new Date());
-    //const dateNow = ref(new Date());
     const dateStart = ref("2021-01-01");
     const dateEnd = ref("2021-01-11");
     date.value = [dateStart, dateEnd];
-
-    //console.log(dateNow)
     
     const talks = useTalkStore();
 
@@ -27,10 +23,14 @@ export default {
     date.value = [dateStart.value,dateEnd.value]
 
     function updateDateStartCalendar(){
+      if(dateEnd.value<dateStart.value)
+        dateStart.value = dateEnd.value;
       date.value[0] = dateStart.value;
     }
 
     function updateDateEndCalendar(){
+      if(dateEnd.value<dateStart.value)
+        dateEnd.value = dateStart.value;
       date.value[1] = dateEnd.value;
     }
 
@@ -118,7 +118,7 @@ export default {
   <div class="flex-column">
     <div class="date">
       <label for="start">Date de début</label>
-      <input type="date" id="start" name="talk-start" v-bind:min="dateNow" v-model="dateStart" @change="updateDateStartCalendar"/>
+      <input type="date" id="start" name="talk-start" v-model="dateStart" @change="updateDateStartCalendar"/>
     </div>
 
     <div class="date">
@@ -140,6 +140,7 @@ export default {
     range
     inline
     autoApply
+    data-test="test"
     format = 'yyyy-mm-dd"'
     locale="fr"
     calendarCellClassName="dp-custom-cell"

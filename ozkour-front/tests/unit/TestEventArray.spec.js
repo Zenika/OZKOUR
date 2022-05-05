@@ -1,9 +1,6 @@
 import { mount } from '@vue/test-utils'
 import EventArray from '@/components/EventArray.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { useTalkStore } from "../../src/stores/talks";
-import { defineStore } from 'pinia'
-
 
 describe('ListEvent Component', () => {
   it('Display title when no talk', () => {
