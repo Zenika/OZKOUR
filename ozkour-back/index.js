@@ -12,7 +12,7 @@ const init = async () => {
     const port = process.env.PORT
 
     const server = Hapi.server({
-        port: 3000,
+        port: port,
         host: 'localhost',
         routes: {
             cors: {
