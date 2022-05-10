@@ -70,50 +70,6 @@ export default {
         });
     });
 
-    // watch(dateStart, async (newDate) => {
-    //   console.log(newDate);
-    //   date.value[0] = newDate;
-    //   axios
-    //     .get("http://localhost:3000/talk", {
-    //       params: {
-    //         start: newDate,
-    //         end: dateEnd.value,
-    //       },
-    //       paramsSerializer: (params) => qs.stringify(params, { encode: false }),
-    //     })
-    //     .then(function (response) {
-    //       talks.updateTalks(response.data);
-    //       //console.log(response);
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     })
-    //     .then(function () {
-    //       // always executed
-    //     });
-    // });
-
-    // watch(dateEnd, async (newDate) => {
-    // //   console.log(newDate);
-    //   date.value[1] = newDate;
-    //   axios
-    //     .get("http://localhost:3000/talk", {
-    //       params: {
-    //         start: dateStart.value,
-    //         end: newDate,
-    //       },
-    //     })
-    //     .then(function (response) {
-    //       talks.updateTalks(response.data);
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
-    //     })
-    //     .then(function () {
-    //       // always executed
-    //     });
-    // });
-
     return {
       date,
       talks,

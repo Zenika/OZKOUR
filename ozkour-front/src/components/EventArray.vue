@@ -19,7 +19,6 @@
               type="checkbox"
               class="red-input"
               v-bind:value="talk"
-              v-model="checkedTalks"
               @change="check(talk, $event)"
               checked
             />
@@ -43,7 +42,6 @@ import { useTalkStore } from "../stores/talks";
 
 const talk = useTalkStore();
 
-const checkedTalks = talk.checkedTalks;
 
 //console.log(talk)
 
@@ -64,9 +62,6 @@ function check(oui, event) {
     //is not selected
     talk.removeCheckedTalk(value);
   }
-  
-  
-  console.log(value);
 }
 //setInterval(function(){
 // console.log(talk.talks)
