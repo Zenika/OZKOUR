@@ -1,16 +1,10 @@
-<script>
+<script setup>
 import ValidateBtn from './Buttons/ValidateBtn.vue'
 import { useTalkStore } from '../stores/talks'
 
-export default {
-  components: {
-    ValidateBtn,
-  },
-  setup() {
+
     const talk = useTalkStore()
-    console.log(talk.selected);
-}
-}
+    console.log(talk)
 
 </script>
 
@@ -41,10 +35,9 @@ export default {
                     </div>
                     <p><b>Liste des talks : </b></p>
                 </div>
-                {{talk}}
-                <!-- <ul v-for="talk in talk.retrived" v-bind:key="talk" class="events">
-                    <li>{{ talk[6] }}</li>
-                </ul> -->
+                <ul v-for="talk in talk.selected" v-bind:key="talk" class="events">
+                    <li>{{ talk.talkTitle }}</li>
+                </ul>
             </div>
         </div>
 
