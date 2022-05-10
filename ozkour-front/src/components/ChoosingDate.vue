@@ -144,6 +144,7 @@ export default {
     format = 'yyyy-mm-dd"'
     locale="fr"
     calendarCellClassName="dp-custom-cell"
+    :monthChangeOnScroll="false" 
   >
     <template #clear-icon="{ clear }">
       <img class="input-slot-image" src="" @click="clear" />

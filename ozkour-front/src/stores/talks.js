@@ -19,6 +19,10 @@ export const useTalkStore = defineStore({
       console.log(newTalks)
       //this.talks.push(newTalks);
     },
+    selectedTalks(newTalks) {
+      this.selected = newTalks;
+      console.log(newTalks);
+    }
     // updateCheckedTalks(newTalks) {
     //   this.checkedTalks = [];
     //   console.log(newTalks)
