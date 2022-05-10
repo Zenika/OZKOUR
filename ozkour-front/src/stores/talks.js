@@ -6,6 +6,9 @@ export const useTalkStore = defineStore({
   state: () => ({
     retrived: [],
     selected: [],
+    blured: false,
+    template: "",
+    date: {}
   }),
   getters: {
     items: (state) =>
@@ -23,24 +26,36 @@ export const useTalkStore = defineStore({
     addCheckedTalk(newTalk) {
       let index = -1;
       let founded = false;
-      while(index<=this.selected.length-1 && !founded){
+      while (index <= this.selected.length - 1 && !founded) {
         index++;
         // console.log("old " +this.selected[index]?.date)
         // console.log("new "+newTalk.date)
         // console.log("res " + this.selected[index]?.date > newTalk.date)
-        if(this.selected[index]?.date > newTalk.date)
-          founded = true;
+        if (this.selected[index]?.date > newTalk.date) founded = true;
       }
       this.selected.splice(index, 0, newTalk);
       //this.selected.push(newTalk);
     },
     removeCheckedTalk(oldTalk) {
-      this.selected = this.selected.filter(function(value){ 
+      this.selected = this.selected.filter(function (value) {
         // console.log(value.talkTitle)
         // console.log(oldTalk.talkTitle)
         // console.log(value.talkTitle != oldTalk.talkTitle)
         return value.talkTitle != oldTalk.talkTitle;
-    });
+      });
     },
+    blur(){
+      this.blured = true;
+    },
+    clarify(){
+      this.blured = false;
+    },
+    pickedTemplate(chosenTemplate) {
+      this.template = chosenTemplate
+      console.log('template',chosenTemplate);
+    },
+    selectedDate(start, end) {
+      this.date = {start, end}
+    }
   },
 });

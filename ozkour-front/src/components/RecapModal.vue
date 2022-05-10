@@ -1,11 +1,10 @@
 <script setup>
 import ValidateBtn from './Buttons/ValidateBtn.vue'
 import { useTalkStore } from '../stores/talks'
-import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
-import { picked } from '../components/ChoosingTemplate.vue'
+// import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
 
 const talk = useTalkStore()
-console.log(talk.selected);
+console.log(talk)
 
 </script>
 
@@ -21,7 +20,7 @@ console.log(talk.selected);
                 <div class="icon-bg">
                     <img src="../assets/images/gallery.png" alt="calendar" class="icon">
                 </div>
-                <p><b>Visuel : {{ picked }} </b></p>
+                <p><b>Visuel : </b>{{ talk.template }}</p>
             </div>
             <div class="recap-details">
                 <div class="icon-bg">
@@ -36,8 +35,8 @@ console.log(talk.selected);
                     </div>
                     <p><b>Liste des talks : </b></p>
                 </div>
-                <ul v-for="talk in talk.retrived" v-bind:key="talk" class="events">
-                    <li>{{ talk[6] }}</li>
+                <ul v-for="talk in talk.selected" v-bind:key="talk" class="events">
+                    <li>{{ talk.talkTitle }}</li>
                 </ul>
             </div>
         </div>

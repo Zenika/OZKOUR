@@ -1,4 +1,5 @@
 <script >
+import { useTalkStore } from '@/stores/talks';
 import Modal from '../RecapModal.vue';
   
   export default {
@@ -11,12 +12,21 @@ import Modal from '../RecapModal.vue';
             isAddClass: false,
         };
     },
+    setup() {
+        const talk = useTalkStore();
+
+        return{
+            talk
+        }
+    },
     methods: {
         showModal() {
             this.isModalVisible = true;
+            this.talk.blur();
         },
         closeModal() {
             this.isModalVisible = false;
+            this.talk.clarify()
         },
         addClass() {
             this.isAddClass = true;
@@ -34,16 +44,17 @@ import Modal from '../RecapModal.vue';
         class="generate-btn"
         @click=showModal
         v-on:click="addClass"
-        :class="{'myClass': isAddClass}"
+        :class="{'blurClass': isAddClass}"
     >
         GÉNÉRER UN VISUEL
     </button>
-
+    
     <Modal
-      v-show="isModalVisible"
-      @close="closeModal"
-      v-on:click="deleteClass"
+        v-show="isModalVisible"
+        @close="closeModal"
+        v-on:click="deleteClass"
     />
+    
 </template>
 
 <style scoped>
@@ -64,13 +75,18 @@ import Modal from '../RecapModal.vue';
         background: linear-gradient(90deg, #921623 0%, #94184e 100%);
     }
 
+    .antiBlur{
+        -webkit-filter: blur(0px);
+        filter: blur(0px);
+    }
+
     .modal--active body {
         -webkit-filter: blur(8px);
             filter: blur(8px);
             opacity: 1;
     }
 
-    .myClass {
+    .blurClass {
          -webkit-filter: blur(5px);
         filter: blur(5px)
     }

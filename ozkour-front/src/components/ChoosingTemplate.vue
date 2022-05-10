@@ -1,34 +1,69 @@
+ <script setup>
+const { useTalkStore }=require("@/stores/talks");
+
+const talk = useTalkStore()
+
+</script>
+
 <template>
     <form action="#">
-        <fieldset>
-            <legend>Choisir un visuel</legend>
-            <div class="templateChoice">
-                <div>
-                    <input type="radio" id="quoide9" name="template" value="quoide9" class="radio-btn" v-model="picked">
-                    <label for="quoide9">QUOI DE 9</label>
-                </div>
-                <div>
-                    <input type="radio" id="emailing" name="template" value="emailing" class="radio-btn" v-model="picked">
-                    <label for="emailing">E-MAILING</label>
-                </div>
-                <div>
-                    <input type="radio" id="meetup" name="template" value="meetup" class="radio-btn" v-model="picked">
-                    <label for="meetup">MEET-UP</label>
-                </div>
-                <div>
-                    <input type="radio" id="slack" name="template" value="slack" class="radio-btn" v-model="picked">
-                    <label for="slack">SLACK</label>
-                </div>
-            </div>
-        </fieldset>
+      <fieldset>
+        <legend>Choisir un visuel</legend>
+        <div class="templateChoice">
+          <div>
+            <input
+              type="radio"
+              id="quoide9"
+              name="template"
+              value="quoide9"
+              class="radio-btn"
+              @change="talk.pickedTemplate('Quoi de 9')"
+            />
+            <label for="quoide9">QUOI DE 9</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="emailing"
+              name="template"
+              value="emailing"
+              class="radio-btn"
+              @change="talk.pickedTemplate('E-mailing')"
+            />
+            <label for="emailing">E-MAILING</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="meetup"
+              name="template"
+              value="meetup"
+              class="radio-btn"
+              @change="talk.pickedTemplate('Meet Up')"
+            />
+            <label for="meetup">MEET-UP</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              id="slack"
+              name="template"
+              value="slack"
+              class="radio-btn"
+              @change="talk.pickedTemplate('Slack')"
+            />
+            <label for="slack">SLACK</label>
+          </div>
+        </div>
+      </fieldset>
     </form>
+  <!-- </div> -->
 </template>
 
 <style scoped>
     fieldset {
         border: none;
     }
-
     legend {
         background-color: #FFFFFF;
         border-radius: 10px;
@@ -38,7 +73,6 @@
         padding: 10px 20px;
         margin-bottom: 10px;
     }
-
     .templateChoice {
         width: 100%;
         display: flex;
@@ -49,13 +83,15 @@
         letter-spacing: .0.5rem;
         padding-left: 5px;
     }
-
     .radio-btn {
         cursor: pointer;
         accent-color: #BF1D67;
     }
-
     label {
         padding-left: 10px;
     }
+    .blurClass {
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+}
 </style>
