@@ -8,7 +8,7 @@ export default {
   },
   setup() {
     const talk = useTalkStore()
-    console.log(talk);
+    console.log(talk.selected);
 }
 }
 
@@ -41,9 +41,10 @@ export default {
                     </div>
                     <p><b>Liste des talks : </b></p>
                 </div>
-                <ul v-for="talk in talk.selected" v-bind:key="talk" class="events">
+                {{talk}}
+                <!-- <ul v-for="talk in talk.retrived" v-bind:key="talk" class="events">
                     <li>{{ talk[6] }}</li>
-                </ul>
+                </ul> -->
             </div>
         </div>
 
