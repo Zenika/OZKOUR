@@ -4,19 +4,19 @@
             <legend>Choisir un visuel</legend>
             <div class="templateChoice">
                 <div>
-                    <input type="radio" id="quoide9" name="template" value="quoide9" class="radio-btn">
+                    <input type="radio" id="quoide9" name="template" value="quoide9" class="radio-btn" v-model="picked">
                     <label for="quoide9">QUOI DE 9</label>
                 </div>
                 <div>
-                    <input type="radio" id="emailing" name="template" value="emailing" class="radio-btn">
+                    <input type="radio" id="emailing" name="template" value="emailing" class="radio-btn" v-model="picked">
                     <label for="emailing">E-MAILING</label>
                 </div>
                 <div>
-                    <input type="radio" id="meetup" name="template" value="meetup" class="radio-btn">
+                    <input type="radio" id="meetup" name="template" value="meetup" class="radio-btn" v-model="picked">
                     <label for="meetup">MEET-UP</label>
                 </div>
                 <div>
-                    <input type="radio" id="slack" name="template" value="slack" class="radio-btn">
+                    <input type="radio" id="slack" name="template" value="slack" class="radio-btn" v-model="picked">
                     <label for="slack">SLACK</label>
                 </div>
             </div>

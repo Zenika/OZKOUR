@@ -16,7 +16,8 @@ export default {
     // EventList,
     // Calendar,
     EventArray
-  },
+  }
+
 }
 </script>
 

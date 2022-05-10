@@ -32,7 +32,7 @@ import Modal from '../RecapModal.vue';
     <button 
         type="submit" 
         class="generate-btn"
-        @click="showModal"
+        @click=showModal
         v-on:click="addClass"
         :class="{'myClass': isAddClass}"
     >

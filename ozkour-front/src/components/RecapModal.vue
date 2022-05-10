@@ -1,16 +1,11 @@
-<script>
+<script setup>
 import ValidateBtn from './Buttons/ValidateBtn.vue'
 import { useTalkStore } from '../stores/talks'
+import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
+import { picked } from '../components/ChoosingTemplate.vue'
 
-export default {
-  components: {
-    ValidateBtn,
-  },
-  setup() {
-    const talk = useTalkStore()
-    console.log(talk.selected);
-}
-}
+const talk = useTalkStore()
+console.log(talk.selected);
 
 </script>
 
@@ -26,13 +21,13 @@ export default {
                 <div class="icon-bg">
                     <img src="../assets/images/gallery.png" alt="calendar" class="icon">
                 </div>
-                <p><b>Visuel : </b></p>
+                <p><b>Visuel : {{ picked }} </b></p>
             </div>
             <div class="recap-details">
                 <div class="icon-bg">
                     <img src="../assets/images/calendar.png" alt="calendar" class="icon">
                 </div>
-                <p><b>Dates : </b></p>
+                <p><b>Dates : {{ dateStart }} au {{ dateEnd }}</b></p>
             </div>
             <div>
                 <div class="recap-details">
@@ -41,10 +36,9 @@ export default {
                     </div>
                     <p><b>Liste des talks : </b></p>
                 </div>
-                {{talk}}
-                <!-- <ul v-for="talk in talk.retrived" v-bind:key="talk" class="events">
+                <ul v-for="talk in talk.retrived" v-bind:key="talk" class="events">
                     <li>{{ talk[6] }}</li>
-                </ul> -->
+                </ul>
             </div>
         </div>
 
