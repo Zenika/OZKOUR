@@ -1,4 +1,5 @@
 // @ts-check
+import dateFormat from "dateformat";
 import { defineStore } from "pinia";
 
 export const useTalkStore = defineStore({
@@ -50,12 +51,20 @@ export const useTalkStore = defineStore({
     clarify(){
       this.blured = false;
     },
+    // Visuel choisi
     pickedTemplate(chosenTemplate) {
       this.template = chosenTemplate
       console.log('template',chosenTemplate);
     },
+    // Plage de date choisie
     selectedDate(start, end) {
+      start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
+      end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");
       this.date = {start, end}
+      console.log('start date',start);
+      console.log('end date',end);
     }
   },
 });
+
+
