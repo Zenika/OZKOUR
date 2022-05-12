@@ -1,7 +1,14 @@
  <script setup>
 const { useTalkStore }=require("@/stores/talks");
+const { watch, ref }=require("@vue/runtime-core");
 
 const talk = useTalkStore()
+
+const selected = ref('')
+
+watch(selected, async (newSelect) => {
+    talk.pickedTemplate(newSelect);
+})
 
 </script>
 
@@ -15,9 +22,10 @@ const talk = useTalkStore()
               type="radio"
               id="quoide9"
               name="template"
-              value="quoide9"
+              value="Quoi de 9"
               class="radio-btn"
-              @change="talk.pickedTemplate('Quoi de 9')"
+              v-model="selected"
+              
             />
             <label for="quoide9">QUOI DE 9</label>
           </div>
@@ -26,9 +34,10 @@ const talk = useTalkStore()
               type="radio"
               id="emailing"
               name="template"
-              value="emailing"
+              value="E-mailing"
               class="radio-btn"
-              @change="talk.pickedTemplate('E-mailing')"
+              v-model="selected"
+              
             />
             <label for="emailing">E-MAILING</label>
           </div>
@@ -37,9 +46,10 @@ const talk = useTalkStore()
               type="radio"
               id="meetup"
               name="template"
-              value="meetup"
+              value="Meetup"
               class="radio-btn"
-              @change="talk.pickedTemplate('Meet Up')"
+              v-model="selected"
+              
             />
             <label for="meetup">MEET-UP</label>
           </div>
@@ -48,9 +58,10 @@ const talk = useTalkStore()
               type="radio"
               id="slack"
               name="template"
-              value="slack"
+              value="Slack"
               class="radio-btn"
-              @change="talk.pickedTemplate('Slack')"
+              v-model="selected"
+              
             />
             <label for="slack">SLACK</label>
           </div>
