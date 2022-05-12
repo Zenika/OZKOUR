@@ -8,7 +8,7 @@ export const useTalkStore = defineStore({
     retrived: [],
     selected: [],
     blured: false,
-    template: "",
+    template: {template : "", frequency : ""},
     date: {},
   }),
   getters: {
@@ -52,18 +52,14 @@ export const useTalkStore = defineStore({
       this.blured = false;
     },
     // Visuel choisi
-    pickedTemplate(chosenTemplate) {
-      console.log("template", chosenTemplate);
-      this.template = chosenTemplate;
-      console.log("template", chosenTemplate);
+    pickedTemplate(chosenTemplate,freq) {
+      this.template = {template : chosenTemplate, frequency : freq };
     },
     // Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");
       this.date = { start, end };
-      console.log("start date", start);
-      console.log("end date", end);
     },
   },
 });
