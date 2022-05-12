@@ -10,9 +10,9 @@ describe("Talk Store", () => {
   }),
     it("updateTalks", () => {
       const talk = useTalkStore();
-      expect(talk.retrived.length).toBe(0);
+      expect(talk.retrieved.length).toBe(0);
       talk.updateTalks(talksRetrieved);
-      expect(talk.retrived.length).toBe(5);
+      expect(talk.retrieved.length).toBe(5);
     }),
     it("updateCheckedTalks", () => {
       const talk = useTalkStore();

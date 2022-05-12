@@ -5,7 +5,7 @@ import { defineStore } from "pinia";
 export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
-    retrived: [],
+    retrieved: [],
     selected: [],
     blured: false,
     template: {template : "", frequency : ""},
@@ -13,13 +13,13 @@ export const useTalkStore = defineStore({
   }),
   getters: {
     items: (state) =>
-      state.retrived.reduce((items) => {
+      state.retrieved.reduce((items) => {
         return items;
       }, []),
   },
   actions: {
     updateTalks(newTalks) {
-      this.retrived = newTalks;
+      this.retrieved = newTalks;
     },
     updateCheckedTalks(newTalks) {
       this.selected = newTalks;
