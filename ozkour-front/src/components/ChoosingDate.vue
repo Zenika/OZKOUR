@@ -68,6 +68,7 @@ export default {
         .then(function () {
           // always executed
         });
+      talks.selectedDate(dateStart, dateEnd);
     });
 
     return {
@@ -115,7 +116,7 @@ export default {
     inline
     autoApply
     data-test="test"
-    format='yyyy-mm-dd"'
+    format='yyyy-mm-dd'
     locale="fr"
     calendarCellClassName="dp-custom-cell"
     :monthChangeOnScroll="false" 

@@ -26,7 +26,8 @@ console.log(talk)
                 <div class="icon-bg">
                     <img src="../assets/images/calendar.png" alt="calendar" class="icon">
                 </div>
-                <p><b>Dates : {{ dateStart }} au {{ dateEnd }}</b></p>
+                <!-- <p><b>Dates : {{ talk.dateStart }} au {{ dateEnd }}</b></p> -->
+                <p><b>Dates : </b>{{ talk.date.start }} au {{ talk.date.end }}</p>
             </div>
             <div>
                 <div class="recap-details">
@@ -50,7 +51,7 @@ console.log(talk)
 
 <style scoped>
     .popUp-bg {
-        width: 30%;;
+        width: 35%;;
         top: 30%;
         bottom: auto;
         background: #F2F2F2;
@@ -58,6 +59,7 @@ console.log(talk)
         z-index: 20;
         transform: 'translate(-50%, -50%)';
         border-radius: 20px;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
 
     .popUp-header{
