@@ -13,13 +13,81 @@ export default {
   },
   setup() {
     const date = ref(new Date());
-    const dateStart = ref("2021-01-01");
-    const dateEnd = ref("2021-01-11");
+    const dateStart = ref("");
+    const dateEnd = ref("");
     date.value = [dateStart, dateEnd];
 
     const talks = useTalkStore();
 
     date.value = [dateStart.value, dateEnd.value];
+
+  
+
+    talks.$subscribe((mutation, state) => {
+  // import { MutationType } from 'pinia'
+  mutation.type // 'direct' | 'patch object' | 'patch function'
+  // same as cartStore.$id
+  mutation.storeId // 'cart'
+  // only available with mutation.type === 'patch object'
+  mutation.payload // patch object passed to cartStore.$patch()
+
+  // persist the whole state to the local storage whenever it changes
+  console.log(state)
+  //localStorage.setItem('cart', JSON.stringify(state))
+  if(state.template ==="Quoi de 9"){
+        defaultDateNextWeek();
+      }
+      else{
+        defaultDateNextMonth();
+      }
+})
+      
+  
+    //const test = false
+   
+    
+
+    function defaultDateNextMonth(){
+      const d = new Date();
+      if(d.getDate() < 7){
+        dateStart.value = dateFormat(Date.parse(d), "yyyy-mm-dd");
+        dateEnd.value = dateFormat(Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 0)), "yyyy-mm-dd");
+      }
+      else{
+        dateStart.value = dateFormat(Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 1)), "yyyy-mm-dd")
+        dateEnd.value = dateFormat(Date.parse(new Date(d.getFullYear(), d.getMonth() + 2, 0)), "yyyy-mm-dd");
+      }
+      updateDateStartCalendar();
+      updateDateEndCalendar();
+    }
+
+    function defaultDateNextWeek(){
+      const d = new Date();
+      if(d.getDay() !== 1){
+        console.log("c'est pas lundi");
+        dateStart.value = dateFormat(Date.parse(new Date(d.getTime() + seekNextModay(d) * 24 * 60 * 60 * 1000)), "yyyy-mm-dd");
+      }
+      else{
+        console.log("c'est lundi")
+        dateStart.value =  dateFormat(Date.parse(d.getTime()), "yyyy-mm-dd");
+      }
+      //dateEnd.value =  dateFormat(Date.parse(new Date().getTime()), "yyyy-mm-dd");
+      dateEnd.value = dateFormat(Date.parse(new Date(new Date(dateStart.value).getTime() + 6 * 24 * 60 * 60 * 1000)), "yyyy-mm-dd");
+      updateDateStartCalendar();
+      updateDateEndCalendar();
+    }
+
+    function seekNextModay(d = new Date()){ 
+      
+      let n = 0;
+      while((d.getDay() + n )% 7!== 1){
+        n++
+        console.log(n);
+      }
+      console.log("prochain lundi dans " + n + " jours")
+      return n
+      
+    }
 
     function updateDateStartCalendar() {
       if (dateEnd.value < dateStart.value) dateStart.value = dateEnd.value;
@@ -32,6 +100,7 @@ export default {
     }
 
     watch(date, async (newDate) => {
+      
       dateStart.value = dateFormat(Date.parse(newDate[0]), "yyyy-mm-dd");
       dateEnd.value = dateFormat(Date.parse(newDate[1]), "yyyy-mm-dd");
       axios

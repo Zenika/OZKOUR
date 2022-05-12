@@ -9,7 +9,7 @@ export const useTalkStore = defineStore({
     selected: [],
     blured: false,
     template: "",
-    date: {}
+    date: {},
   }),
   getters: {
     items: (state) =>
@@ -45,26 +45,25 @@ export const useTalkStore = defineStore({
         return value.talkTitle != oldTalk.talkTitle;
       });
     },
-    blur(){
+    blur() {
       this.blured = true;
     },
-    clarify(){
+    clarify() {
       this.blured = false;
     },
     // Visuel choisi
     pickedTemplate(chosenTemplate) {
-      this.template = chosenTemplate
-      console.log('template',chosenTemplate);
+      console.log("template", chosenTemplate);
+      this.template = chosenTemplate;
+      console.log("template", chosenTemplate);
     },
     // Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");
-      this.date = {start, end}
-      console.log('start date',start);
-      console.log('end date',end);
-    }
+      this.date = { start, end };
+      console.log("start date", start);
+      console.log("end date", end);
+    },
   },
 });
-
-
