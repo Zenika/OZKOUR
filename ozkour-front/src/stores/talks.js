@@ -45,24 +45,26 @@ export const useTalkStore = defineStore({
         return value.talkTitle != oldTalk.talkTitle;
       });
     },
+    //--- Flouter l'arrière plan lorsque la pop up est ouverte
     blur(){
       this.blured = true;
     },
+    //--- Enlever l'arrière plan flouté lorsque la pop up est fermée
     clarify(){
       this.blured = false;
     },
-    // Visuel choisi
+    //--- Visuel choisi
     pickedTemplate(chosenTemplate) {
       this.template = chosenTemplate
       console.log('template',chosenTemplate);
     },
-    // Plage de date choisie
+    //--- Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");
       this.date = {start, end}
-      console.log('start date',start);
-      console.log('end date',end);
+      // console.log('start date',start);
+      // console.log('end date',end);
     }
   },
 });

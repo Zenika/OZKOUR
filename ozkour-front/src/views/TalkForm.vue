@@ -1,22 +1,15 @@
 <script>
 import ChoosingTemplate from "../components/ChoosingTemplate.vue";
 import ChoosingDate from "../components/ChoosingDate.vue";
-//import ValidateButton from '../components/Buttons/ValidateBtn.vue';
 import GenerateButton from "../components/Buttons/GenerateBtn.vue";
 import EventArray from "../components/EventArray.vue";
 import { useTalkStore } from "@/stores/talks";
-
-// import EventList from '../components/EventList.vue';
-// import Calendar from '../components/Calendar.vue'
 
 export default {
   components: {
     ChoosingTemplate,
     ChoosingDate,
-    // ValidateButton,
     GenerateButton,
-    // EventList,
-    // Calendar,
     EventArray,
   },
   setup() {
@@ -38,7 +31,6 @@ export default {
     <section :class="{ blurClass: talk.blured , section:true}">
       <ChoosingTemplate />
       <ChoosingDate />
-      <!-- <Calendar /> -->
     </section>
 
     <section :class="{ blurClass: talk.blured ,eventList : true }">
@@ -46,8 +38,7 @@ export default {
     </section>
 
     <section class="section lastSection">
-      <!-- <ValidateButton /> -->
-      <GenerateButton/>
+      <GenerateButton />
     </section>
   </main>
 
