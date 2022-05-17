@@ -1,9 +1,44 @@
-<script >
+<script>
+// import {ref} from "vue";
+import axios from "axios";
+// import { useTalkStore } from "../../stores/talks";
+
+export default {
+
+    data() {
+
+        // function sendTalks () {
+        //     axios.post('http://localhost:3000/selected-talks')
+        //     .then(function (response) {
+        //         // talk.updateCheckedTalks(response.data())
+        //         console.log('talks',response.data.talk);
+        //     })
+        // }
+
+        function sendTalks() {
+            axios
+            .post('http://localhost:3000/selected-talks', this.talk)
+            .then((response) => console.log(response))
+        }
+
+        return {
+            talk: {
+                date: "",    
+                universe: "",
+                eventType: "",
+                eventName: "",
+                talkTitle: "",
+                speakers: "",
+            },
+            sendTalks
+        }
+    },
+};
 
 </script>
 
 <template>
-    <button type="button" class="validate-btn">VALIDER</button>
+    <button type="button" class="validate-btn" @submit="sendTalks()" >VALIDER</button>
 </template>
 
 <style scoped>
