@@ -113,7 +113,6 @@ export default {
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
         .then(function (response) {
-          if(response.success){
 
           talks.updateTalks(response.data);
           let res = [];
@@ -126,13 +125,14 @@ export default {
               eventName: talk[2],
               talkTitle: talk[6],
               speakers: talk[5],
+              checked : true
             };
             //console.log(value);
             res.push(value);
           }
 
-          talks.updateCheckedTalks(res);
-          }
+          talks.updateTalks(res);
+          
           //console.log(response);
         })
         .catch(function (error) {
