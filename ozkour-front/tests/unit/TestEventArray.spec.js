@@ -22,7 +22,7 @@ describe("ListEvent Component", () => {
           plugins: [
             createTestingPinia({
               initialState: {
-                talk: { retrived: talksRetrieved },
+                talk: { retrieved: talksRetrieved },
               },
             }),
           ],
@@ -39,7 +39,7 @@ describe("ListEvent Component", () => {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrived: talksRetrieved },
+              talk: { retrieved: talksRetrieved },
             },
           }),
         ],
@@ -55,7 +55,7 @@ describe("ListEvent Component", () => {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrived: talksRetrieved },
+              talk: { retrieved: talksRetrieved },
             },
           }),
         ],
@@ -70,7 +70,7 @@ describe("ListEvent Component", () => {
           plugins: [
             createTestingPinia({
               initialState: {
-                talk: { retrived: talksRetrieved, selected: talkSelected },
+                talk: { retrieved: talksRetrieved, selected: talkSelected },
               },
             }),
           ],
@@ -93,7 +93,7 @@ describe("ListEvent Component", () => {
           plugins: [
             createTestingPinia({
               initialState: {
-                talk: { retrived: talksRetrieved, selected: talkSelected },
+                talk: { retrieved: talksRetrieved, selected: talkSelected },
               },
             }),
           ],

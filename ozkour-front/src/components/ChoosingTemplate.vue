@@ -6,8 +6,39 @@ const talk = useTalkStore()
 
 const selected = ref('')
 
+const visuals = [
+  {
+    id : "quoide9",
+    label : "QUOI DE 9",
+    value : "Quoi de 9",
+    frequency : "week" 
+  },
+  {
+    id : "emailing",
+    label : "E-MAILING",
+    value : "E-mailing",
+    frequency : "month"
+  },
+  {
+    id : "meetup",
+    label : "MEET-UP",
+    value : "Meet-up",
+    frequency : "month"
+  },
+  {
+    id : "slack",
+    label : "SLACK",
+    value : "Slack",
+    frequency : "month"
+  },
+]
+
 watch(selected, async (newSelect) => {
-    talk.pickedTemplate(newSelect);
+    let n = 0
+    while(visuals[n].value !== newSelect){
+      n++;
+    }
+    talk.pickedTemplate(newSelect,visuals[n].frequency);
 })
 
 </script>
@@ -17,53 +48,17 @@ watch(selected, async (newSelect) => {
       <fieldset>
         <legend>Choisir un visuel</legend>
         <div class="templateChoice">
-          <div>
+          <div v-for="visual in visuals" v-bind:key="visual">
             <input
               type="radio"
-              id="quoide9"
+              :id="visual.id"
               name="template"
-              value="Quoi de 9"
+              :value="visual.value"
               class="radio-btn"
               v-model="selected"
               
             />
-            <label for="quoide9">QUOI DE 9</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="emailing"
-              name="template"
-              value="E-mailing"
-              class="radio-btn"
-              v-model="selected"
-              
-            />
-            <label for="emailing">E-MAILING</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="meetup"
-              name="template"
-              value="Meetup"
-              class="radio-btn"
-              v-model="selected"
-              
-            />
-            <label for="meetup">MEET-UP</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="slack"
-              name="template"
-              value="Slack"
-              class="radio-btn"
-              v-model="selected"
-              
-            />
-            <label for="slack">SLACK</label>
+            <label :for="visual.id" >{{visual.label}}</label>
           </div>
         </div>
       </fieldset>

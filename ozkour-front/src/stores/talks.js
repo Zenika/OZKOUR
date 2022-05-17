@@ -5,21 +5,21 @@ import { defineStore } from "pinia";
 export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
-    retrived: [],
+    retrieved: [],
     selected: [],
     blured: false,
-    template: "",
-    date: {}
+    template: {template : "", frequency : ""},
+    date: {},
   }),
   getters: {
     items: (state) =>
-      state.retrived.reduce((items) => {
+      state.retrieved.reduce((items) => {
         return items;
       }, []),
   },
   actions: {
     updateTalks(newTalks) {
-      this.retrived = newTalks;
+      this.retrieved = newTalks;
     },
     updateCheckedTalks(newTalks) {
       this.selected = newTalks;
@@ -45,26 +45,21 @@ export const useTalkStore = defineStore({
         return value.talkTitle != oldTalk.talkTitle;
       });
     },
-    blur(){
+    blur() {
       this.blured = true;
     },
-    clarify(){
+    clarify() {
       this.blured = false;
     },
     // Visuel choisi
-    pickedTemplate(chosenTemplate) {
-      this.template = chosenTemplate
-      console.log('template',chosenTemplate);
+    pickedTemplate(chosenTemplate,freq) {
+      this.template = {template : chosenTemplate, frequency : freq };
     },
     // Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");
-      this.date = {start, end}
-      console.log('start date',start);
-      console.log('end date',end);
-    }
+      this.date = { start, end };
+    },
   },
 });
-
-

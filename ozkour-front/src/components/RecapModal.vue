@@ -20,7 +20,7 @@ console.log(talk)
                 <div class="icon-bg">
                     <img src="../assets/images/gallery.png" alt="calendar" class="icon">
                 </div>
-                <p><b>Visuel : </b>{{ talk.template }}</p>
+                <p><b>Visuel : </b>{{ talk.template.template }}</p>
             </div>
             <div class="recap-details">
                 <div class="icon-bg">

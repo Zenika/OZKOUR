@@ -1,5 +1,5 @@
 <template>
-  <h2 v-if="talk.retrived == ''">Pas de talks entre les dates recherchées</h2>
+  <h2 v-if="talk.retrieved == ''">Pas de talks entre les dates recherchées</h2>
   <div v-else>
     <h2>Liste des événements sélectionnés</h2>
     <div class="eventDetails">
@@ -13,7 +13,7 @@
           <th scope="col">TITRE DU TALK</th>
           <th scope="col">SPEAKER</th>
         </tr>
-        <tr v-for="talk in talk.retrived" v-bind:key="talk" data-test="talks">
+        <tr v-for="talk in talk.retrieved" v-bind:key="talk" data-test="talks">
           <td>
             <input
               type="checkbox"
