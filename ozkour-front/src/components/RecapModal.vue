@@ -4,7 +4,6 @@ import { useTalkStore } from '../stores/talks'
 // import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
 
 const talk = useTalkStore()
-console.log(talk)
 
 </script>
 
@@ -36,7 +35,7 @@ console.log(talk)
                     </div>
                     <p><b>Liste des talks : </b></p>
                 </div>
-                <ul v-for="talk in talk.selected" v-bind:key="talk" class="events">
+                <ul v-for="talk in talk.getSelectedTalks" v-bind:key="talk" class="events">
                     <li>{{ talk.talkTitle }}</li>
                 </ul>
             </div>
