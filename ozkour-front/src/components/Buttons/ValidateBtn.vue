@@ -6,16 +6,8 @@ import axios from "axios";
 export default {
 
     data() {
-
-        // function sendTalks () {
-        //     axios.post('http://localhost:3000/selected-talks')
-        //     .then(function (response) {
-        //         // talk.updateCheckedTalks(response.data())
-        //         console.log('talks',response.data.talk);
-        //     })
-        // }
-
         function sendTalks() {
+            console.log("tyi");
             axios
             .post('http://localhost:3000/selected-talks', this.talk)
             .then((response) => console.log(response))
@@ -38,7 +30,7 @@ export default {
 </script>
 
 <template>
-    <button type="button" class="validate-btn" @submit="sendTalks()" >VALIDER</button>
+    <button type="button" class="validate-btn" @click="sendTalks" >VALIDER</button>
 </template>
 
 <style scoped>

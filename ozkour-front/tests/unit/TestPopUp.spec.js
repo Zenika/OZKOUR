@@ -1,52 +1,63 @@
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
-import PopUp from "@/components/RecapModal.vue"
+import RecapModal from "@/components/RecapModal.vue"
 import { useTalkStore } from "../../src/stores/talks";
+
+// On utilise 'shallowMount' pour ne pas mount les composants enfants (ici ValidateBtn)
 
 describe("RecapModal Component", () => {
     //--- Affiche le visuel choisi par l'utilisateur
     it("Display the template chosen", async () => {
-        const wrapper = mount(PopUp, {
-            global: {
-              plugins: [createTestingPinia()],
-            },
-        });
-
-        const template = wrapper.find('[name="template"]')
-
-        await template.setValue("E-mailing")
-
-        expect(template.element.value).toBe("E-mailing");
-    })
-
-    //--- Affiche la plage de dates choisi par l'utilisateur
-    it("Display the date range chosen", async () => {
-        const wrapper = mount(PopUp, {
+        const wrapper = shallowMount(RecapModal, {
             global: {
               plugins: [
                 createTestingPinia({
                   initialState: {
-                    talk: { selected: talksSelected },
+                    talk: { 
+                        selected: talksSelected,
+                        template : 'E-mailing'
+                    },
                   },
                 }),
               ],
             },
         });
 
-        const dateStart = wrapper.find(talk.date.start)
+        const template = wrapper.find('[data-test="template-detail"]').text()
 
-        await dateStart.setValue('2021-01-11')
+        expect(template).toBe('Visuel : E-mailing')
+    })
 
-        const dateEnd = wrapper.find(talk.date.end)
+    //--- Affiche la plage de dates choisi par l'utilisateur
+    it("Display the date range chosen", async () => {
+        const wrapper = shallowMount(RecapModal, {
+            global: {
+              plugins: [
+                createTestingPinia({
+                  initialState: {
+                    talk: { 
+                        selected: talksSelected,
+                        date : { 
+                            start : '11/01/2021', 
+                            end : '12/02/2021'
+                        }
+                    },
+                  },
+                }),
+              ],
+            },
+        });
 
-        await dateEnd.setValue('2021-02-12')
+        const dateText = wrapper.find('[data-test="date-detail"]').text()
 
-        expect(dates)
+        expect(dateText).toBe('Dates : 11/01/2021 au 12/02/2021')
+
+        // console.log(dateText.html()); => affiche la partie HTML du code
     }),
 
     //--- Affiche la liste des titres des talks choisi par l'utilisateur 
     it("Display a list of the chosen talks, only their titles", async () => {
-        const wrapper = mount(PopUp, {
+        const wrapper = shallowMount(RecapModal, {
             global: {
               plugins: [
                 createTestingPinia({
@@ -58,8 +69,21 @@ describe("RecapModal Component", () => {
             },
         });
     
-        const talksTitles = wrapper.find(talk.talkTitle)
+        const talkTitle = wrapper.find('.events').html()
+
+        expect(talkTitle).toMatchSnapshot()
     })
+
+    // Bouton fermer la pop up
+    // it("Close de the pop up when you click on the cross button", async () => {
+    //     const wrapper = shallowMount (RecapModal, {
+    //         global: {
+    //             plugins: [createTestingPinia]
+    //         }
+    //     })
+    // })
+
+    // Envoie de données dans le back lorsque l'on clique sur le bouton 'Valider'
 })
 
 const talksSelected =
