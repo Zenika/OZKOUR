@@ -1,5 +1,5 @@
 <template>
-  <h2 v-if="talk.retrived == ''">Pas de talks entre les dates recherchées</h2>
+  <h2 v-if="talk.retrieved == ''">Pas de talks entre les dates recherchées</h2>
   <div v-else>
     <h2>Liste des événements sélectionnés</h2>
     <div class="eventDetails">
@@ -13,7 +13,7 @@
           <th scope="col">TITRE DU TALK</th>
           <th scope="col">SPEAKER</th>
         </tr>
-        <tr v-for="talk in talk.retrived" v-bind:key="talk" data-test="talks">
+        <tr v-for="talk in talk.retrieved" v-bind:key="talk" data-test="talks">
           <td>
             <input
               type="checkbox"
@@ -23,12 +23,12 @@
               checked
             />
           </td>
-          <td>{{ talk[4] }}</td>
-          <td>{{ talk[3] }}</td>
-          <td>{{ talk[1] }}</td>
-          <td>{{ talk[2] }}</td>
-          <td>{{ talk[6] }}</td>
-          <td>{{ talk[5] }}</td>
+          <td>{{ talk.date }}</td>
+          <td>{{ talk.universe }}</td>
+          <td>{{ talk.eventType }}</td>
+          <td>{{ talk.eventName }}</td>
+          <td>{{ talk.talkTitle }}</td>
+          <td>{{ talk.speakers }}</td>
         </tr>
       </table>
     </div>
@@ -45,22 +45,23 @@ const talk = useTalkStore();
 
 //console.log(talk)
 
-function check(oui, event) {
+function check(talkSelected, event) {
   const value = {
-    date: oui[4],
-    universe: oui[3],
-    eventType: oui[1],
-    eventName: oui[2],
-    talkTitle: oui[6],
-    speakers: oui[5],
+    date: talkSelected.date,
+    universe: talkSelected.universe,
+    eventType: talkSelected.eventType,
+    eventName: talkSelected.eventName ,
+    talkTitle: talkSelected.talkTitle,
+    speakers: talkSelected.speakers,
+    checked: talkSelected.checked,
   };
 
   if (event.target.checked) {
     //is selected
-    talk.addCheckedTalk(value);
+    talk.checkTalk(value);
   } else {
     //is not selected
-    talk.removeCheckedTalk(value);
+    talk.uncheckTalk(value);
   }
 }
 //setInterval(function(){

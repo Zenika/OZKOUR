@@ -13,13 +13,85 @@ export default {
   },
   setup() {
     const date = ref(new Date());
-    const dateStart = ref("2021-01-01");
-    const dateEnd = ref("2021-01-11");
+    const dateStart = ref("");
+    const dateEnd = ref("");
     date.value = [dateStart, dateEnd];
 
     const talks = useTalkStore();
 
     date.value = [dateStart.value, dateEnd.value];
+
+    talks.$subscribe((mutation, state) => {
+      if(mutation.events.key === "template"){
+        if (state.template.frequency === "week") {
+          defaultDateNextWeek();
+        } else if(state.template.frequency === "month"){
+          defaultDateNextMonth();
+        }
+        updateDateStartCalendar();
+        updateDateEndCalendar();
+        searchTalk();
+      }
+    });
+
+    //const test = false
+
+    function defaultDateNextMonth(d = new Date()) {
+      if (d.getDate() < 7) {
+        dateStart.value = dateFormat(Date.parse(d), "yyyy-mm-dd");
+        dateEnd.value = dateFormat(
+          Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 0)),
+          "yyyy-mm-dd"
+        );
+      } else {
+        dateStart.value = dateFormat(
+          Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 1)),
+          "yyyy-mm-dd"
+        );
+        dateEnd.value = dateFormat(
+          Date.parse(new Date(d.getFullYear(), d.getMonth() + 2, 0)),
+          "yyyy-mm-dd"
+        );
+      }
+    }
+
+    function defaultDateNextWeek(d = new Date()) {
+      if (d.getDay() !== 1) {
+        console.log("c'est pas lundi");
+        dateStart.value = dateFormat(
+          Date.parse(
+            new Date(d.getTime() + seekNextModay(d) * 24 * 60 * 60 * 1000)
+          ),
+          "yyyy-mm-dd"
+        );
+      } else {
+        console.log("c'est lundi");
+        dateStart.value = dateFormat(Date.parse(d), "yyyy-mm-dd");
+      }
+      //dateEnd.value =  dateFormat(Date.parse(new Date().getTime()), "yyyy-mm-dd");
+      dateEnd.value = dateFormat(
+        Date.parse(
+          new Date(
+            new Date(dateStart.value).getTime() + 6 * 24 * 60 * 60 * 1000
+          )
+        ),
+        "yyyy-mm-dd"
+      );
+    }
+
+    function seekNextModay(d = new Date()) {
+      let n = 0;
+      // while ((d.getDay() + n) % 7 !== 1) {
+      //   n++;
+      // }
+
+      if(d.getDay()<1)
+        n = 1-d.getDay()
+      else
+        n = 7 - d.getDay() + 1
+      //console.log("prochain lundi dans " + n + " jours");
+      return n;
+    }
 
     function updateDateStartCalendar() {
       if (dateEnd.value < dateStart.value) dateStart.value = dateEnd.value;
@@ -31,9 +103,7 @@ export default {
       date.value[1] = dateEnd.value;
     }
 
-    watch(date, async (newDate) => {
-      dateStart.value = dateFormat(Date.parse(newDate[0]), "yyyy-mm-dd");
-      dateEnd.value = dateFormat(Date.parse(newDate[1]), "yyyy-mm-dd");
+    function searchTalk(){
       axios
         .get("http://localhost:3000/talk", {
           params: {
@@ -43,6 +113,7 @@ export default {
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
         .then(function (response) {
+
           talks.updateTalks(response.data);
           let res = [];
           for (let i = 0; i < response.data.length; i++) {
@@ -54,12 +125,14 @@ export default {
               eventName: talk[2],
               talkTitle: talk[6],
               speakers: talk[5],
+              checked : true
             };
-            console.log(value)
+            //console.log(value);
             res.push(value);
           }
 
-          talks.updateCheckedTalks(res);
+          talks.updateTalks(res);
+          
           //console.log(response);
         })
         .catch(function (error) {
@@ -69,6 +142,12 @@ export default {
           // always executed
         });
       talks.selectedDate(dateStart, dateEnd);
+    }
+
+    watch(date, async (newDate) => {
+      dateStart.value = dateFormat(Date.parse(newDate[0]), "yyyy-mm-dd");
+      dateEnd.value = dateFormat(Date.parse(newDate[1]), "yyyy-mm-dd");
+      searchTalk();
     });
 
     return {
@@ -116,10 +195,10 @@ export default {
     inline
     autoApply
     data-test="test"
-    format='yyyy-mm-dd'
+    format="yyyy-mm-dd"
     locale="fr"
     calendarCellClassName="dp-custom-cell"
-    :monthChangeOnScroll="false" 
+    :monthChangeOnScroll="false"
   >
     <template #clear-icon="{ clear }">
       <img class="input-slot-image" src="" @click="clear" />

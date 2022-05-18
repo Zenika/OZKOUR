@@ -4,7 +4,6 @@ import { useTalkStore } from '../stores/talks'
 // import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
 
 const talk = useTalkStore()
-console.log(talk)
 
 </script>
 
@@ -20,7 +19,7 @@ console.log(talk)
                 <div class="icon-bg">
                     <img src="../assets/images/gallery.png" alt="calendar" class="icon">
                 </div>
-                <p data-test="template-detail"><b>Visuel : </b>{{ talk.template }}</p>
+                <p data-test="template-detail"><b>Visuel : </b>{{ talk.template.template }}</p>
             </div>
             <div class="recap-details">
                 <div class="icon-bg">
@@ -36,7 +35,7 @@ console.log(talk)
                     <p><b>Liste des talks : </b></p>
                 </div>
                 <ul class="events">
-                    <li data-test="talk-title" v-for="talk in talk.selected" v-bind:key="talk">{{ talk.talkTitle }}</li>
+                    <li data-test="talk-title" v-for="talk in talk.getSelectedTalks" v-bind:key="talk">{{ talk.talkTitle }}</li>
                 </ul>
             </div>
         </div>

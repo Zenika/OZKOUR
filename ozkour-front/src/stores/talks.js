@@ -5,68 +5,44 @@ import { defineStore } from "pinia";
 export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
-    retrived: [],
-    selected: [],
+    retrieved: [],
     blured: false,
-    template: "",
-    date: {}
+    template: {template : "", frequency : ""},
+    date: {},
   }),
   getters: {
-    items: (state) =>
-      state.retrived.reduce((items) => {
-        return items;
-      }, []),
+    getSelectedTalks: (state) =>
+      state.retrieved.filter((talk) => {
+        return talk.checked;
+      }),
   },
   actions: {
     updateTalks(newTalks) {
-      this.retrived = newTalks;
+      this.retrieved = newTalks;
     },
-    updateCheckedTalks(newTalks) {
-      this.selected = newTalks;
+    checkTalk(selected) {
+      this.retrieved.find(talk => 
+              talk.talkTitle === selected.talkTitle).checked = true;
     },
-    addCheckedTalk(newTalk) {
-      let index = -1;
-      let founded = false;
-      while (index <= this.selected.length - 1 && !founded) {
-        index++;
-        // console.log("old " +this.selected[index]?.date)
-        // console.log("new "+newTalk.date)
-        // console.log("res " + this.selected[index]?.date > newTalk.date)
-        if (this.selected[index]?.date > newTalk.date) founded = true;
-      }
-      this.selected.splice(index, 0, newTalk);
-      //this.selected.push(newTalk);
-    },
-    removeCheckedTalk(oldTalk) {
-      this.selected = this.selected.filter(function (value) {
-        // console.log(value.talkTitle)
-        // console.log(oldTalk.talkTitle)
-        // console.log(value.talkTitle != oldTalk.talkTitle)
-        return value.talkTitle != oldTalk.talkTitle;
-      });
-    },
-    //--- Flouter l'arrière plan lorsque la pop up est ouverte
-    blur(){
+    uncheckTalk(selected) {
+      this.retrieved.find(talk => 
+        talk.talkTitle === selected.talkTitle).checked = false;
+},
+    blur() {
       this.blured = true;
     },
-    //--- Enlever l'arrière plan flouté lorsque la pop up est fermée
-    clarify(){
+    clarify() {
       this.blured = false;
     },
-    //--- Visuel choisi
-    pickedTemplate(chosenTemplate) {
-      this.template = chosenTemplate
-      console.log('template',chosenTemplate);
+    // Visuel choisi
+    pickedTemplate(chosenTemplate,freq) {
+      this.template = {template : chosenTemplate, frequency : freq };
     },
     //--- Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");
-      this.date = {start, end}
-      // console.log('start date',start);
-      // console.log('end date',end);
-    }
+      this.date = { start, end };
+    },
   },
 });
-
-
