@@ -1,28 +1,31 @@
 <script>
 // import {ref} from "vue";
 import axios from "axios";
-// import { useTalkStore } from "../../stores/talks";
+import { useTalkStore } from "../../stores/talks";
 
 export default {
 
     data() {
+        const talk = useTalkStore()
+        console.log('talks', talk);
+
         function sendTalks() {
-            console.log("tyi");
             axios
-            .post('http://localhost:3000/selected-talks', this.talk)
-            .then((response) => console.log(response))
+            .post('http://localhost:3000/selected-talks', talk)
+            .then((response) => console.log('res :',response))
         }
 
         return {
-            talk: {
-                date: "",    
-                universe: "",
-                eventType: "",
-                eventName: "",
-                talkTitle: "",
-                speakers: "",
+            selectedTalks: {
+                date: talk[4],
+                universe: talk[3],
+                eventType: talk[1],
+                eventName: talk[2],
+                talkTitle: talk[6],
+                speakers: talk[5],
             },
-            sendTalks
+            sendTalks,
+
         }
     },
 };
