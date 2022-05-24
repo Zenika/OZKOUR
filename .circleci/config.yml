@@ -5,6 +5,6 @@ orbs:
 workflows:
     example-workflow:
       jobs:
-        - test-front:
+        - node/test:
             app-dir: ~/OZKOUR/ozkour-front 
             test-results-for: jest 
