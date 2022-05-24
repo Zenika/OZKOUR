@@ -6,5 +6,5 @@ workflows:
     example-workflow:
       jobs:
         - node/test:
-            app-dir: ~/project
+            app-dir: ~/project/ozkour-front
             test-results-for: jest 
