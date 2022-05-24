@@ -3,21 +3,19 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
-  fetch_code: 
-      steps:
-          - checkout
-  test:
-    working_directory: ~/project/ozkour-front
-    docker:
-      - image: cimg/node:14.19.3
+  test-front:
+    working_directory: ~/OZKOUR/ozkour-front
+    executor: node/default
     steps:
-      - node/install-packages
+      - checkout:
+          path: ~/OZKOUR
+      - node/install-packages:
+          pkg-manager: npm
       - run:
+          command: npm run test
           name: Run tests
-          command: npm test
 
 workflows:
-    example-workflow:
+    testing:
       jobs:
-        - fetch_code
-        - test
+        - test-front
