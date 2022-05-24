@@ -1,21 +1,10 @@
 version: 2.1
 orbs:
-  node: circleci/node@4.7
-
-jobs:
-  test:
-    working_directory: ~/project/OZKOUR/ozkour-front
-    docker:
-      - image: cimg/node:15.1
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm test
-          name: Run tests
+  node: circleci/node@5.0.2
 
 workflows:
-  test_front:
-    jobs:
-      - test
+    example-workflow:
+      jobs:
+        - test-front:
+            app-dir: ~/OZKOUR/ozkour-front 
+            test-results-for: jest 
