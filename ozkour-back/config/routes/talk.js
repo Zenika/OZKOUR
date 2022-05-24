@@ -13,6 +13,7 @@ module.exports = [
         method: 'POST',
         path: '/selected-talks',
         handler: function (request, h) {
+            // call google slide hqndler
             return request.payload
         },
     }
