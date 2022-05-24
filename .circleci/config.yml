@@ -5,7 +5,8 @@ orbs:
 jobs:
   test:
     working_directory: ~/project/ozkour-front
-    executor: node/default
+    docker:
+      - image: cimg/node:15.1
     steps:
       - checkout
       - node/install-packages:
@@ -15,6 +16,6 @@ jobs:
           name: Run tests
 
 workflows:
-  test_ozkour:
+  test_front:
     jobs:
       - test
