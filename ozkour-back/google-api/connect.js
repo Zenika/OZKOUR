@@ -4,7 +4,7 @@ const { google } = require("googleapis");
 require("dotenv").config();
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly"];
+const SCOPES = ["https://www.googleapis.com/auth/spreadsheets.readonly", "https://www.googleapis.com/auth/presentations"];
 // The file token.json stores the user's access and refresh tokens, and is
 // created automatically when the authorization flow completes for the first
 // time.
@@ -14,6 +14,7 @@ const TOKEN_PATH = "config/auth/token.json";
  * Execute all the functions used to authenticate
  */
 function auth() {
+  
   // Load client secrets from a local file.
   fs.readFile("config/auth/credentials.json", (err, content) => {
     if (err) return console.log("Error loading client secret file:", err);
@@ -114,5 +115,6 @@ async function authMethode(callback, params) {
 
 module.exports = {
   auth,
+  authorize,
   authMethode,
 };
