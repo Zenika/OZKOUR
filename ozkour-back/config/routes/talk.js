@@ -1,6 +1,8 @@
 
 const { getTalkFromDate } = require("../../google-api/sheets");
 
+const { createSlideFromTalks } = require("../../google-api/slide");
+
 module.exports = [
     {
     method: 'GET',
@@ -13,14 +15,9 @@ module.exports = [
         method: 'POST',
         path: '/selected-talks',
         handler: function (request, h) {
-            return {
-                date: request.payload.date,    
-                universe: request.payload.universe,
-                eventType: request.payload.eventType,
-                eventName: request.payload.eventName,
-                talkTitle: request.payload.talkTitle,
-                speakers: request.payload.speakers,
-            }
+
+            
+            return createSlideFromTalks(request.payload)
         },
     }
 ];
