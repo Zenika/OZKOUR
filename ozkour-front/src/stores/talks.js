@@ -38,7 +38,7 @@ export const useTalkStore = defineStore({
     pickedTemplate(chosenTemplate,freq) {
       this.template = {template : chosenTemplate, frequency : freq };
     },
-    // Plage de date choisie
+    //--- Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");

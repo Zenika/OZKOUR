@@ -187,7 +187,7 @@ export default {
       />
     </div>
 
-    <button type="button" class="next-week-btn">Semaine prochaine</button>
+    <!-- <button type="button" class="next-week-btn">Semaine prochaine</button> -->
   </div>
   <Datepicker
     v-model="date"
@@ -210,7 +210,7 @@ export default {
 .flex-column {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
 
 .date {
@@ -224,7 +224,7 @@ label,
 #end {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
-  padding-bottom: 5px;
+  padding-bottom: 10px;
   font-weight: 400;
 }
 
@@ -243,7 +243,7 @@ label,
   cursor: text;
 }
 
-.next-week-btn {
+/* .next-week-btn {
   background: #f2f2f2;
   font-weight: 400;
   font-size: 16px;
@@ -251,7 +251,7 @@ label,
   border-radius: 10px;
   padding: 10px;
   cursor: pointer;
-}
+} */
 
 /* supprimer l'icon calendrier de l'input date */
 input[type="date"]::-webkit-inner-spin-button,

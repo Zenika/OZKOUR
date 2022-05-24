@@ -13,14 +13,7 @@ module.exports = [
         method: 'POST',
         path: '/selected-talks',
         handler: function (request, h) {
-            return {
-                date: request.payload.date,    
-                universe: request.payload.universe,
-                eventType: request.payload.eventType,
-                eventName: request.payload.eventName,
-                talkTitle: request.payload.talkTitle,
-                speakers: request.payload.speakers,
-            }
+            return request.payload
         },
     }
 ];

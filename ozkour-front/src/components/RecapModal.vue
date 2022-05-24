@@ -1,16 +1,23 @@
 <script setup>
 import ValidateBtn from './Buttons/ValidateBtn.vue'
 import { useTalkStore } from '../stores/talks'
+import axios from 'axios';
 // import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
 
 const talk = useTalkStore()
 
+const sendTalks = () => {
+    console.log('talks', talk.getSelectedTalks);
+    axios
+    .post('http://localhost:3000/selected-talks', talk.getSelectedTalks)
+    .then((response) => console.log('res :',response))
+}
 </script>
 
 <template>
     <div class="popUp-bg">
         <div class="popUp-header">
-            <button type="button" class="close" @click="$emit('close')"> X </button>
+            <button type="button" class="close-btn" @click="$emit('close')"> X </button>
             <h2>Récapitulatif</h2>
         </div>
 
@@ -19,14 +26,13 @@ const talk = useTalkStore()
                 <div class="icon-bg">
                     <img src="../assets/images/gallery.png" alt="calendar" class="icon">
                 </div>
-                <p><b>Visuel : </b>{{ talk.template.template }}</p>
+                <p data-test="template-detail"><b>Visuel : </b>{{ talk.template.template }}</p>
             </div>
             <div class="recap-details">
                 <div class="icon-bg">
                     <img src="../assets/images/calendar.png" alt="calendar" class="icon">
                 </div>
-                <!-- <p><b>Dates : {{ talk.dateStart }} au {{ dateEnd }}</b></p> -->
-                <p><b>Dates : </b>{{ talk.date.start }} au {{ talk.date.end }}</p>
+                <p data-test="date-detail"><b>Dates : </b>{{ talk.date.start }} au {{ talk.date.end }}</p>
             </div>
             <div>
                 <div class="recap-details">
@@ -35,14 +41,14 @@ const talk = useTalkStore()
                     </div>
                     <p><b>Liste des talks : </b></p>
                 </div>
-                <ul v-for="talk in talk.getSelectedTalks" v-bind:key="talk" class="events">
-                    <li>{{ talk.talkTitle }}</li>
+                <ul class="events">
+                    <li data-test="talk-title" v-for="talk in talk.getSelectedTalks" v-bind:key="talk">{{ talk.talkTitle }}</li>
                 </ul>
             </div>
         </div>
 
         <div class="validate">
-            <ValidateBtn />
+            <ValidateBtn @click="sendTalks"/>
         </div>
 
     </div>
@@ -69,7 +75,7 @@ const talk = useTalkStore()
         border-radius: 20px 20px 0px 0px;
     }
 
-    .close {
+    .close-btn {
         position: absolute;
         left: 5%;
         align-self: flex-start;

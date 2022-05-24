@@ -1,9 +1,5 @@
-<script >
-
-</script>
-
 <template>
-    <button type="button" class="validate-btn">VALIDER</button>
+    <button type="button" class="validate-btn" >VALIDER</button>
 </template>
 
 <style scoped>

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecapModal Component Display a list of the chosen talks, only their titles 1`] = `
+<ul class="events">
+  <li data-test="talk-title">GraalVM for Sustainable Software Development?</li>
+  <li data-test="talk-title">Migration JS vers TS sur du react</li>
+  <li data-test="talk-title">Nuxt 2021</li>
+  <li data-test="talk-title">Simplify Remote Hands-On Training and Improve Engagement</li>
+</ul>
+`;
