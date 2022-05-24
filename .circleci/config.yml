@@ -2,28 +2,16 @@ version: 2.1
 orbs:
   node: circleci/node@5.0.2
 
-executors:
-  my-executor:
+jobs:
+  fetch_code: 
+      steps:
+          - checkout
+  test:
     working_directory: ~/project/ozkour-front
     docker:
       - image: cimg/node:14.19.3
-
-jobs:
-  checkout:
-   steps:
-      - checkout
-  test:
-    executor: my-executor
     steps:
-      # Checkout the code as the first step.
-      - checkout
-      # Next, the node orb's install-packages step will install the dependencies from a package.json.
-      # The orb install-packages step will also automatically cache them for faster future runs.
-      - node/install-packages:
-          app-dir: ~/project/ozkour-front
-      # If you are using yarn instead npm, remove the line above and uncomment the two lines below.
-      # - node/install-packages:
-      #     pkg-manager: yarn
+      - node/install-packages
       - run:
           name: Run tests
           command: npm test
@@ -31,5 +19,5 @@ jobs:
 workflows:
     example-workflow:
       jobs:
-        - checkout
+        - fetch_code
         - test
