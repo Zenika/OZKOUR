@@ -1,22 +1,5 @@
-<script setup>
-// import {ref} from "vue";
-import axios from "axios";
-import { useTalkStore } from "../../stores/talks";
-
-
-const talk = useTalkStore()
-
-    function sendTalks() {
-        console.log('talks', talk.getSelectedTalks);
-        axios
-        .post('http://localhost:3000/selected-talks', talk.getSelectedTalks)
-        .then((response) => console.log('res :',response))
-    }
-
-</script>
-
 <template>
-    <button type="button" class="validate-btn" @click="sendTalks" >VALIDER</button>
+    <button type="button" class="validate-btn" >VALIDER</button>
 </template>
 
 <style scoped>
