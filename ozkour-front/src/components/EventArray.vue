@@ -6,19 +6,27 @@
       <table>
         <tr>
           <th scope="col"></th>
-          <th scope="col">DATE</th>
-          <th scope="col">UNIVERS</th>
-          <th scope="col">TYPE</th>
-          <th scope="col">NOM DE L'EVENEMENT</th>
-          <th scope="col">TITRE DU TALK</th>
-          <th scope="col">SPEAKER</th>
+          <th
+            v-for="(columnsValue, index) in columnsValues"
+            :key="index"
+            scope="col"
+            class="selectable"
+            :class="{ columnSelected: sort === columnsValue.columnName }"
+            @click="setSort(columnsValue.columnName)"
+          >
+            {{ columnsValue.displayColumns }}
+
+             <IconArrow  v-if="sort === columnsValue.columnName"
+              :class="ascending ? '' : 'arrow_down'"
+              class="arrow"/>
+          </th>
         </tr>
-        <tr v-for="talk in talk.retrieved" v-bind:key="talk" data-test="talks">
+        <tr v-for="talk in sortedTalk" :key="talk" data-test="talks">
           <td>
             <input
               type="checkbox"
               class="red-input"
-              v-bind:value="talk"
+              :value="talk"
               @change="check(talk, $event)"
               checked
             />
@@ -36,34 +44,87 @@
   </div>
 </template>
 
-<script setup>
-//import { ref } from 'vue'
+<script>
+import { ref } from "vue";
+import { computed } from "@vue/runtime-core";
 import { useTalkStore } from "../stores/talks";
 
-const talk = useTalkStore();
+import IconArrow from '@/components/icons/IconArrow.vue';
 
+export default {
+  components : {
+    IconArrow
+  },
 
-//console.log(talk)
+  setup() {
+    const talk = useTalkStore();
 
-function check(talkSelected, event) {
-  const value = {
-    date: talkSelected.date,
-    universe: talkSelected.universe,
-    eventType: talkSelected.eventType,
-    eventName: talkSelected.eventName ,
-    talkTitle: talkSelected.talkTitle,
-    speakers: talkSelected.speakers,
-    checked: talkSelected.checked,
-  };
+    const sort = ref("");
+    const ascending = ref(false);
 
-  if (event.target.checked) {
-    //is selected
-    talk.checkTalk(value);
-  } else {
-    //is not selected
-    talk.uncheckTalk(value);
-  }
-}
+    const columnsValues = [
+      { columnName: "date", displayColumns: "DATE" },
+      { columnName: "universe", displayColumns: "UNIVERS" },
+      { columnName: "eventType", displayColumns: "TYPE" },
+      { columnName: "eventName", displayColumns: "NOM DE L'EVENEMENT" },
+      { columnName: "talkTitle", displayColumns: "TITRE DU TALK" },
+      { columnName: "speakers", displayColumns: "SPEAKERS" },
+    ];
+
+    function compare(a, b) {
+      if (a[sort.value] < b[sort.value]) return -1;
+      if (a[sort.value] > b[sort.value]) return 1;
+      // a doit être égal à b
+      return 0;
+    }
+
+    const sortedTalk = computed(() => {
+      if (ascending.value) return talk.retrieved.sort((a, b) => compare(a, b));
+      else return talk.retrieved.sort((a, b) => compare(b, a));
+    });
+
+    function setSort(column) {
+      if (column === sort.value) ascending.value = !ascending.value;
+      else {
+        ascending.value = true;
+        sort.value = column;
+      }
+    }
+
+    //console.log(talk)
+
+    function check(talkSelected, event) {
+      const value = {
+        date: talkSelected.date,
+        universe: talkSelected.universe,
+        eventType: talkSelected.eventType,
+        eventName: talkSelected.eventName,
+        talkTitle: talkSelected.talkTitle,
+        speakers: talkSelected.speakers,
+        checked: talkSelected.checked,
+      };
+
+      if (event.target.checked) {
+        //is selected
+        talk.checkTalk(value);
+      } else {
+        //is not selected
+        talk.uncheckTalk(value);
+      }
+    }
+
+    return {
+      talk,
+      sort,
+      ascending,
+      sortedTalk,
+      setSort,
+      check,
+      columnsValues,
+    };
+  },
+};
+
 //setInterval(function(){
 // console.log(talk.talks)
 //},1000);
@@ -101,6 +162,24 @@ td {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.columnSelected {
+  text-decoration: underline;
+}
+
+.selectable {
+  cursor: pointer;
+}
+
+.arrow_down {
+  transform: rotate(180deg);
+}
+
+.arrow {
+  width: 12px;
+  height: 15px;
+  fill : white;
 }
 
 .detail {
