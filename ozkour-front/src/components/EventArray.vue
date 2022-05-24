@@ -7,84 +7,26 @@
         <tr>
           <th scope="col"></th>
           <th
+            v-for="(columnsValue, index) in columnsValues"
+            :key="index"
             scope="col"
-            :class="{ columnSelected: sort === 'date', selectable: true }"
-            v-on:click="setSort('date')"
+            class="selectable"
+            :class="{ columnSelected: sort === columnsValue.columnName }"
+            @click="setSort(columnsValue.columnName)"
           >
-            DATE
-            <div
-              class="arrow"
-              v-if="sort === 'date'"
-              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
-            ></div>
-          </th>
-          <th
-            scope="col"
-            :class="{ columnSelected: sort === 'universe', selectable: true }"
-            v-on:click="setSort('universe')"
-          >
-            UNIVERS
-            <div
-              class="arrow"
-              v-if="sort === 'universe'"
-              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
-            ></div>
-          </th>
-          <th
-            scope="col"
-            :class="{ columnSelected: sort === 'eventType', selectable: true }"
-            v-on:click="setSort('eventType')"
-          >
-            TYPE
-            <div
-              class="arrow"
-              v-if="sort === 'eventType'"
-              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
-            ></div>
-          </th>
-          <th
-            scope="col"
-            :class="{ columnSelected: sort === 'eventName', selectable: true }"
-            v-on:click="setSort('eventName')"
-          >
-            NOM DE L'EVENEMENT
-            <div
-              class="arrow"
-              v-if="sort === 'eventName'"
-              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
-            ></div>
-          </th>
-          <th
-            scope="col"
-            :class="{ columnSelected: sort === 'talkTitle', selectable: true }"
-            v-on:click="setSort('talkTitle')"
-          >
-            TITRE DU TALK
-            <div
-              class="arrow"
-              v-if="sort === 'talkTitle'"
-              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
-            ></div>
-          </th>
-          <th
-            scope="col"
-            :class="{ columnSelected: sort === 'speakers', selectable: true }"
-            v-on:click="setSort('speakers')"
-          >
-            SPEAKER
-            <div
-              class="arrow"
-              v-if="sort === 'speakers'"
-              v-bind:class="ascending ? 'arrow_up' : 'arrow_down'"
-            ></div>
+            {{ columnsValue.displayColumns }}
+
+             <IconArrow  v-if="sort === columnsValue.columnName"
+              :class="ascending ? '' : 'arrow_down'"
+              class="arrow"/>
           </th>
         </tr>
-        <tr v-for="talk in sortedTalk" v-bind:key="talk" data-test="talks">
+        <tr v-for="talk in sortedTalk" :key="talk" data-test="talks">
           <td>
             <input
               type="checkbox"
               class="red-input"
-              v-bind:value="talk"
+              :value="talk"
               @change="check(talk, $event)"
               checked
             />
@@ -102,57 +44,87 @@
   </div>
 </template>
 
-<script setup>
+<script>
 import { ref } from "vue";
 import { computed } from "@vue/runtime-core";
 import { useTalkStore } from "../stores/talks";
 
-const talk = useTalkStore();
+import IconArrow from '@/components/icons/IconArrow.vue';
 
-const sort = ref("");
-const ascending = ref(false);
+export default {
+  components : {
+    IconArrow
+  },
 
-function compare(a, b) {
-  if (a[sort.value] < b[sort.value]) return -1;
-  if (a[sort.value] > b[sort.value]) return 1;
-  // a doit être égal à b
-  return 0;
-}
+  setup() {
+    const talk = useTalkStore();
 
-const sortedTalk = computed(() => {
-  if (ascending.value) return talk.retrieved.sort((a, b) => compare(a, b));
-  else return talk.retrieved.sort((a, b) => compare(b, a));
-});
+    const sort = ref("");
+    const ascending = ref(false);
 
-function setSort(column) {
-  if (column === sort.value) ascending.value = !ascending.value;
-  else {
-    ascending.value = true;
-    sort.value = column;
-  }
-}
+    const columnsValues = [
+      { columnName: "date", displayColumns: "DATE" },
+      { columnName: "universe", displayColumns: "UNIVERS" },
+      { columnName: "eventType", displayColumns: "TYPE" },
+      { columnName: "eventName", displayColumns: "NOM DE L'EVENEMENT" },
+      { columnName: "talkTitle", displayColumns: "TITRE DU TALK" },
+      { columnName: "speakers", displayColumns: "SPEAKERS" },
+    ];
 
-//console.log(talk)
+    function compare(a, b) {
+      if (a[sort.value] < b[sort.value]) return -1;
+      if (a[sort.value] > b[sort.value]) return 1;
+      // a doit être égal à b
+      return 0;
+    }
 
-function check(talkSelected, event) {
-  const value = {
-    date: talkSelected.date,
-    universe: talkSelected.universe,
-    eventType: talkSelected.eventType,
-    eventName: talkSelected.eventName,
-    talkTitle: talkSelected.talkTitle,
-    speakers: talkSelected.speakers,
-    checked: talkSelected.checked,
-  };
+    const sortedTalk = computed(() => {
+      if (ascending.value) return talk.retrieved.sort((a, b) => compare(a, b));
+      else return talk.retrieved.sort((a, b) => compare(b, a));
+    });
 
-  if (event.target.checked) {
-    //is selected
-    talk.checkTalk(value);
-  } else {
-    //is not selected
-    talk.uncheckTalk(value);
-  }
-}
+    function setSort(column) {
+      if (column === sort.value) ascending.value = !ascending.value;
+      else {
+        ascending.value = true;
+        sort.value = column;
+      }
+    }
+
+    //console.log(talk)
+
+    function check(talkSelected, event) {
+      const value = {
+        date: talkSelected.date,
+        universe: talkSelected.universe,
+        eventType: talkSelected.eventType,
+        eventName: talkSelected.eventName,
+        talkTitle: talkSelected.talkTitle,
+        speakers: talkSelected.speakers,
+        checked: talkSelected.checked,
+      };
+
+      if (event.target.checked) {
+        //is selected
+        talk.checkTalk(value);
+      } else {
+        //is not selected
+        talk.uncheckTalk(value);
+      }
+    }
+
+    return {
+      talk,
+      sort,
+      ascending,
+      sortedTalk,
+      setSort,
+      check,
+      columnsValues,
+    };
+  },
+};
+
 //setInterval(function(){
 // console.log(talk.talks)
 //},1000);
@@ -201,20 +173,13 @@ td {
 }
 
 .arrow_down {
-  background-image: url("../assets/images/arrow-down-1.png");
-}
-
-.arrow_up {
-  background-image: url("../assets/images/arrow-up-2.png");
+  transform: rotate(180deg);
 }
 
 .arrow {
-  float: right;
   width: 12px;
   height: 15px;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position-y: bottom;
+  fill : white;
 }
 
 .detail {
