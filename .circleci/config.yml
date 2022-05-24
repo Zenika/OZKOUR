@@ -6,5 +6,5 @@ workflows:
     example-workflow:
       jobs:
         - node/test:
-            app-dir: ~/ 
+            app-dir: ~/project
             test-results-for: jest 
