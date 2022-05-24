@@ -17,13 +17,11 @@ function auth() {
   
   // Load client secrets from a local file.
   fs.readFile("config/auth/credentials.json", (err, content) => {
-    console.log ('zio')
     if (err) return console.log("Error loading client secret file:", err);
     // Authorize a client with credentials, then call the Google Sheets API.
 
     authorize(JSON.parse(content));
   });
-  console.log ('zia')
 }
 
 /**

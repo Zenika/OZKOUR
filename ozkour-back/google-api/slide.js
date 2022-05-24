@@ -5,14 +5,110 @@ const utilitary = require("../utilitary");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
-/**
- * Get all the talks between 2 dates
- * @param {String} start the start of the date range
- * @param {String} end the end of the date range
- */
+const defaultForegroundColor = {
+  opaqueColor: {
+    rgbColor: {
+      blue: 1.0,
+      green: 1.0,
+      red: 1.0,
+    },
+  },
+};
+
+const greyForegroundColor = {
+  opaqueColor: {
+    rgbColor: {
+      blue: 0.7,
+      green: 0.7,
+      red: 0.7,
+    },
+  },
+};
+
+
+
 async function createSlideFromTalks(talks) {
   const res = await connect.authMethode(test, talks);
-  return res
+  return "Created !"
+}
+
+
+/**
+ * cluster all the talks by date
+ * @param {Array} The talks that need to be clustered
+ * @return {dataOrganized} dataOrganized where the keys are the date and the values are the talks
+ */
+ function clusterByDate(data) {
+  let dataOrganized = new Map();
+  for (let i = 0; i < data.length; i++) {
+    if (!dataOrganized.has(data[i].date)) {
+      dataOrganized.set(data[i].date, [
+        {
+          universe: data[i].universe,
+          eventType: data[i].eventType,
+          eventName: data[i].eventName,
+          talkTitle: data[i].talkTitle,
+          speakers: data[i].speakers,
+        },
+      ]);
+    } else {
+      let newValue = dataOrganized.get(data[i].date);
+      newValue.push({
+        universe: data[i].universe,
+        eventType: data[i].eventType,
+        eventName: data[i].eventName,
+        talkTitle: data[i].talkTitle,
+        speakers: data[i].speakers,
+      });
+    }
+  }
+  return clusterByEventName(dataOrganized);
+}
+
+/**
+ * cluster all the talks by name of events
+ * @param {dataOrganized} The talks already clustured by dates
+ * @return {dataOrganized} dataOrganized where the keys are the date and the values are an object
+ * with 2 attributes: one for the event name and one for the left data
+ */
+function clusterByEventName(dataOrganized) {
+  var mapIter = dataOrganized.keys();
+  let date = mapIter.next().value;
+
+  while (date !== undefined) {
+    const EventNameAdded = [];
+    const EventArray = [];
+    for (let i = 0; i < dataOrganized.get(date).length; i++) {
+      //pour chaque date
+      const talk = dataOrganized.get(date)[i];
+
+      if (EventNameAdded.includes(talk.eventName)) {
+        EventArray[EventNameAdded.indexOf(talk.eventName)].talks.push({
+          universe: talk.universe,
+          eventType: talk.eventType,
+          eventName: talk.eventName,
+          talkTitle: talk.talkTitle,
+          speakers: talk.speakers,
+        });
+      } else {
+        EventArray.push({
+          eventName: talk.eventName,
+          talks: [
+            {
+              universe: talk.universe,
+              eventType: talk.eventType,
+              talkTitle: talk.talkTitle,
+              speakers: talk.speakers,
+            },
+          ],
+        });
+        EventNameAdded.push(talk.eventName);
+      }
+    }
+    dataOrganized.set(date, EventArray);
+    date = mapIter.next().value;
+  }
+  return dataOrganized;
 }
 
 function test(auth, talks) {
