@@ -4,7 +4,7 @@ orbs:
 
 jobs:
   test:
-    app-dir: "~/project/ozkour-front"
+    working_directory: ~/project/ozkour-front
     executor: node/default
     steps:
       - checkout
