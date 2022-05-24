@@ -4,7 +4,7 @@ orbs:
 
 jobs:
   test:
-    working_directory: ~/project/ozkour-front
+    working_directory: ~/project/OZKOUR/ozkour-front
     docker:
       - image: cimg/node:15.1
     steps:
