@@ -14,17 +14,17 @@ describe("Talk Store", () => {
       talk.updateTalks(talksRetrieved);
       expect(talk.retrieved.length).toBe(5);
     }),
-    it("updateCheckedTalks", () => {
+    it("getSelectedTalks give all talks by default ", () => {
       const talk = useTalkStore();
-      expect(talk.selected.length).toBe(0);
-      talk.updateCheckedTalks(talkSelected);
-      expect(talk.selected.length).toBe(5);
+      expect(talk.retrieved.length).toBe(0);
+      talk.updateTalks(talksRetrieved);
+      expect(talk.getSelectedTalks.length).toBe(5);
     }),
-    it("removeCheckedTalk", () => {
+    it("uncheckTalk", () => {
       const talk = useTalkStore();
-      talk.updateCheckedTalks(talkSelected);
+      talk.updateTalks(talksRetrieved);
 
-      const talkRemove = {
+      const talkToBeRemoved = {
         date: "19/01/2021",
         universe: "",
         eventType: "Meetup",
@@ -33,14 +33,15 @@ describe("Talk Store", () => {
         speakers: "Adrien Nortain",
       };
 
-      talk.removeCheckedTalk(talkRemove);
-      expect(talk.selected.length).toBe(4);
+      talk.uncheckTalk(talkToBeRemoved);
+      expect(talk.getSelectedTalks.length).toBe(4);
+      expect(talk.retrieved.length).toBe(5);
     }),
     it("addCheckedTalk", () => {
       const talk = useTalkStore();
-      talk.updateCheckedTalks(talkSelected);
+      talk.updateTalks(talksRetrieved);
 
-      const talkAction = {
+      const talkToBeRemovedAndAdded = {
         date: "19/01/2021",
         universe: "",
         eventType: "Meetup",
@@ -49,82 +50,32 @@ describe("Talk Store", () => {
         speakers: "Adrien Nortain",
       };
 
-      talk.removeCheckedTalk(talkAction);
-      talk.addCheckedTalk(talkAction);
-      expect(talk.selected.length).toBe(5);
+      talk.uncheckTalk(talkToBeRemovedAndAdded);
+      talk.checkTalk(talkToBeRemovedAndAdded);
+      expect(talk.getSelectedTalks.length).toBe(5);
+      expect(talk.retrieved.length).toBe(5);
     }),
     it("addCheckedTalk order", () => {
       const talk = useTalkStore();
-      talk.updateCheckedTalks(talkSelected);
+      talk.updateTalks(talksRetrieved);
 
-      const talkAction = {
+      const talkToBeRemovedAndAdded = {
         date: "19/01/2021",
         universe: "",
         eventType: "Meetup",
         eventName: "GraalVM Night",
         talkTitle: "GraalVM for Sustainable Software Development?",
         speakers: "Adrien Nortain",
+        checked: true
       };
 
-      talk.removeCheckedTalk(talkAction);
-      talk.addCheckedTalk(talkAction);
-      expect(talk.selected[1]).toStrictEqual(talkAction);
+      talk.uncheckTalk(talkToBeRemovedAndAdded);
+      talk.checkTalk(talkToBeRemovedAndAdded);
+      expect(talk.getSelectedTalks[0]).toStrictEqual(talkToBeRemovedAndAdded);
     });
 });
 
 const talksRetrieved = [
-  [
-    "Singapour",
-    "Meetup",
-    "GraalVM Night",
-    "",
-    "19/01/2021",
-    "Adrien Nortain",
-    "GraalVM for Sustainable Software Development?",
-    "https://www.meetup.com/singajug/events/275681145/",
-  ],
-  [
-    "Grenoble",
-    "NightClazz",
-    "NightClass",
-    "",
-    "19/01/2021",
-    "Jules Hablot",
-    "Migration JS vers TS sur du react",
-  ],
-  [
-    "Nantes",
-    "Meetup",
-    "Nantes JS #55",
-    "",
-    "21/01/2021",
-    "Yann Bertrand",
-    "Nuxt 2021",
-    "https://twitter.com/NantesJS/status/1351104198436392964",
-  ],
-  [
-    "Mix",
-    "Autre",
-    "Webinar Strigo",
-    "",
-    "21/01/2021",
-    "Yoan Rousseau / Oliver Huber",
-    "Simplify Remote Hands-On Training and Improve Engagement",
-    "https://zoom.us/webinar/register/9516106320701/WN_xAAafGs2SOGbWFub-8dGJg\nhttps://trainingindustry.com/webinar/remote-learning/product-demo-simplify-remote-hands-on-training-and-improve-engagement/",
-  ],
-  [
-    "Nantes",
-    "NightClazz",
-    "RemoteClazz Nodejs",
-    "",
-    "25/01/2021",
-    "Hugo Wood",
-    "Techniques minimalistes pour Node.js",
-    "https://www.meetup.com/NightClazz-by-Zenika-Nantes/events/275720340/",
-  ],
-];
-
-const talkSelected = [
   {
     date: "19/01/2021",
     universe: "",
@@ -132,6 +83,7 @@ const talkSelected = [
     eventName: "GraalVM Night",
     talkTitle: "GraalVM for Sustainable Software Development?",
     speakers: "Adrien Nortain",
+    checked: true
   },
   {
     date: "19/01/2021",
@@ -140,6 +92,7 @@ const talkSelected = [
     eventName: "NightClass",
     talkTitle: "Migration JS vers TS sur du react",
     speakers: "Jules Hablot",
+    checked: true
   },
   {
     date: "21/01/2021",
@@ -148,6 +101,7 @@ const talkSelected = [
     eventName: "Nantes JS #55",
     talkTitle: "Nuxt 2021",
     speakers: "Yann Bertrand",
+    checked: true
   },
   {
     date: "21/01/2021",
@@ -156,6 +110,7 @@ const talkSelected = [
     eventName: "Webinar Strigo",
     talkTitle: "Simplify Remote Hands-On Training and Improve Engagement",
     speakers: "Yoan Rousseau / Oliver Huber",
+    checked: true
   },
   {
     date: "25/01/2021",
@@ -164,5 +119,6 @@ const talkSelected = [
     eventName: "RemoteClazz Nodejs",
     talkTitle: "Techniques minimalistes pour Node.js",
     speakers: "Hugo Wood",
+    checked: true
   },
 ];

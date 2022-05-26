@@ -94,12 +94,12 @@ export default {
     }
 
     function updateDateStartCalendar() {
-      if (dateEnd.value < dateStart.value) dateStart.value = dateEnd.value;
+      if (dateEnd.value < dateStart.value && dateEnd.value!=="") dateStart.value = dateEnd.value;
       date.value[0] = dateStart.value;
     }
 
     function updateDateEndCalendar() {
-      if (dateEnd.value < dateStart.value) dateEnd.value = dateStart.value;
+      if (dateEnd.value < dateStart.value && dateStart.value!=="") dateEnd.value = dateStart.value;
       date.value[1] = dateEnd.value;
     }
 
