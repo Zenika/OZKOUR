@@ -54,6 +54,7 @@ const selected = ref('')
               :id="visual.id"
               name="template"
               :value="visual.value"
+              :checked="visual.id == 'quoide9'"
               class="radio-btn"
               v-model="selected"
             />
