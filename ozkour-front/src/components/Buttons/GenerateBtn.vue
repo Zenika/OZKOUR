@@ -30,6 +30,7 @@ import Modal from '../RecapModal.vue';
         class="generate-btn"
         @click=showModal
         v-on:click="addClass"
+        data-test="btn-validate"
         :class="{'blurClass': talk.blured}"
     >
         GÉNÉRER UN VISUEL
