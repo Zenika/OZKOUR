@@ -3,6 +3,17 @@ import EventArray from "@/components/EventArray.vue";
 import { createTestingPinia } from "@pinia/testing";
 import { useTalkStore } from "../../src/stores/talks";
 
+function isAscending(arr) {
+  return arr.every(function (x, i) {
+    return i === 0 || x >= arr[i - 1];
+  });
+}
+function isDescending(arr) {
+  return arr.every(function (x, i) {
+    return i === 0 || x <= arr[i - 1];
+  });
+}
+
 describe("ListEvent Component", () => {
   it("Display title when no talk", () => {
     // Create an instance of our component
@@ -63,29 +74,6 @@ describe("ListEvent Component", () => {
     });
     expect(wrapper.findAll('[data-test="talks"]')).toHaveLength(5);
   }),
-    it("check is working", async () => {
-      // Create an instance of our component
-      const wrapper = mount(EventArray, {
-        global: {
-          plugins: [
-            createTestingPinia({
-              initialState: {
-                talk: { retrieved: talksRetrieved, selected: talkSelected },
-              },
-            }),
-          ],
-        },
-      });
-
-      const talk = useTalkStore();
-
-      const inputCheckbox = wrapper.find('[type="checkbox"]');
-
-      await inputCheckbox.setChecked(false);
-
-      expect(inputCheckbox.element.checked).toBe(false);
-      expect(talk.removeCheckedTalk).toHaveBeenCalledTimes(1);
-    }),
     it("uncheck is working", async () => {
       // Create an instance of our component
       const wrapper = mount(EventArray, {
@@ -93,7 +81,51 @@ describe("ListEvent Component", () => {
           plugins: [
             createTestingPinia({
               initialState: {
-                talk: { retrieved: talksRetrieved, selected: talkSelected },
+                talk: { retrieved: talksRetrieved },
+              },
+            }),
+          ],
+        },
+      });
+
+      const talk = useTalkStore();
+      const inputCheckbox = wrapper.find('[type="checkbox"]');
+      await inputCheckbox.setChecked(false);
+
+      expect(inputCheckbox.element.checked).toBe(false);
+      expect(talk.uncheckTalk).toHaveBeenCalledTimes(1);
+    }),
+    it("check talk is working", async () => {
+      // Create an instance of our component
+      const wrapper = mount(EventArray, {
+        global: {
+          plugins: [
+            createTestingPinia({
+              initialState: {
+                talk: { retrieved: talksRetrieved },
+              },
+            }),
+          ],
+        },
+      });
+
+      const talk = useTalkStore();
+      const inputCheckbox = wrapper.find('[type="checkbox"]');
+
+      await inputCheckbox.setChecked(false);
+      await inputCheckbox.setChecked(true);
+
+      expect(inputCheckbox.element.checked).toBe(true);
+      expect(talk.checkTalk).toHaveBeenCalledTimes(1);
+    }),
+    it("check order(ascending/discending) when clicking on column", async () => {
+      // Create an instance of our component
+      const wrapper = mount(EventArray, {
+        global: {
+          plugins: [
+            createTestingPinia({
+              initialState: {
+                talk: { retrieved: talksRetrieved },
               },
             }),
           ],
@@ -102,109 +134,78 @@ describe("ListEvent Component", () => {
 
       const talk = useTalkStore();
 
-      const inputCheckbox = wrapper.find('[type="checkbox"]');
+      let columns = wrapper.find('[data-test="speakers"]');
+      let talksLines = wrapper.findAll('[data-test="talks"]');
+      let listSpeakersOrderedAsTheyAppear = [];
 
-      await inputCheckbox.setChecked(false);
-      await inputCheckbox.setChecked(true);
+      await columns.trigger("click");
 
-      expect(inputCheckbox.element.checked).toBe(true);
-      expect(talk.addCheckedTalk).toHaveBeenCalledTimes(1);
-    })
+      talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
+
+      talksLines.forEach((element) => {
+        listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
+      });
+
+      expect(isAscending(listSpeakersOrderedAsTheyAppear)).toBe(true);
+
+      await columns.trigger("click");
+
+      talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
+      listSpeakersOrderedAsTheyAppear = [];
+
+      talksLines.forEach((element) => {
+        listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
+      });
+
+      expect(isDescending(listSpeakersOrderedAsTheyAppear)).toBe(true);
+
+    });
 });
 
 const talksRetrieved = [
-  [
-    "Singapour",
-    "Meetup",
-    "GraalVM Night",
-    "",
-    "19/01/2021",
-    "Adrien Nortain",
-    "GraalVM for Sustainable Software Development?",
-    "https://www.meetup.com/singajug/events/275681145/",
-  ],
-  [
-    "Grenoble",
-    "NightClazz",
-    "NightClass",
-    "",
-    "19/01/2021",
-    "Jules Hablot",
-    "Migration JS vers TS sur du react",
-  ],
-  [
-    "Nantes",
-    "Meetup",
-    "Nantes JS #55",
-    "",
-    "21/01/2021",
-    "Yann Bertrand",
-    "Nuxt 2021",
-    "https://twitter.com/NantesJS/status/1351104198436392964",
-  ],
-  [
-    "Mix",
-    "Autre",
-    "Webinar Strigo",
-    "",
-    "21/01/2021",
-    "Yoan Rousseau / Oliver Huber",
-    "Simplify Remote Hands-On Training and Improve Engagement",
-    "https://zoom.us/webinar/register/9516106320701/WN_xAAafGs2SOGbWFub-8dGJg\nhttps://trainingindustry.com/webinar/remote-learning/product-demo-simplify-remote-hands-on-training-and-improve-engagement/",
-  ],
-  [
-    "Nantes",
-    "NightClazz",
-    "RemoteClazz Nodejs",
-    "",
-    "25/01/2021",
-    "Hugo Wood",
-    "Techniques minimalistes pour Node.js",
-    "https://www.meetup.com/NightClazz-by-Zenika-Nantes/events/275720340/",
-  ],
+  {
+    date: "19/01/2021",
+    universe: "",
+    eventType: "Meetup",
+    eventName: "GraalVM Night",
+    talkTitle: "GraalVM for Sustainable Software Development?",
+    speakers: "Adrien Nortain",
+    checked: true,
+  },
+  {
+    date: "19/01/2021",
+    universe: "",
+    eventType: "NightClazz",
+    eventName: "NightClass",
+    talkTitle: "Migration JS vers TS sur du react",
+    speakers: "Jules Hablot",
+    checked: true,
+  },
+  {
+    date: "21/01/2021",
+    universe: "",
+    eventType: "Meetup",
+    eventName: "Nantes JS #55",
+    talkTitle: "Nuxt 2021",
+    speakers: "Yann Bertrand",
+    checked: true,
+  },
+  {
+    date: "21/01/2021",
+    universe: "",
+    eventType: "Autre",
+    eventName: "Webinar Strigo",
+    talkTitle: "Simplify Remote Hands-On Training and Improve Engagement",
+    speakers: "Yoan Rousseau / Oliver Huber",
+    checked: true,
+  },
+  {
+    date: "25/01/2021",
+    universe: "",
+    eventType: "NightClazz",
+    eventName: "RemoteClazz Nodejs",
+    talkTitle: "Techniques minimalistes pour Node.js",
+    speakers: "Hugo Wood",
+    checked: true,
+  },
 ];
-
-const talkSelected =
-  [
-    {
-      date: "19/01/2021",
-      universe: "",
-      eventType: "Meetup",
-      eventName: "GraalVM Night",
-      talkTitle: "GraalVM for Sustainable Software Development?",
-      speakers: "Adrien Nortain",
-    },
-    {
-      date: "19/01/2021",
-      universe: "",
-      eventType: "NightClazz",
-      eventName: "NightClass",
-      talkTitle: "Migration JS vers TS sur du react",
-      speakers: "Jules Hablot",
-    },
-    {
-      date: "21/01/2021",
-      universe: "",
-      eventType: "Meetup",
-      eventName: "Nantes JS #55",
-      talkTitle: "Nuxt 2021",
-      speakers: "Yann Bertrand",
-    },
-    {
-      date: "21/01/2021",
-      universe: "",
-      eventType: "Autre",
-      eventName: "Webinar Strigo",
-      talkTitle: "Simplify Remote Hands-On Training and Improve Engagement",
-      speakers: "Yoan Rousseau / Oliver Huber",
-    },
-    {
-      date: "25/01/2021",
-      universe: "",
-      eventType: "NightClazz",
-      eventName: "RemoteClazz Nodejs",
-      talkTitle: "Techniques minimalistes pour Node.js",
-      speakers: "Hugo Wood",
-    }
-];
-
