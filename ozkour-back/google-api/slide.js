@@ -250,6 +250,32 @@ function test(auth, talks) {
           fields: "tableBorderFill",
         },
       },
+      {
+        updateTableColumnProperties : {
+          objectId: date.replaceAll("/", "-") + "-table",
+          columnIndices: [0],
+          tableColumnProperties : {
+            columnWidth: {
+              magnitude: 320,
+              unit: "PT"
+            }
+          },
+          fields: "columnWidth",
+        },
+      },
+      {
+        updateTableColumnProperties : {
+          objectId: date.replaceAll("/", "-") + "-table",
+          columnIndices: [1],
+          tableColumnProperties : {
+            columnWidth: {
+              magnitude: 130,
+              unit: "PT"
+            }
+          },
+          fields: "columnWidth",
+        },
+      },
     ];
   }
   
