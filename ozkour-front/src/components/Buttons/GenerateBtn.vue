@@ -43,16 +43,15 @@ export default {
   <button 
     type="submit" 
     class="generate-btn"
-    :class="{'blurClass': isAddClass}"
+    :class="{'blurClass': talk.blured}"
     @click="showModal"
   >
     GÉNÉRER UN VISUEL
   </button>
     
   <Modal
-    v-show="isModalVisible"
+    v-show="talk.blured"
     @close="closeModal"
-    @click="deleteClass"
   />
 </template>
 
