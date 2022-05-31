@@ -6,12 +6,6 @@ import Modal from '../RecapModal.vue';
     components: {
       Modal,
     },
-    data () {
-        return {
-            isModalVisible: false,
-            isAddClass: false,
-        };
-    },
     setup() {
         const talk = useTalkStore();
 
@@ -21,19 +15,11 @@ import Modal from '../RecapModal.vue';
     },
     methods: {
         showModal() {
-            this.isModalVisible = true;
             this.talk.blur();
         },
         closeModal() {
-            this.isModalVisible = false;
             this.talk.clarify()
         },
-        addClass() {
-            this.isAddClass = true;
-        },
-        deleteClass() {
-            this.isAddClass = false;
-        }
     },
   };
 </script>
@@ -44,15 +30,14 @@ import Modal from '../RecapModal.vue';
         class="generate-btn"
         @click=showModal
         v-on:click="addClass"
-        :class="{'blurClass': isAddClass}"
+        :class="{'blurClass': talk.blured}"
     >
         GÉNÉRER UN VISUEL
     </button>
     
     <Modal
-        v-show="isModalVisible"
+        v-show="talk.blured"
         @close="closeModal"
-        v-on:click="deleteClass"
     />
     
 </template>
