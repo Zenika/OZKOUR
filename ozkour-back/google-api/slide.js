@@ -250,6 +250,7 @@ function test(auth, talks) {
           fields: "tableBorderFill",
         },
       },
+      // Définir la taille de la première colonne du tableau de la slide
       {
         updateTableColumnProperties : {
           objectId: date.replaceAll("/", "-") + "-table",
@@ -263,6 +264,7 @@ function test(auth, talks) {
           fields: "columnWidth",
         },
       },
+      // Définir la taille de la seconde colonne du tableau de la slide
       {
         updateTableColumnProperties : {
           objectId: date.replaceAll("/", "-") + "-table",
