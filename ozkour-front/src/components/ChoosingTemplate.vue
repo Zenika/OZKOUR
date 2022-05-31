@@ -32,6 +32,8 @@ const selected = ref('')
       frequency : "month"
     },
   ]
+  
+  talk.pickedTemplate(visuals[0].value,visuals[0].frequency);
 
   watch(selected, async (newSelect) => {
     let n = 0
@@ -54,6 +56,7 @@ const selected = ref('')
               :id="visual.id"
               name="template"
               :value="visual.value"
+              :checked="visual.id == 'quoide9'"
               class="radio-btn"
               v-model="selected"
             />
