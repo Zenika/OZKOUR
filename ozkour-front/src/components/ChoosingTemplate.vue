@@ -32,6 +32,8 @@ const selected = ref('')
       frequency : "month"
     },
   ]
+  
+  talk.pickedTemplate(visuals[0].value,visuals[0].frequency);
 
   watch(selected, async (newSelect) => {
     let n = 0
