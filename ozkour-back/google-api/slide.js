@@ -86,7 +86,6 @@ function clusterByEventName(dataOrganized) {
         EventArray[EventNameAdded.indexOf(talk.eventName)].talks.push({
           universe: talk.universe,
           eventType: talk.eventType,
-          eventName: talk.eventName,
           talkTitle: talk.talkTitle,
           speakers: talk.speakers,
         });
@@ -541,4 +540,6 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
 
 module.exports = {
   createSlideFromTalks,
+  clusterByDate,
+  clusterByEventName
 };
