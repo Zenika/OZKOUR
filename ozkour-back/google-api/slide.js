@@ -397,7 +397,66 @@ function test(auth, talks) {
       },
     ];
   }
-  
+
+/**
+ * Adds an image to a presentation.
+ * @param {string} presentationId The presentation ID.
+ * @param {string} pageId The presentation page ID.
+ */
+ async function createImage(presentationId, pageId, auth) {
+  console.log("create picto");
+  const {GoogleAuth} = require('google-auth-library');
+  const {google} = require('googleapis');
+
+  // const auth = new GoogleAuth(
+  //     {scopes: 'https://www.googleapis.com/auth/presentations'});
+
+  const service = google.slides({version: 'v1', auth});
+
+  const imageUrl =
+    'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png';
+  // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
+  const imageId = 'Picto_Conference';
+  const emu4M = {
+    magnitude: 110,
+    unit: 'PT',
+  };
+  const requests = [{
+    createImage: {
+      objectId: imageId,
+      url: imageUrl,
+      elementProperties: {
+        pageObjectId: pageId,
+        size: {
+          height: emu4M,
+          width: emu4M,
+        },
+        transform: {
+          scaleX: 1,
+          scaleY: 1,
+          translateX: 455,
+          translateY: 140,
+          unit: 'PT',
+        },
+      },
+    },
+  }];
+
+  // Execute the request.
+  try {
+    const response = await service.presentations.batchUpdate({
+      presentationId,
+      resource: {requests},
+    });
+    const createImageResponse = response.data.replies;
+    console.log(`Created image with ID: ${createImageResponse[0].createImage.objectId}`);
+    return createImageResponse;
+  } catch (err) {
+    // TODO (developer) - Handle exception
+    throw err;
+  }
+}
+
   /**
    * generate the requests to add a date text to a slide
    * @param {string} the id of the page where the elements need to be deleted
@@ -490,57 +549,57 @@ function test(auth, talks) {
  * @param {string} the id of the page where the elements need to be deleted
  * @param {string} the id of the google slide presentation
  */
-function deleteTemplateInfo(auth, idPage, presentationId) {
-  const slides = google.slides({ version: "v1", auth });
-  slides.presentations.get(
-    {
-      presentationId: presentationId,
-    },
-    async (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
+  function deleteTemplateInfo(auth, idPage, presentationId) {
+    const slides = google.slides({ version: "v1", auth });
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        if (err) return console.log("The API returned an error: " + err);
 
-      res.data.slides.map((slide) => {
-        if (slide.objectId === idPage) {
-          // if the page is the one we're looking for
-          let pageElements = slide.pageElements;
+        res.data.slides.map((slide) => {
+          if (slide.objectId === idPage) {
+            // if the page is the one we're looking for
+            let pageElements = slide.pageElements;
 
-          let requests = [];
-          requests.push({
-            deleteObject: {
-              //delete icon
-              objectId: pageElements[pageElements.length - 1].objectId,
-            },
-          });
-          requests.push({
-            deleteObject: {
-              //delete table event
-              objectId: pageElements[pageElements.length - 2].objectId,
-            },
-          });
-          requests.push({
-            deleteObject: {
-              //delete date
-              objectId: pageElements[pageElements.length - 3].objectId,
-            },
-          });
-          slides.presentations.batchUpdate(
-            {
-              presentationId: presentationId,
-              resource: {
-                requests,
+            let requests = [];
+            requests.push({
+              deleteObject: {
+                //delete icon
+                objectId: pageElements[pageElements.length - 1].objectId,
               },
-            },
-            (err, res) => {
-              console.log(err);
-            }
-          );
-        }
-      });
-    }
-  );
-}
+            });
+            requests.push({
+              deleteObject: {
+                //delete table event
+                objectId: pageElements[pageElements.length - 2].objectId,
+              },
+            });
+            requests.push({
+              deleteObject: {
+                //delete date
+                objectId: pageElements[pageElements.length - 3].objectId,
+              },
+            });
+            slides.presentations.batchUpdate(
+              {
+                presentationId: presentationId,
+                resource: {
+                  requests,
+                },
+              },
+              (err, res) => {
+                console.log(err);
+              }
+            );
+          }
+        });
+      }
+    );
+  }
 
-function copySlide(auth, idPage, presentationId, talkSelected) {
+  function copySlide(auth, idPage, presentationId, talkSelected) {
     const slides = google.slides({ version: "v1", auth });
     const newIdPage = Date.now().toString();//New id is supposed to be unique
     let requests = [
@@ -562,10 +621,12 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
       },
       (err, res) => {
         deleteTemplateInfo(auth, newIdPage, presentationId);
+        createImage(presentationId, newIdPage, auth)
         addTableData(auth, newIdPage, presentationId, talkSelected);
       }
     );
   }
+
 
 module.exports = {
   createSlideFromTalks,
