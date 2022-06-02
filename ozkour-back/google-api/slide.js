@@ -687,6 +687,7 @@ function copySlide (auth, idPage, talkSelected) {
   return promiseCopySlide
 }
 
+
 module.exports = {
   createSlideFromTalks,
   clusterByDate,
