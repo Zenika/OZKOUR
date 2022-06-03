@@ -25,20 +25,21 @@ const greyForegroundColor = {
   },
 };
 
-
-
-async function createSlideFromTalks(talks) {
-  const res = await connect.authMethode(test, talks);
-  return "Created !"
+async function createSlideFromTalks(talks,h) {
+  try {
+    const res = await connect.authMethode(createSlides, talks);
+    return h.response(res).code(200);
+  } catch (e) {
+    return h.response(e).code(500);
+  }
 }
-
 
 /**
  * cluster all the talks by date
  * @param {Array} The talks that need to be clustered
  * @return {dataOrganized} dataOrganized where the keys are the date and the values are the talks
  */
- function clusterByDate(data) {
+function clusterByDate(data) {
   let dataOrganized = new Map();
   for (let i = 0; i < data.length; i++) {
     if (!dataOrganized.has(data[i].date)) {
@@ -110,18 +111,32 @@ function clusterByEventName(dataOrganized) {
   return dataOrganized;
 }
 
-function test(auth, talks) {
+async function createSlides(auth, talks) {
   const slides = google.slides({ version: "v1", auth });
-  presentationId = "1_lpgL0UeRYtqvB0X5jT3k2ZPk9kchJNgC6UHq_1J5hI";
-  slides.presentations.get(
-    {
-      presentationId: presentationId,
-    },
-    (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
-      copySlide(auth, res.data.slides[0].objectId, presentationId, talks);
-    }
-  );
+  presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
+  const maPromesse = new Promise((resolve, reject) => {
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        if (err) reject(err.message);
+        try {
+          copySlide(auth, res.data.slides[0].objectId, presentationId, talks)
+            .then((result) => {
+              resolve({message : result, link: "https://docs.google.com/presentation/d/1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug/"});
+            })
+            .catch((e) => {
+              reject({message : e});
+            });
+        } catch (e) {
+          console.log(e.response.data.error);
+          //reject(e.response.data.error);
+        }
+      }
+    );
+  });
+  return maPromesse;
 }
 
 /**
@@ -131,310 +146,310 @@ function test(auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
- function addDateTextWithStyle(idPage, date, Y) {
-    const pt350 = {
-      magnitude: 350,
-      unit: "PT",
-    };
-    const pt30 = {
-      magnitude: 30,
-      unit: "PT",
-    };
-  
-    return [
-      {
-        //create a shape to put text in it
-        createShape: {
-          objectId: date.replaceAll("/", "-"),
-          shapeType: "TEXT_BOX",
-          elementProperties: {
-            pageObjectId: idPage,
-            size: {
-              height: pt30,
-              width: pt350,
-            },
-            transform: {
-              scaleX: 1,
-              scaleY: 1,
-              translateX: 70,
-              translateY: Y,
-              unit: "PT",
-            },
+function addDateTextWithStyle(idPage, date, Y) {
+  const pt350 = {
+    magnitude: 350,
+    unit: "PT",
+  };
+  const pt30 = {
+    magnitude: 30,
+    unit: "PT",
+  };
+
+  return [
+    {
+      //create a shape to put text in it
+      createShape: {
+        objectId: date.replaceAll("/", "-"),
+        shapeType: "TEXT_BOX",
+        elementProperties: {
+          pageObjectId: idPage,
+          size: {
+            height: pt30,
+            width: pt350,
+          },
+          transform: {
+            scaleX: 1,
+            scaleY: 1,
+            translateX: 70,
+            translateY: Y,
+            unit: "PT",
           },
         },
       },
-  
-      {
-        insertText: {
-          //add date to the text
-          objectId: date.replaceAll("/", "-"),
-          insertionIndex: 0,
-          text: date,
-        },
+    },
+
+    {
+      insertText: {
+        //add date to the text
+        objectId: date.replaceAll("/", "-"),
+        insertionIndex: 0,
+        text: date,
       },
-      {
-        updateTextStyle: {
-          //add style to the date
-          objectId: date.replaceAll("/", "-"),
-          style: {
-            underline: true,
-            fontFamily: "Nunito",
-            fontSize: {
-              magnitude: 17,
-              unit: "PT",
-            },
-            foregroundColor: defaultForegroundColor,
+    },
+    {
+      updateTextStyle: {
+        //add style to the date
+        objectId: date.replaceAll("/", "-"),
+        style: {
+          underline: true,
+          fontFamily: "Nunito",
+          fontSize: {
+            magnitude: 17,
+            unit: "PT",
           },
-          fields: "underline,foregroundColor,fontFamily,fontSize",
+          foregroundColor: defaultForegroundColor,
         },
+        fields: "underline,foregroundColor,fontFamily,fontSize",
       },
-      {
-        //center the date
-        updateParagraphStyle: {
-          objectId: date.replaceAll("/", "-"),
-          style: {
-            alignment: "CENTER",
+    },
+    {
+      //center the date
+      updateParagraphStyle: {
+        objectId: date.replaceAll("/", "-"),
+        style: {
+          alignment: "CENTER",
+        },
+        fields: "alignment",
+      },
+    },
+  ];
+}
+
+function CreateTableWithStyleForAllEventsInDate(
+  idPage,
+  date,
+  Y,
+  dataOrganized
+) {
+  //calculate size of Table
+  let nbTalkForDate = dataOrganized.get(date).length;
+  for (let i = 0; i < dataOrganized.get(date).length; i++)
+    nbTalkForDate += dataOrganized.get(date)[i].talks.length;
+  return [
+    {
+      createTable: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        elementProperties: {
+          pageObjectId: idPage,
+          transform: {
+            scaleX: 1,
+            scaleY: 1,
+            translateY: Y,
+            unit: "PT",
           },
-          fields: "alignment",
         },
+        rows: nbTalkForDate,
+        columns: 2,
       },
-    ];
-  }
-  
-  function CreateTableWithStyleForAllEventsInDate(
-    idPage,
-    date,
-    Y,
-    dataOrganized
-  ) {
-    //calculate size of Table
-    let nbTalkForDate = dataOrganized.get(date).length;
-    for (let i = 0; i < dataOrganized.get(date).length; i++)
-      nbTalkForDate += dataOrganized.get(date)[i].talks.length;
-    return [
-      {
-        createTable: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          elementProperties: {
-            pageObjectId: idPage,
-            transform: {
-              scaleX: 1,
-              scaleY: 1,
-              translateY: Y,
-              unit: "PT",
-            },
-          },
-          rows: nbTalkForDate,
-          columns: 2,
-        },
-      },
-      {
-        updateTableBorderProperties: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          borderPosition: "ALL",
-          tableBorderProperties: {
-            tableBorderFill: {
-              solidFill: {
-                color: {
-                  rgbColor: {
-                    red: 0,
-                    green: 0,
-                    blue: 0,
-                  },
+    },
+    {
+      updateTableBorderProperties: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        borderPosition: "ALL",
+        tableBorderProperties: {
+          tableBorderFill: {
+            solidFill: {
+              color: {
+                rgbColor: {
+                  red: 0,
+                  green: 0,
+                  blue: 0,
                 },
-                alpha: 0,
               },
+              alpha: 0,
             },
           },
-          fields: "tableBorderFill",
+        },
+        fields: "tableBorderFill",
+      },
+    },
+  ];
+}
+
+function addEventNameWithStyleToTable(
+  date,
+  arrayOfTalksForAnEvent,
+  IndexRowInTableToInsert
+) {
+  return [
+    {
+      insertText: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+        },
+        insertionIndex: 0,
+        text: arrayOfTalksForAnEvent.eventName,
+      },
+    },
+    {
+      updateTextStyle: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+        },
+        style: {
+          fontFamily: "Nunito",
+          bold: true,
+          fontSize: {
+            magnitude: 20,
+            unit: "PT",
+          },
+          foregroundColor: defaultForegroundColor,
+        },
+        fields: "bold,foregroundColor,fontFamily,fontSize",
+        textRange: {
+          type: "ALL",
         },
       },
-    ];
-  }
-  
-  function addEventNameWithStyleToTable(
-    date,
-    arrayOfTalksForAnEvent,
-    IndexRowInTableToInsert
-  ) {
-    return [
-      {
-        insertText: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
+    },
+  ];
+}
+
+function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  return [
+    {
+      insertText: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+        },
+        insertionIndex: 0,
+        text: talk.talkTitle,
+      },
+    },
+    {
+      updateTextStyle: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+        },
+        style: {
+          fontFamily: "Nunito",
+          bold: true,
+          fontSize: {
+            magnitude: 14,
+            unit: "PT",
           },
-          insertionIndex: 0,
-          text: arrayOfTalksForAnEvent.eventName,
+          foregroundColor: defaultForegroundColor,
+        },
+        fields: "bold,foregroundColor,fontFamily,fontSize",
+        textRange: {
+          type: "ALL",
         },
       },
-      {
-        updateTextStyle: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
+    },
+  ];
+}
+
+function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  return [
+    {
+      insertText: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 1,
+        },
+        insertionIndex: 0,
+        text: talk.speakers,
+      },
+    },
+    {
+      updateTextStyle: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 1,
+        },
+        style: {
+          fontFamily: "Nunito",
+          fontSize: {
+            magnitude: 13,
+            unit: "PT",
           },
-          style: {
-            fontFamily: "Nunito",
-            bold: true,
-            fontSize: {
-              magnitude: 20,
-              unit: "PT",
-            },
-            foregroundColor: defaultForegroundColor,
-          },
-          fields: "bold,foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
-          },
+          foregroundColor: greyForegroundColor,
+        },
+        fields: "foregroundColor,fontFamily,fontSize",
+        textRange: {
+          type: "ALL",
         },
       },
-    ];
-  }
-  
-  function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
-    return [
-      {
-        insertText: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          insertionIndex: 0,
-          text: talk.talkTitle,
-        },
-      },
-      {
-        updateTextStyle: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          style: {
-            fontFamily: "Nunito",
-            bold: true,
-            fontSize: {
-              magnitude: 14,
-              unit: "PT",
-            },
-            foregroundColor: defaultForegroundColor,
-          },
-          fields: "bold,foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
-          },
-        },
-      },
-    ];
-  }
-  
-  function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
-    return [
-      {
-        insertText: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 1,
-          },
-          insertionIndex: 0,
-          text: talk.speakers,
-        },
-      },
-      {
-        updateTextStyle: {
-          objectId: date.replaceAll("/", "-") + "-table",
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 1,
-          },
-          style: {
-            fontFamily: "Nunito",
-            fontSize: {
-              magnitude: 13,
-              unit: "PT",
-            },
-            foregroundColor: greyForegroundColor,
-          },
-          fields: "foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
-          },
-        },
-      },
-    ];
-  }
-  
-  /**
-   * generate the requests to add a date text to a slide
-   * @param {string} the id of the page where the elements need to be deleted
-   * @param {string} the date we need to add to the slide
-   * @param {int} the place (only axis y) where we need put the date
-   * @return {Array} return an array of the requests
-   */
-  function addTableData(auth, idPage, presentationId, data) {
-    const slides = google.slides({ version: "v1", auth });
-    const dataOrganized = clusterByDate(data);
-  
-    const requests = [];
-    let mapIter = dataOrganized.keys();
-  
-    let date = mapIter.next().value;
-    let IndexRowInTableToInsert = 0;
-    let yNextElmt = 100;
-  
-    while (date !== undefined) {
-      IndexRowInTableToInsert = 0;
-      requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
-      yNextElmt += 40;
-  
+    },
+  ];
+}
+
+/**
+ * generate the requests to add a date text to a slide
+ * @param {string} the id of the page where the elements need to be deleted
+ * @param {string} the date we need to add to the slide
+ * @param {int} the place (only axis y) where we need put the date
+ * @return {Array} return an array of the requests
+ */
+function addTableData(auth, idPage, presentationId, data) {
+  const slides = google.slides({ version: "v1", auth });
+  const dataOrganized = clusterByDate(data);
+
+  const requests = [];
+  let mapIter = dataOrganized.keys();
+
+  let date = mapIter.next().value;
+  let IndexRowInTableToInsert = 0;
+  let yNextElmt = 100;
+
+  while (date !== undefined) {
+    IndexRowInTableToInsert = 0;
+    requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
+    yNextElmt += 40;
+
+    requests.push(
+      CreateTableWithStyleForAllEventsInDate(
+        idPage,
+        date,
+        yNextElmt,
+        dataOrganized
+      )
+    );
+
+    //for each event
+    for (let i = 0; i < dataOrganized.get(date).length; i++) {
+      const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
       requests.push(
-        CreateTableWithStyleForAllEventsInDate(
-          idPage,
+        addEventNameWithStyleToTable(
           date,
-          yNextElmt,
-          dataOrganized
+          arrayOfTalksForAnEvent,
+          IndexRowInTableToInsert
         )
       );
-  
-      //for each event
-      for (let i = 0; i < dataOrganized.get(date).length; i++) {
-        const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
+      IndexRowInTableToInsert++;
+
+      //add all talk for the event
+      for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
+        const talk = arrayOfTalksForAnEvent.talks[j];
         requests.push(
-          addEventNameWithStyleToTable(
-            date,
-            arrayOfTalksForAnEvent,
-            IndexRowInTableToInsert
-          )
+          addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
+          addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
         IndexRowInTableToInsert++;
-  
-        //add all talk for the event
-        for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
-          const talk = arrayOfTalksForAnEvent.talks[j];
-          requests.push(
-            addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
-            addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
-          );
-          IndexRowInTableToInsert++;
-        }
       }
-  
-      yNextElmt += checkSizeElement(
-        auth,
-        idPage,
-        presentationId,
-        date.replaceAll("/", "-") + "-table"
-      );
-      date = mapIter.next().value;
     }
-  
+
+    yNextElmt += checkSizeElement(
+      auth,
+      idPage,
+      presentationId,
+      date.replaceAll("/", "-") + "-table"
+    );
+    date = mapIter.next().value;
+  }
+  const maPromesse = new Promise((resolve, reject) => {
     // Execute the request.
-    return slides.presentations.batchUpdate(
+    slides.presentations.batchUpdate(
       {
         presentationId: presentationId,
         resource: {
@@ -442,18 +457,28 @@ function test(auth, talks) {
         },
       },
       (err, res) => {
-        console.log(err);
+        try {
+          if (err) {
+            reject(err.message);
+          } else {
+            resolve("Table Added");
+          }
+        } catch (e) {
+          reject("error catch copy");
+        }
       }
     );
-  }
-  
+  });
+  return maPromesse;
+}
+
+// TO DO
+function checkSizeElement(auth, idPage, presentationId, elementId) {
+  const size = 130;
   // TO DO
-  function checkSizeElement(auth, idPage, presentationId, elementId) {
-    const size = 130;
-    // TO DO
-  
-    return size;
-  }
+
+  return size;
+}
 
 /**
  * delete the elements copied from the model used for the style of the data
@@ -463,67 +488,82 @@ function test(auth, talks) {
  */
 function deleteTemplateInfo(auth, idPage, presentationId) {
   const slides = google.slides({ version: "v1", auth });
-  slides.presentations.get(
-    {
-      presentationId: presentationId,
-    },
-    async (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
+  const maPromesse = new Promise((resolve, reject) => {
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        //if (err) return console.log("The API returned an error: " + err);
 
-      res.data.slides.map((slide) => {
-        if (slide.objectId === idPage) {
-          // if the page is the one we're looking for
-          let pageElements = slide.pageElements;
+        const slide = res.data.slides.find(slide => slide.objectId === idPage)
+        if(slide !== undefined) {
+            // if the page is the one we're looking for
+            let pageElements = slide.pageElements;
 
-          let requests = [];
-          requests.push({
-            deleteObject: {
-              //delete icon
-              objectId: pageElements[pageElements.length - 1].objectId,
-            },
-          });
-          requests.push({
-            deleteObject: {
-              //delete table event
-              objectId: pageElements[pageElements.length - 2].objectId,
-            },
-          });
-          requests.push({
-            deleteObject: {
-              //delete date
-              objectId: pageElements[pageElements.length - 3].objectId,
-            },
-          });
-          slides.presentations.batchUpdate(
-            {
-              presentationId: presentationId,
-              resource: {
-                requests,
-              },
-            },
-            (err, res) => {
-              console.log(err);
+            let requests = [];
+            try {
+              requests.push({
+                deleteObject: {
+                  //delete icon
+                  objectId: pageElements[pageElements.length - 1].objectId,
+                },
+              });
+              requests.push({
+                deleteObject: {
+                  //delete table event
+                  objectId: pageElements[pageElements.length - 2].objectId,
+                },
+              });
+              requests.push({
+                deleteObject: {
+                  //delete date
+                  objectId: pageElements[pageElements.length - 3].objectId,
+                },
+              });
+              slides.presentations.batchUpdate(
+                {
+                  presentationId: presentationId,
+                  resource: {
+                    requests,
+                  },
+                },
+                (err, res) => {
+                  if (err) {
+                    reject(err);
+                  }
+                  else{
+                    resolve("style template element deleted");
+                  }
+                }
+              );
+            } catch (e) {
+              reject("missing element on template slide");
             }
-          );
-        }
-      });
-    }
-  );
+          }
+          else{
+            reject("error delete template element")
+          }
+      }
+    );
+  });
+  return maPromesse;
 }
 
 function copySlide(auth, idPage, presentationId, talkSelected) {
-    const slides = google.slides({ version: "v1", auth });
-    const newIdPage = Date.now().toString();//New id is supposed to be unique
-    let requests = [
-      {
-        duplicateObject: {
-          objectId: idPage,
-          objectIds: {
-            p: newIdPage,
-          },
+  const slides = google.slides({ version: "v1", auth });
+  const newIdPage = Date.now().toString(); //New id is supposed to be unique
+  let requests = [
+    {
+      duplicateObject: {
+        objectId: idPage,
+        objectIds: {
+          [idPage]: newIdPage,
         },
       },
-    ];
+    },
+  ];
+  const maPromesse = new Promise((resolve, reject) => {
     slides.presentations.batchUpdate(
       {
         presentationId: presentationId,
@@ -531,15 +571,25 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
           requests,
         },
       },
-      (err, res) => {
-        deleteTemplateInfo(auth, newIdPage, presentationId);
-        addTableData(auth, newIdPage, presentationId, talkSelected);
+      async (err, res) => {
+        try {
+          if (err) {
+            reject(err.message);
+          }
+          await deleteTemplateInfo(auth, newIdPage, presentationId);
+          await addTableData(auth, newIdPage, presentationId, talkSelected);
+          resolve("Created !")
+        } catch (e) {
+          reject(e);
+        }
       }
     );
-  }
+  });
+  return maPromesse;
+}
 
 module.exports = {
   createSlideFromTalks,
   clusterByDate,
-  clusterByEventName
+  clusterByEventName,
 };
