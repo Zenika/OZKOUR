@@ -1,9 +1,10 @@
 const { google } = require("googleapis");
 const connect = require("./connect.js");
 const dayjs = require("dayjs");
-const utilitary = require("../utilitary");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
+
+const presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -115,8 +116,7 @@ function clusterByEventName(dataOrganized) {
 
 async function createSlides(auth, talks) {
   const slides = google.slides({ version: "v1", auth });
-  presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
-  const maPromesse = new Promise((resolve, reject) => {
+  const promiseCreateSlide = new Promise((resolve, reject) => {
     slides.presentations.get(
       {
         presentationId: presentationId,
@@ -124,9 +124,9 @@ async function createSlides(auth, talks) {
       async (err, res) => {
         if (err) reject(err.message);
         try {
-          copySlide(auth, res.data.slides[0].objectId, presentationId, talks)
+          copySlide(auth, res.data.slides[0].objectId, talks)
             .then((result) => {
-              resolve({message : result, link: "https://docs.google.com/presentation/d/1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug/"});
+              resolve({message : result, link: "https://docs.google.com/presentation/d/"+presentationId+"/"});
             })
             .catch((e) => {
               reject({message : e});
@@ -138,7 +138,7 @@ async function createSlides(auth, talks) {
       }
     );
   });
-  return maPromesse;
+  return promiseCreateSlide;
 }
 
 /**
@@ -515,6 +515,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
+<<<<<<< HEAD
   function addTableData(auth, idPage, presentationId, data) {
     const slides = google.slides({ version: "v1", auth });
     const dataOrganized = clusterByDate(data);
@@ -532,6 +533,36 @@ function addDateTextWithStyle(idPage, objectId, Y) {
       requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt));
       yNextElmt += 40;
   
+=======
+function addTableData(auth, idPage, data) {
+  const slides = google.slides({ version: "v1", auth });
+  const dataOrganized = clusterByDate(data);
+
+  const requests = [];
+  let mapIter = dataOrganized.keys();
+
+  let date = mapIter.next().value;
+  let IndexRowInTableToInsert = 0;
+  let yNextElmt = 100;
+
+  while (date !== undefined) {
+    IndexRowInTableToInsert = 0;
+    requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
+    yNextElmt += 40;
+
+    requests.push(
+      CreateTableWithStyleForAllEventsInDate(
+        idPage,
+        date,
+        yNextElmt,
+        dataOrganized
+      )
+    );
+
+    //for each event
+    for (let i = 0; i < dataOrganized.get(date).length; i++) {
+      const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
+>>>>>>> 6f55da3 (front feedback with backend response)
       requests.push(
         CreateTableWithStyleForAllEventsInDate(
           idPage,
@@ -589,7 +620,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
     );
     date = mapIter.next().value;
   }
-  const maPromesse = new Promise((resolve, reject) => {
+  const promiseAddTableData = new Promise((resolve, reject) => {
     // Execute the request.
     slides.presentations.batchUpdate(
       {
@@ -611,11 +642,11 @@ function addDateTextWithStyle(idPage, objectId, Y) {
       }
     );
   });
-  return maPromesse;
+  return promiseAddTableData;
 }
 
 // TO DO
-function checkSizeElement(auth, idPage, presentationId, elementId) {
+function checkSizeElement(auth, idPage, elementId) {
   const size = 130;
   // TO DO
 
@@ -628,9 +659,9 @@ function checkSizeElement(auth, idPage, presentationId, elementId) {
  * @param {string} the id of the page where the elements need to be deleted
  * @param {string} the id of the google slide presentation
  */
-function deleteTemplateInfo(auth, idPage, presentationId) {
+function deleteTemplateInfo(auth, idPage) {
   const slides = google.slides({ version: "v1", auth });
-  const maPromesse = new Promise((resolve, reject) => {
+  const promiseDeleteTemplateInfo = new Promise((resolve, reject) => {
     slides.presentations.get(
       {
         presentationId: presentationId,
@@ -689,10 +720,10 @@ function deleteTemplateInfo(auth, idPage, presentationId) {
       }
     );
   });
-  return maPromesse;
+  return promiseDeleteTemplateInfo;
 }
 
-function copySlide(auth, idPage, presentationId, talkSelected) {
+function copySlide(auth, idPage, talkSelected) {
   const slides = google.slides({ version: "v1", auth });
   const newIdPage = Date.now().toString(); //New id is supposed to be unique
   let requests = [
@@ -705,7 +736,7 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
       },
     },
   ];
-  const maPromesse = new Promise((resolve, reject) => {
+  const promiseCopySlide = new Promise((resolve, reject) => {
     slides.presentations.batchUpdate(
       {
         presentationId: presentationId,
@@ -718,8 +749,8 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
           if (err) {
             reject(err.message);
           }
-          await deleteTemplateInfo(auth, newIdPage, presentationId);
-          await addTableData(auth, newIdPage, presentationId, talkSelected);
+          await deleteTemplateInfo(auth, newIdPage);
+          await addTableData(auth, newIdPage, talkSelected);
           resolve("Created !")
         } catch (e) {
           reject(e);
@@ -727,7 +758,7 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
       }
     );
   });
-  return maPromesse;
+  return promiseCopySlide;
 }
 
 
