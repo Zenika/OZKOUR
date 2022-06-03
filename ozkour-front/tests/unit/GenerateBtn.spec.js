@@ -22,7 +22,7 @@ describe("Generate Button", () => {
         
         const talk = useTalkStore();
 
-        wrapper.find('[data-test="btn-validate"]').trigger('click');
+        wrapper.find('button').trigger('click');
         expect(talk.blur).toHaveBeenCalledTimes(1);
       }),
       it("button is blured when clicked", () => {
@@ -36,7 +36,7 @@ describe("Generate Button", () => {
             },
           });
         
-        expect( wrapper.find('[data-test="btn-validate"]').classes('blurClass')).toBe(true);
+        expect( wrapper.find('button').classes('blurClass')).toBe(true);
       }),
       it("button is not blured by default", () => {
         const wrapper = mount(GenerateBtn, {
@@ -45,6 +45,6 @@ describe("Generate Button", () => {
             },
           });
         
-          expect( wrapper.find('[data-test="btn-validate"]').classes('blurClass')).toBe(false);
+          expect( wrapper.find('button').classes('blurClass')).toBe(false);
       })
 });
