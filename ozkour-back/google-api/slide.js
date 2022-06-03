@@ -27,13 +27,14 @@ const greyForegroundColor = {
   },
 };
 
-
-
-async function createSlideFromTalks(talks) {
-  const res = await connect.authMethode(test, talks);
-  return "Created !"
+async function createSlideFromTalks(talks,h) {
+  try {
+    const res = await connect.authMethode(createSlides, talks);
+    return h.response(res).code(200);
+  } catch (e) {
+    return h.response(e).code(500);
+  }
 }
-
 
 /**
  * cluster all the talks by date
@@ -112,18 +113,32 @@ function clusterByEventName(dataOrganized) {
   return dataOrganized;
 }
 
-function test(auth, talks) {
+async function createSlides(auth, talks) {
   const slides = google.slides({ version: "v1", auth });
-  presentationId = "1_lpgL0UeRYtqvB0X5jT3k2ZPk9kchJNgC6UHq_1J5hI";
-  slides.presentations.get(
-    {
-      presentationId: presentationId,
-    },
-    (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
-      copySlide(auth, res.data.slides[0].objectId, presentationId, talks);
-    }
-  );
+  presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
+  const maPromesse = new Promise((resolve, reject) => {
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        if (err) reject(err.message);
+        try {
+          copySlide(auth, res.data.slides[0].objectId, presentationId, talks)
+            .then((result) => {
+              resolve({message : result, link: "https://docs.google.com/presentation/d/1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug/"});
+            })
+            .catch((e) => {
+              reject({message : e});
+            });
+        } catch (e) {
+          console.log(e.response.data.error);
+          //reject(e.response.data.error);
+        }
+      }
+    );
+  });
+  return maPromesse;
 }
 
 /**
@@ -227,9 +242,9 @@ function addDateTextWithStyle(idPage, objectId, Y) {
               unit,
             },
           },
-          rows: nbTalkForDate,
-          columns: 2,
         },
+        rows: nbTalkForDate,
+        columns: 2,
       },
       {
         updateTableBorderProperties: {
@@ -245,12 +260,12 @@ function addDateTextWithStyle(idPage, objectId, Y) {
                     blue: 0,
                   },
                 },
-                alpha: 0,
               },
+              alpha: 0,
             },
           },
-          fields: "tableBorderFill",
         },
+        fields: "tableBorderFill",
       },
       // Set the size of the first column of the table
       {
@@ -300,6 +315,8 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           insertionIndex: 0,
           text: arrayOfTalksForAnEvent.eventName,
         },
+        insertionIndex: 0,
+        text: arrayOfTalksForAnEvent.eventName,
       },
       {
         updateTextStyle: {
@@ -321,12 +338,17 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           textRange: {
             type: "ALL",
           },
+          foregroundColor: defaultForegroundColor,
+        },
+        fields: "bold,foregroundColor,fontFamily,fontSize",
+        textRange: {
+          type: "ALL",
         },
       },
     ];
   }
   
-  function addTalkTitleWithStyleToTable(objectId, talk, IndexRowInTableToInsert) {
+  function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
     const objectId = date + '-table'
     return [
       {
@@ -339,6 +361,8 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           insertionIndex: 0,
           text: talk.talkTitle,
         },
+        insertionIndex: 0,
+        text: talk.talkTitle,
       },
       {
         updateTextStyle: {
@@ -360,12 +384,17 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           textRange: {
             type: "ALL",
           },
+          foregroundColor: defaultForegroundColor,
+        },
+        fields: "bold,foregroundColor,fontFamily,fontSize",
+        textRange: {
+          type: "ALL",
         },
       },
     ];
   }
   
-  function addSpeakersWithStyleToTable(objectId, talk, IndexRowInTableToInsert) {
+  function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
     const objectId = date + '-table'
     return [
       {
@@ -378,6 +407,8 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           insertionIndex: 0,
           text: talk.speakers,
         },
+        insertionIndex: 0,
+        text: talk.speakers,
       },
       {
         updateTextStyle: {
@@ -398,6 +429,11 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           textRange: {
             type: "ALL",
           },
+          foregroundColor: greyForegroundColor,
+        },
+        fields: "foregroundColor,fontFamily,fontSize",
+        textRange: {
+          type: "ALL",
         },
       },
     ];
@@ -504,8 +540,6 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           dataOrganized
         )
       );
-  
-      //for each event
       for (let i = 0; i < dataOrganized.get(date).length; i++) {
         const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
         requests.push(
@@ -514,6 +548,15 @@ function addDateTextWithStyle(idPage, objectId, Y) {
             arrayOfTalksForAnEvent,
             IndexRowInTableToInsert
           )
+        );
+      IndexRowInTableToInsert++;
+
+      //add all talk for the event
+      for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
+        const talk = arrayOfTalksForAnEvent.talks[j];
+        requests.push(
+          addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
+          addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
         IndexRowInTableToInsert++;
         createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
@@ -537,98 +580,17 @@ function addDateTextWithStyle(idPage, objectId, Y) {
       );
       date = mapIter.next().value;
     }
-  
+
+    yNextElmt += checkSizeElement(
+      auth,
+      idPage,
+      presentationId,
+      date.replaceAll("/", "-") + "-table"
+    );
+    date = mapIter.next().value;
+  }
+  const maPromesse = new Promise((resolve, reject) => {
     // Execute the request.
-    return slides.presentations.batchUpdate(
-      {
-        presentationId: presentationId,
-        resource: {
-          requests,
-        },
-      },
-      (err, res) => {
-        console.log(err);
-      }
-    );
-  }
-  
-  // TO DO
-  function checkSizeElement(auth, idPage, presentationId, elementId) {
-    const size = 130;
-    // TO DO
-  
-    return size;
-  }
-
-/**
- * delete the elements copied from the model used for the style of the data
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- * @param {string} the id of the page where the elements need to be deleted
- * @param {string} the id of the google slide presentation
- */
-  function deleteTemplateInfo(auth, idPage, presentationId) {
-    const slides = google.slides({ version: "v1", auth });
-    slides.presentations.get(
-      {
-        presentationId: presentationId,
-      },
-      async (err, res) => {
-        if (err) return console.log("The API returned an error: " + err);
-
-        res.data.slides.map((slide) => {
-          if (slide.objectId === idPage) {
-            // if the page is the one we're looking for
-            let pageElements = slide.pageElements;
-
-            let requests = [];
-            requests.push({
-              deleteObject: {
-                //delete icon
-                objectId: pageElements[pageElements.length - 1].objectId,
-              },
-            });
-            requests.push({
-              deleteObject: {
-                //delete table event
-                objectId: pageElements[pageElements.length - 2].objectId,
-              },
-            });
-            requests.push({
-              deleteObject: {
-                //delete date
-                objectId: pageElements[pageElements.length - 3].objectId,
-              },
-            });
-            slides.presentations.batchUpdate(
-              {
-                presentationId: presentationId,
-                resource: {
-                  requests,
-                },
-              },
-              (err, res) => {
-                console.log(err);
-              }
-            );
-          }
-        });
-      }
-    );
-  }
-
-  function copySlide(auth, idPage, presentationId, talkSelected) {
-    const slides = google.slides({ version: "v1", auth });
-    const newIdPage = Date.now().toString();//New id is supposed to be unique
-    let requests = [
-      {
-        duplicateObject: {
-          objectId: idPage,
-          objectIds: {
-            p: newIdPage,
-          },
-        },
-      },
-    ];
     slides.presentations.batchUpdate(
       {
         presentationId: presentationId,
@@ -637,15 +599,140 @@ function addDateTextWithStyle(idPage, objectId, Y) {
         },
       },
       (err, res) => {
-        deleteTemplateInfo(auth, newIdPage, presentationId);
-        addTableData(auth, newIdPage, presentationId, talkSelected);
+        try {
+          if (err) {
+            reject(err.message);
+          } else {
+            resolve("Table Added");
+          }
+        } catch (e) {
+          reject("error catch copy");
+        }
       }
     );
-  }
+  });
+  return maPromesse;
+}
+
+// TO DO
+function checkSizeElement(auth, idPage, presentationId, elementId) {
+  const size = 130;
+  // TO DO
+
+  return size;
+}
+
+/**
+ * delete the elements copied from the model used for the style of the data
+ * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
+ * @param {string} the id of the page where the elements need to be deleted
+ * @param {string} the id of the google slide presentation
+ */
+function deleteTemplateInfo(auth, idPage, presentationId) {
+  const slides = google.slides({ version: "v1", auth });
+  const maPromesse = new Promise((resolve, reject) => {
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        //if (err) return console.log("The API returned an error: " + err);
+
+        const slide = res.data.slides.find(slide => slide.objectId === idPage)
+        if(slide !== undefined) {
+            // if the page is the one we're looking for
+            let pageElements = slide.pageElements;
+
+            let requests = [];
+            try {
+              requests.push({
+                deleteObject: {
+                  //delete icon
+                  objectId: pageElements[pageElements.length - 1].objectId,
+                },
+              });
+              requests.push({
+                deleteObject: {
+                  //delete table event
+                  objectId: pageElements[pageElements.length - 2].objectId,
+                },
+              });
+              requests.push({
+                deleteObject: {
+                  //delete date
+                  objectId: pageElements[pageElements.length - 3].objectId,
+                },
+              });
+              slides.presentations.batchUpdate(
+                {
+                  presentationId: presentationId,
+                  resource: {
+                    requests,
+                  },
+                },
+                (err, res) => {
+                  if (err) {
+                    reject(err);
+                  }
+                  else{
+                    resolve("style template element deleted");
+                  }
+                }
+              );
+            } catch (e) {
+              reject("missing element on template slide");
+            }
+          }
+          else{
+            reject("error delete template element")
+          }
+      }
+    );
+  });
+  return maPromesse;
+}
+
+function copySlide(auth, idPage, presentationId, talkSelected) {
+  const slides = google.slides({ version: "v1", auth });
+  const newIdPage = Date.now().toString(); //New id is supposed to be unique
+  let requests = [
+    {
+      duplicateObject: {
+        objectId: idPage,
+        objectIds: {
+          [idPage]: newIdPage,
+        },
+      },
+    },
+  ];
+  const maPromesse = new Promise((resolve, reject) => {
+    slides.presentations.batchUpdate(
+      {
+        presentationId: presentationId,
+        resource: {
+          requests,
+        },
+      },
+      async (err, res) => {
+        try {
+          if (err) {
+            reject(err.message);
+          }
+          await deleteTemplateInfo(auth, newIdPage, presentationId);
+          await addTableData(auth, newIdPage, presentationId, talkSelected);
+          resolve("Created !")
+        } catch (e) {
+          reject(e);
+        }
+      }
+    );
+  });
+  return maPromesse;
+}
 
 
 module.exports = {
   createSlideFromTalks,
   clusterByDate,
-  clusterByEventName
+  clusterByEventName,
 };
