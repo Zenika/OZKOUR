@@ -26,7 +26,7 @@ import Modal from '../RecapModal.vue';
         },
         closeModal() {
             this.isModalVisible = false;
-            this.talk.clarify()
+            this.talk.clarify();
         },
         addClass() {
             this.isAddClass = true;
