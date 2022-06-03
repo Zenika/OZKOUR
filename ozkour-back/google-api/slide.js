@@ -517,7 +517,6 @@ function addTableData (auth, idPage, data) {
     IndexRowInTableToInsert = 0
     requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt))
     yNextElmt += slideSpacing.DATE
-
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
