@@ -25,6 +25,11 @@ const greyForegroundColor = {
   },
 };
 
+const spaceEvent = 45;
+const spaceTalk = 40;
+const spaceDate = 40;
+const defaultStartYIndex = 100;
+
 
 
 async function createSlideFromTalks(talks) {
@@ -112,7 +117,7 @@ function clusterByEventName(dataOrganized) {
 
 function test(auth, talks) {
   const slides = google.slides({ version: "v1", auth });
-  presentationId = "1_lpgL0UeRYtqvB0X5jT3k2ZPk9kchJNgC6UHq_1J5hI";
+  presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
   slides.presentations.get(
     {
       presentationId: presentationId,
@@ -385,12 +390,12 @@ function test(auth, talks) {
   
     let date = mapIter.next().value;
     let IndexRowInTableToInsert = 0;
-    let yNextElmt = 100;
+    let yNextElmt = defaultStartYIndex;
   
     while (date !== undefined) {
       IndexRowInTableToInsert = 0;
       requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
-      yNextElmt += 40;
+      yNextElmt += spaceDate;
   
       requests.push(
         CreateTableWithStyleForAllEventsInDate(
@@ -412,6 +417,7 @@ function test(auth, talks) {
           )
         );
         IndexRowInTableToInsert++;
+        yNextElmt += spaceEvent;
   
         //add all talk for the event
         for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
@@ -421,15 +427,10 @@ function test(auth, talks) {
             addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
           );
           IndexRowInTableToInsert++;
+          yNextElmt += spaceTalk;
         }
       }
-  
-      yNextElmt += checkSizeElement(
-        auth,
-        idPage,
-        presentationId,
-        date.replaceAll("/", "-") + "-table"
-      );
+
       date = mapIter.next().value;
     }
   
@@ -445,14 +446,6 @@ function test(auth, talks) {
         console.log(err);
       }
     );
-  }
-  
-  // TO DO
-  function checkSizeElement(auth, idPage, presentationId, elementId) {
-    const size = 130;
-    // TO DO
-  
-    return size;
   }
 
 /**
@@ -519,7 +512,7 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
         duplicateObject: {
           objectId: idPage,
           objectIds: {
-            p: newIdPage,
+            [idPage]: newIdPage,
           },
         },
       },
