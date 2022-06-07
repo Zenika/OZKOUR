@@ -1,23 +1,37 @@
 <template>
-    <header>
-        <div id='header'>
-            <div id='header-logo'>
-                <a href="/" tabindex="1">
-                    <img id="logoZenika" alt="Zenika logo" src="../assets/Logo_Horizontal_Blanc.png" >
-                </a>      
-            </div>  
-            <div id='header-user'>
-                <span>NOM Prénom</span>
-                <img id="imgLogout" @keyup.enter="test" @click="test" alt="image logout" src="../assets/images/logout.png" tabindex="2">
-            </div>
-        </div>
-    </header>
+  <header>
+    <div id="header">
+      <div id="header-logo">
+        <a
+          href="/"
+          tabindex="1"
+        >
+          <img
+            id="logoZenika"
+            alt="Zenika logo"
+            src="../assets/Logo_Horizontal_Blanc.png"
+          >
+        </a>      
+      </div>  
+      <div id="header-user">
+        <span>NOM Prénom</span>
+        <img
+          id="imgLogout"
+          alt="image logout"
+          src="../assets/images/logout.png"
+          tabindex="2"
+          @keyup.enter="test"
+          @click="test"
+        >
+      </div>
+    </div>
+  </header>
 </template>
 
 <script setup>
-    function test(){
-        console.log("test")
-    }
+function test(){
+  console.log("test")
+}
 </script>
 
 <style scoped>

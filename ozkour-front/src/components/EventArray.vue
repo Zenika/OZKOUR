@@ -1,47 +1,57 @@
 <template>
-  <h2 v-if="talk.retrieved == ''">Pas de talks entre les dates recherchées</h2>
+  <h2 v-if="talk.retrieved == ''">
+    Pas de talks entre les dates recherchées
+  </h2>
   <div v-else>
     <h2>Liste des événements sélectionnés</h2>
     <div class="eventDetails">
       <table>
         <tr>
-          <th scope="col"></th>
+          <th scope="col" />
           <th
             v-for="(columnsValue, index) in columnsValues"
             :key="index"
             scope="col"
             class="selectable"
             :class="{ columnSelected: sort === columnsValue.columnName }"
+            :data-test="columnsValue.columnName"
             @click="setSort(columnsValue.columnName)"
-            :data-test=columnsValue.columnName
           >
             {{ columnsValue.displayColumns }}
 
-             <IconArrow  v-if="sort === columnsValue.columnName"
+            <IconArrow
+              v-if="sort === columnsValue.columnName"
               :class="ascending ? '' : 'arrow_down'"
-              class="arrow"/>
+              class="arrow"
+            />
           </th>
         </tr>
-        <tr v-for="talk in sortedTalk" :key="talk" data-test="talks">
+        <tr
+          v-for="talk in sortedTalk"
+          :key="talk"
+          data-test="talks"
+        >
           <td>
             <input
               type="checkbox"
               class="red-input"
               :value="talk"
-              @change="check(talk, $event)"
               checked
-            />
+              @change="check(talk, $event)"
+            >
           </td>
           <td>{{ talk.date }}</td>
           <td>{{ talk.universe }}</td>
           <td>{{ talk.eventType }}</td>
           <td>{{ talk.eventName }}</td>
-          <td data-test="talks-test">{{ talk.talkTitle }}</td>
+          <td data-test="talks-test">
+            {{ talk.talkTitle }}
+          </td>
           <td>{{ talk.speakers }}</td>
         </tr>
       </table>
     </div>
-    <br />
+    <br>
   </div>
 </template>
 

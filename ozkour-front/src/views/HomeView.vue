@@ -1,9 +1,15 @@
 <template>
-    <h1>Generateur de Visuel</h1>
-    <div id="buttons">
-        <a href="./talkform" class="btnChoixForm">TALK</a>
-        <a href="./" class="btnChoixForm">TRAINING</a>
-    </div>
+  <h1>Generateur de Visuel</h1>
+  <div id="buttons">
+    <a
+      href="./talkform"
+      class="btnChoixForm"
+    >TALK</a>
+    <a
+      href="./"
+      class="btnChoixForm"
+    >TRAINING</a>
+  </div>
 </template>
 
 <style scoped>

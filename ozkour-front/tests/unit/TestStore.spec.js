@@ -8,71 +8,71 @@ describe("Talk Store", () => {
     // `useStore(pinia)`
     setActivePinia(createPinia());
   }),
-    it("updateTalks", () => {
-      const talk = useTalkStore();
-      expect(talk.retrieved.length).toBe(0);
-      talk.updateTalks(talksRetrieved);
-      expect(talk.retrieved.length).toBe(5);
-    }),
-    it("getSelectedTalks give all talks by default ", () => {
-      const talk = useTalkStore();
-      expect(talk.retrieved.length).toBe(0);
-      talk.updateTalks(talksRetrieved);
-      expect(talk.getSelectedTalks.length).toBe(5);
-    }),
-    it("uncheckTalk", () => {
-      const talk = useTalkStore();
-      talk.updateTalks(talksRetrieved);
+  it("updateTalks", () => {
+    const talk = useTalkStore();
+    expect(talk.retrieved.length).toBe(0);
+    talk.updateTalks(talksRetrieved);
+    expect(talk.retrieved.length).toBe(5);
+  }),
+  it("getSelectedTalks give all talks by default ", () => {
+    const talk = useTalkStore();
+    expect(talk.retrieved.length).toBe(0);
+    talk.updateTalks(talksRetrieved);
+    expect(talk.getSelectedTalks.length).toBe(5);
+  }),
+  it("uncheckTalk", () => {
+    const talk = useTalkStore();
+    talk.updateTalks(talksRetrieved);
 
-      const talkToBeRemoved = {
-        date: "19/01/2021",
-        universe: "",
-        eventType: "Meetup",
-        eventName: "GraalVM Night",
-        talkTitle: "GraalVM for Sustainable Software Development?",
-        speakers: "Adrien Nortain",
-      };
+    const talkToBeRemoved = {
+      date: "19/01/2021",
+      universe: "",
+      eventType: "Meetup",
+      eventName: "GraalVM Night",
+      talkTitle: "GraalVM for Sustainable Software Development?",
+      speakers: "Adrien Nortain",
+    };
 
-      talk.uncheckTalk(talkToBeRemoved);
-      expect(talk.getSelectedTalks.length).toBe(4);
-      expect(talk.retrieved.length).toBe(5);
-    }),
-    it("addCheckedTalk", () => {
-      const talk = useTalkStore();
-      talk.updateTalks(talksRetrieved);
+    talk.uncheckTalk(talkToBeRemoved);
+    expect(talk.getSelectedTalks.length).toBe(4);
+    expect(talk.retrieved.length).toBe(5);
+  }),
+  it("addCheckedTalk", () => {
+    const talk = useTalkStore();
+    talk.updateTalks(talksRetrieved);
 
-      const talkToBeRemovedAndAdded = {
-        date: "19/01/2021",
-        universe: "",
-        eventType: "Meetup",
-        eventName: "GraalVM Night",
-        talkTitle: "GraalVM for Sustainable Software Development?",
-        speakers: "Adrien Nortain",
-      };
+    const talkToBeRemovedAndAdded = {
+      date: "19/01/2021",
+      universe: "",
+      eventType: "Meetup",
+      eventName: "GraalVM Night",
+      talkTitle: "GraalVM for Sustainable Software Development?",
+      speakers: "Adrien Nortain",
+    };
 
-      talk.uncheckTalk(talkToBeRemovedAndAdded);
-      talk.checkTalk(talkToBeRemovedAndAdded);
-      expect(talk.getSelectedTalks.length).toBe(5);
-      expect(talk.retrieved.length).toBe(5);
-    }),
-    it("addCheckedTalk order", () => {
-      const talk = useTalkStore();
-      talk.updateTalks(talksRetrieved);
+    talk.uncheckTalk(talkToBeRemovedAndAdded);
+    talk.checkTalk(talkToBeRemovedAndAdded);
+    expect(talk.getSelectedTalks.length).toBe(5);
+    expect(talk.retrieved.length).toBe(5);
+  }),
+  it("addCheckedTalk order", () => {
+    const talk = useTalkStore();
+    talk.updateTalks(talksRetrieved);
 
-      const talkToBeRemovedAndAdded = {
-        date: "19/01/2021",
-        universe: "",
-        eventType: "Meetup",
-        eventName: "GraalVM Night",
-        talkTitle: "GraalVM for Sustainable Software Development?",
-        speakers: "Adrien Nortain",
-        checked: true
-      };
+    const talkToBeRemovedAndAdded = {
+      date: "19/01/2021",
+      universe: "",
+      eventType: "Meetup",
+      eventName: "GraalVM Night",
+      talkTitle: "GraalVM for Sustainable Software Development?",
+      speakers: "Adrien Nortain",
+      checked: true
+    };
 
-      talk.uncheckTalk(talkToBeRemovedAndAdded);
-      talk.checkTalk(talkToBeRemovedAndAdded);
-      expect(talk.getSelectedTalks[0]).toStrictEqual(talkToBeRemovedAndAdded);
-    });
+    talk.uncheckTalk(talkToBeRemovedAndAdded);
+    talk.checkTalk(talkToBeRemovedAndAdded);
+    expect(talk.getSelectedTalks[0]).toStrictEqual(talkToBeRemovedAndAdded);
+  });
 });
 
 const talksRetrieved = [

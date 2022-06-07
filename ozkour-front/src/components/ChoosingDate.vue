@@ -13,7 +13,7 @@ export default {
   },
   setup() {
     const date = ref(new Date());
-    const dateStart = ref("");
+    const dateStart = ref(""); 
     const dateEnd = ref("");
     date.value = [dateStart, dateEnd];
 
@@ -167,24 +167,24 @@ export default {
     <div class="date">
       <label for="start">Date de début</label>
       <input
-        type="date"
         id="start"
-        name="talk-start"
         v-model="dateStart"
+        type="date"
+        name="talk-start"
         @change="updateDateStartCalendar"
-      />
+      >
     </div>
 
     <div class="date">
       <label for="end">Date de fin</label>
       <input
-        type="date"
         id="end"
-        name="talk-end"
         v-model="dateEnd"
+        type="date"
+        name="talk-end"
+        :min="dateStart"
         @change="updateDateEndCalendar"
-        v-bind:min="dateStart"
-      />
+      >
     </div>
 
     <!-- <button type="button" class="next-week-btn">Semaine prochaine</button> -->
@@ -193,15 +193,19 @@ export default {
     v-model="date"
     range
     inline
-    autoApply
+    auto-apply
     data-test="test"
     format="yyyy-mm-dd"
     locale="fr"
-    calendarCellClassName="dp-custom-cell"
-    :monthChangeOnScroll="false"
+    calendar-cell-class-name="dp-custom-cell"
+    :month-change-on-scroll="false"
   >
     <template #clear-icon="{ clear }">
-      <img class="input-slot-image" src="" @click="clear" />
+      <img
+        class="input-slot-image"
+        src=""
+        @click="clear"
+      >
     </template>
   </Datepicker>
 </template>

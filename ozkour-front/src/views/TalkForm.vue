@@ -22,7 +22,6 @@ export default {
 </script>
 
 <template>
-
   <main class="container">
     <div :class="{ blurClass: talk.blured }">
       <h1>Visuels pour les Talks</h1>
@@ -34,14 +33,13 @@ export default {
     </section>
 
     <section :class="{ blurClass: talk.blured ,eventList : true }">
-      <EventArray/>
+      <EventArray />
     </section>
 
     <section class="section lastSection">
       <GenerateButton />
     </section>
   </main>
-
 </template>
 
 <style scoped>
