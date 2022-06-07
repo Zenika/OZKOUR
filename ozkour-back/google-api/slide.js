@@ -6,8 +6,6 @@ dayjs.extend(customParseFormat)
 
 const presentationId = '1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug'
 
-const presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
-
 const defaultForegroundColor = {
   opaqueColor: {
     rgbColor: {
