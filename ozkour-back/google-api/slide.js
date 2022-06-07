@@ -28,6 +28,13 @@ const greyForegroundColor = {
   },
 };
 
+const spaceEvent = 45;
+const spaceTalk = 40;
+const spaceDate = 40;
+const defaultStartYIndex = 100;
+
+
+
 async function createSlideFromTalks(talks,h) {
   try {
     const res = await connect.authMethode(createSlides, talks);
@@ -515,7 +522,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-<<<<<<< HEAD
+
   function addTableData(auth, idPage, presentationId, data) {
     const slides = google.slides({ version: "v1", auth });
     const dataOrganized = clusterByDate(data);
@@ -525,15 +532,14 @@ function addDateTextWithStyle(idPage, objectId, Y) {
   
     let date = mapIter.next().value;
     let IndexRowInTableToInsert = 0;
-    let yNextElmt = 100;
+    let yNextElmt = defaultStartYIndex;
   
     while (date !== undefined) {
       IndexRowInTableToInsert = 0;
       const dateId = date.replaceAll("/", "-")
       requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt));
-      yNextElmt += 40;
+      yNextElmt += spaceDate;
   
-=======
 function addTableData(auth, idPage, data) {
   const slides = google.slides({ version: "v1", auth });
   const dataOrganized = clusterByDate(data);
@@ -562,7 +568,6 @@ function addTableData(auth, idPage, data) {
     //for each event
     for (let i = 0; i < dataOrganized.get(date).length; i++) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
->>>>>>> 6f55da3 (front feedback with backend response)
       requests.push(
         CreateTableWithStyleForAllEventsInDate(
           idPage,
@@ -591,6 +596,7 @@ function addTableData(auth, idPage, data) {
         );
         IndexRowInTableToInsert++;
         createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
+        yNextElmt += spaceEvent;
   
         //add all talk for the event
         for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
@@ -600,15 +606,9 @@ function addTableData(auth, idPage, data) {
             addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
           );
           IndexRowInTableToInsert++;
+          yNextElmt += spaceTalk;
         }
       }
-  
-      yNextElmt += checkSizeElement(
-        auth,
-        idPage,
-        presentationId,
-        objectId + "-table"
-      );
       date = mapIter.next().value;
     }
 
@@ -645,13 +645,7 @@ function addTableData(auth, idPage, data) {
   return promiseAddTableData;
 }
 
-// TO DO
-function checkSizeElement(auth, idPage, elementId) {
-  const size = 130;
-  // TO DO
 
-  return size;
-}
 
 /**
  * delete the elements copied from the model used for the style of the data
