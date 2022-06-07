@@ -37,7 +37,7 @@ jobs:
       - run:
           command: npm run lint
           name: Run linter
-      -run:
+      - run:
           command: npm run test:unit
           name: Run tests
       - run:
