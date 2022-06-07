@@ -7,89 +7,89 @@ import { useTalkStore } from "../../src/stores/talks";
 // On utilise 'shallowMount' pour ne pas mount les composants enfants (ici ValidateBtn)
 
 describe("RecapModal Component", () => {
-    beforeEach(() => {
+  beforeEach(() => {
 
-    })
-    //--- Afficher le visuel choisi par l'utilisateur
-    it("Display the template chosen", async () => {
-        const wrapper = shallowMount(RecapModal, {
-            global: {
-              plugins: [
-                createTestingPinia({
-                  initialState: {
-                    talk: { 
-                        retrieved: talks,
-                        template : {
-                            template : 'E-mailing', 
-                            frequency : 'month' 
-                        }
-                    },
-                  },
-                }),
-              ],
+  })
+  //--- Afficher le visuel choisi par l'utilisateur
+  it("Display the template chosen", async () => {
+    const wrapper = shallowMount(RecapModal, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              talk: { 
+                retrieved: talks,
+                template : {
+                  template : 'E-mailing', 
+                  frequency : 'month' 
+                }
+              },
             },
-        });
+          }),
+        ],
+      },
+    });
 
-        const template = wrapper.find('[data-test="template-detail"]').text()
+    const template = wrapper.find('[data-test="template-detail"]').text()
         
-        expect(template).toBe('Visuel : E-mailing')
-    })
+    expect(template).toBe('Visuel : E-mailing')
+  })
 
-    //--- Afficher la plage de dates choisi par l'utilisateur
-    it("Display the date range chosen", async () => {
-        const wrapper = shallowMount(RecapModal, {
-            global: {
-              plugins: [
-                createTestingPinia({
-                  initialState: {
-                    talk: { 
-                        retrieved: talks,
-                        date : { 
-                            start : '11/01/2021', 
-                            end : '12/02/2021'
-                        }
-                    },
-                  },
-                }),
-              ],
+  //--- Afficher la plage de dates choisi par l'utilisateur
+  it("Display the date range chosen", async () => {
+    const wrapper = shallowMount(RecapModal, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              talk: { 
+                retrieved: talks,
+                date : { 
+                  start : '11/01/2021', 
+                  end : '12/02/2021'
+                }
+              },
             },
-        });
+          }),
+        ],
+      },
+    });
 
-        const dateText = wrapper.find('[data-test="date-detail"]').text()
+    const dateText = wrapper.find('[data-test="date-detail"]').text()
 
-        expect(dateText).toBe('Dates : 11/01/2021 au 12/02/2021')
+    expect(dateText).toBe('Dates : 11/01/2021 au 12/02/2021')
 
-        // console.log(dateText.html()); => affiche la partie HTML du code
-    }),
+    // console.log(dateText.html()); => affiche la partie HTML du code
+  }),
 
-    //--- Afficher la liste des titres des talks choisi par l'utilisateur 
-    it("Display a list of the chosen talks, only their titles", async () => {
-        const wrapper = shallowMount(RecapModal, {
-            global: {
-              plugins: [
-                createTestingPinia({
-                    plugins: [useTalkStore],
-                    initialState: {
-                        talk: { retrieved: talks },
-                    },
-                }),
-              ],
+  //--- Afficher la liste des titres des talks choisi par l'utilisateur 
+  it("Display a list of the chosen talks, only their titles", async () => {
+    const wrapper = shallowMount(RecapModal, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            plugins: [useTalkStore],
+            initialState: {
+              talk: { retrieved: talks },
             },
-        });
+          }),
+        ],
+      },
+    });
     
-        const talkTitle = wrapper.find('.events').html()
+    const talkTitle = wrapper.find('.events').html()
 
-        expect(talkTitle).toMatchSnapshot()
-    })
+    expect(talkTitle).toMatchSnapshot()
+  })
 
-    //--- Bouton fermer la pop up
-    it("Close the pop up when you click on the cross button", async () => {
-        const wrapper = shallowMount (RecapModal)
+  //--- Bouton fermer la pop up
+  it("Close the pop up when you click on the cross button", async () => {
+    const wrapper = shallowMount (RecapModal)
 
-        wrapper.find('.close-btn').trigger('click')
+    wrapper.find('.close-btn').trigger('click')
 
-        expect(wrapper.emitted('close')).toHaveLength(1)
-    })
+    expect(wrapper.emitted('close')).toHaveLength(1)
+  })
 })
 
 const talks =
@@ -139,4 +139,4 @@ const talks =
       speakers: "Hugo Wood",
       checked: false,
     }
-];
+  ];

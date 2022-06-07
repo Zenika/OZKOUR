@@ -4,54 +4,83 @@ import { useTalkStore } from '../stores/talks'
 import axios from 'axios';
 // import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
 
+const emit = defineEmits(['close'])
+
 const talk = useTalkStore()
 
 const sendTalks = () => {
-    console.log('talks', talk.getSelectedTalks);
-    axios
+  console.log('talks', talk.getSelectedTalks);
+  axios
     .post('http://localhost:3000/selected-talks', talk.getSelectedTalks)
     .then((response) => console.log('res :',response))
 }
 </script>
 
 <template>
-    <div class="popUp-bg">
-        <div class="popUp-header">
-            <button type="button" class="close-btn" @click="$emit('close')"> X </button>
-            <h2>Récapitulatif</h2>
-        </div>
-
-        <div class="recap">
-            <div class="recap-details">
-                <div class="icon-bg">
-                    <img src="../assets/images/gallery.png" alt="calendar" class="icon">
-                </div>
-                <p data-test="template-detail"><b>Visuel : </b>{{ talk.template.template }}</p>
-            </div>
-            <div class="recap-details">
-                <div class="icon-bg">
-                    <img src="../assets/images/calendar.png" alt="calendar" class="icon">
-                </div>
-                <p data-test="date-detail"><b>Dates : </b>{{ talk.date.start }} au {{ talk.date.end }}</p>
-            </div>
-            <div>
-                <div class="recap-details">
-                    <div class="icon-bg">
-                        <img src="../assets/images/microphone.png" alt="calendar" class="icon">
-                    </div>
-                    <p><b>Liste des talks : </b></p>
-                </div>
-                <ul class="events">
-                    <li data-test="talk-title" v-for="talk in talk.getSelectedTalks" v-bind:key="talk">{{ talk.talkTitle }}</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="validate">
-            <ValidateBtn @click="sendTalks"/>
-        </div>
-
+  <div class="popUp-bg">
+    <div class="popUp-header">
+      <button
+        type="button"
+        class="close-btn"
+        @click="emit('close')"
+      >
+        X
+      </button>
+      <h2>Récapitulatif</h2>
     </div>
+
+    <div class="recap">
+      <div class="recap-details">
+        <div class="icon-bg">
+          <img
+            src="../assets/images/gallery.png"
+            alt="calendar"
+            class="icon"
+          >
+        </div>
+        <p data-test="template-detail">
+          <b>Visuel : </b>{{ talk.template.template }}
+        </p>
+      </div>
+      <div class="recap-details">
+        <div class="icon-bg">
+          <img
+            src="../assets/images/calendar.png"
+            alt="calendar"
+            class="icon"
+          >
+        </div>
+        <p data-test="date-detail">
+          <b>Dates : </b>{{ talk.date.start }} au {{ talk.date.end }}
+        </p>
+      </div>
+      <div>
+        <div class="recap-details">
+          <div class="icon-bg">
+            <img
+              src="../assets/images/microphone.png"
+              alt="calendar"
+              class="icon"
+            >
+          </div>
+          <p><b>Liste des talks : </b></p>
+        </div>
+        <ul class="events">
+          <li
+            v-for="talk in talk.getSelectedTalks"
+            :key="talk"
+            data-test="talk-title"
+          >
+            {{ talk.talkTitle }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="validate">
+      <ValidateBtn @click="sendTalks" />
+    </div>
+  </div>
 </template>
 
 <style scoped>

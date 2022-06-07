@@ -2,59 +2,58 @@
 import { useTalkStore } from '@/stores/talks';
 import Modal from '../RecapModal.vue';
   
-  export default {
-    components: {
-      Modal,
-    },
-    data () {
-        return {
-            isModalVisible: false,
-            isAddClass: false,
-        };
-    },
-    setup() {
-        const talk = useTalkStore();
+export default {
+  components: {
+    Modal,
+  },
+  setup() {
+    const talk = useTalkStore();
 
-        return{
-            talk
-        }
+    return{
+      talk
+    }
+  },
+  data () {
+    return {
+      isModalVisible: false,
+      isAddClass: false,
+    };
+  },
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+      this.talk.blur();
+      this.addClass()
     },
-    methods: {
-        showModal() {
-            this.isModalVisible = true;
-            this.talk.blur();
-        },
-        closeModal() {
-            this.isModalVisible = false;
-            this.talk.clarify()
-        },
-        addClass() {
-            this.isAddClass = true;
-        },
-        deleteClass() {
-            this.isAddClass = false;
-        }
+    closeModal() {
+      this.isModalVisible = false;
+      this.talk.clarify()
     },
-  };
+    addClass() {
+      this.isAddClass = true;
+    },
+    deleteClass() {
+      this.isAddClass = false;
+    }
+  },
+};
 </script>
 
 <template>
-    <button 
-        type="submit" 
-        class="generate-btn"
-        @click=showModal
-        v-on:click="addClass"
-        :class="{'blurClass': isAddClass}"
-    >
-        GÉNÉRER UN VISUEL
-    </button>
+  <button 
+    type="submit" 
+    class="generate-btn"
+    :class="{'blurClass': isAddClass}"
+    @click="showModal"
+  >
+    GÉNÉRER UN VISUEL
+  </button>
     
-    <Modal
-        v-show="isModalVisible"
-        @close="closeModal"
-        v-on:click="deleteClass"
-    />
-    
+  <Modal
+    v-show="isModalVisible"
+    @close="closeModal"
+    @click="deleteClass"
+  />
 </template>
 
 <style scoped>
