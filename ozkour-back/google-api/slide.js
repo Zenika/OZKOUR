@@ -38,7 +38,7 @@ async function createSlideFromTalks(talks) {
  * @param {Array} The talks that need to be clustered
  * @return {dataOrganized} dataOrganized where the keys are the date and the values are the talks
  */
- function clusterByDate(data) {
+function clusterByDate(data) {
   let dataOrganized = new Map();
   for (let i = 0; i < data.length; i++) {
     if (!dataOrganized.has(data[i].date)) {
@@ -132,75 +132,75 @@ function test(auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
- function addDateTextWithStyle(idPage, date, Y) {
-    const pt350 = {
-      magnitude: 350,
-      unit: "PT",
-    };
-    const pt30 = {
-      magnitude: 30,
-      unit: "PT",
-    };
-  
-    return [
-      {
-        //create a shape to put text in it
-        createShape: {
-          objectId: date.replaceAll("/", "-"),
-          shapeType: "TEXT_BOX",
-          elementProperties: {
-            pageObjectId: idPage,
-            size: {
-              height: pt30,
-              width: pt350,
-            },
-            transform: {
-              scaleX: 1,
-              scaleY: 1,
-              translateX: 70,
-              translateY: Y,
-              unit: "PT",
-            },
+function addDateTextWithStyle(idPage, date, Y) {
+  const pt350 = {
+    magnitude: 350,
+    unit: "PT",
+  };
+  const pt30 = {
+    magnitude: 30,
+    unit: "PT",
+  };
+
+  return [
+    {
+      //create a shape to put text in it
+      createShape: {
+        objectId: date.replaceAll("/", "-"),
+        shapeType: "TEXT_BOX",
+        elementProperties: {
+          pageObjectId: idPage,
+          size: {
+            height: pt30,
+            width: pt350,
+          },
+          transform: {
+            scaleX: 1,
+            scaleY: 1,
+            translateX: 70,
+            translateY: Y,
+            unit: "PT",
           },
         },
       },
-  
-      {
-        insertText: {
-          //add date to the text
-          objectId: date.replaceAll("/", "-"),
-          insertionIndex: 0,
-          text: date,
-        },
+    },
+
+    {
+      insertText: {
+        //add date to the text
+        objectId: date.replaceAll("/", "-"),
+        insertionIndex: 0,
+        text: date,
       },
-      {
-        updateTextStyle: {
-          //add style to the date
-          objectId: date.replaceAll("/", "-"),
-          style: {
-            underline: true,
-            fontFamily: "Nunito",
-            fontSize: {
-              magnitude: 17,
-              unit: "PT",
-            },
-            foregroundColor: defaultForegroundColor,
+    },
+    {
+      updateTextStyle: {
+        //add style to the date
+        objectId: date.replaceAll("/", "-"),
+        style: {
+          underline: true,
+          fontFamily: "Nunito",
+          fontSize: {
+            magnitude: 17,
+            unit: "PT",
           },
-          fields: "underline,foregroundColor,fontFamily,fontSize",
+          foregroundColor: defaultForegroundColor,
         },
+        fields: "underline,foregroundColor,fontFamily,fontSize",
       },
-      {
-        //center the date
-        updateParagraphStyle: {
-          objectId: date.replaceAll("/", "-"),
-          style: {
-            alignment: "CENTER",
-          },
-          fields: "alignment",
+    },
+    {
+      //center the date
+      updateParagraphStyle: {
+        objectId: date.replaceAll("/", "-"),
+        style: {
+          alignment: "CENTER",
         },
+        fields: "alignment",
       },
-    ];
-  }
+    },
+  ];
+}
   
   function CreateTableWithStyleForAllEventsInDate(
     idPage,
@@ -403,7 +403,7 @@ function test(auth, talks) {
  * @param {string} presentationId The presentation ID.
  * @param {string} pageId The presentation page ID.
  */
- async function createImage(presentationId, pageId, auth) {
+ async function createImage(presentationId, pageId, auth, eventType) {
   console.log("create picto");
   const {GoogleAuth} = require('google-auth-library');
   const {google} = require('googleapis');
@@ -413,11 +413,24 @@ function test(auth, talks) {
 
   const service = google.slides({version: 'v1', auth});
 
-  const imageUrl =
-    'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png';
+  const pictogram = new Map();
+
+  pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+  pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+  pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+  pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+  pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+
+
+  const imageUrl = pictogram.get(eventType)
+  console.log('show picto', imageUrl);
+  console.log(eventType);
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = 'Picto_Conference';
-  const emu4M = {
+  const imageId = function(){
+    return Date.now().toString(36) + Math.random().toString(36);
+  };
+
+  const imgSize = {
     magnitude: 110,
     unit: 'PT',
   };
@@ -428,8 +441,8 @@ function test(auth, talks) {
       elementProperties: {
         pageObjectId: pageId,
         size: {
-          height: emu4M,
-          width: emu4M,
+          height: imgSize,
+          width: imgSize,
         },
         transform: {
           scaleX: 1,
@@ -457,13 +470,13 @@ function test(auth, talks) {
   }
 }
 
-  /**
-   * generate the requests to add a date text to a slide
-   * @param {string} the id of the page where the elements need to be deleted
-   * @param {string} the date we need to add to the slide
-   * @param {int} the place (only axis y) where we need put the date
-   * @return {Array} return an array of the requests
-   */
+/**
+ * generate the requests to add a date text to a slide
+ * @param {string} the id of the page where the elements need to be deleted
+ * @param {string} the date we need to add to the slide
+ * @param {int} the place (only axis y) where we need put the date
+ * @return {Array} return an array of the requests
+ */
   function addTableData(auth, idPage, presentationId, data) {
     const slides = google.slides({ version: "v1", auth });
     const dataOrganized = clusterByDate(data);
@@ -500,6 +513,7 @@ function test(auth, talks) {
           )
         );
         IndexRowInTableToInsert++;
+        createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
   
         //add all talk for the event
         for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
@@ -621,7 +635,6 @@ function test(auth, talks) {
       },
       (err, res) => {
         deleteTemplateInfo(auth, newIdPage, presentationId);
-        createImage(presentationId, newIdPage, auth)
         addTableData(auth, newIdPage, presentationId, talkSelected);
       }
     );
