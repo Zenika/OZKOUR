@@ -35,7 +35,10 @@ jobs:
           command: npm install
           name: Install dependencies
       - run:
-          command: npm run test
+          command: npm run lint
+          name: Run linter
+      -run:
+          command: npm run test:unit
           name: Run tests
       - run:
           command: ls -ail ~/OZKOUR/ozkour-back/test-results
