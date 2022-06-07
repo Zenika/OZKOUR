@@ -535,11 +535,24 @@ async function createImage (pageId, auth) {
 
   const service = google.slides({ version: 'v1', auth })
 
-  const imageUrl =
-    'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png'
+  const pictogram = new Map();
+
+  pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+  pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+  pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+  pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+  pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+
+
+  const imageUrl = pictogram.get(eventType)
+  console.log('show picto', imageUrl);
+  console.log(eventType);
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = 'Picto_Conference'
-  const emu4M = {
+  const imageId = function(){
+    return Date.now().toString(36) + Math.random().toString(36);
+  };
+
+  const imgSize = {
     magnitude: 110,
     unit: 'PT'
   }
@@ -550,8 +563,8 @@ async function createImage (pageId, auth) {
       elementProperties: {
         pageObjectId: pageId,
         size: {
-          height: emu4M,
-          width: emu4M
+          height: imgSize,
+          width: imgSize,
         },
         transform: {
           scaleX: 1,
