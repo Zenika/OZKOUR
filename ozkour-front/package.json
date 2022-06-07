@@ -5,10 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
     "lint": "eslint --ext .js,.vue src",
-    "lint:fix": "eslint --ext .js,.vue src --fix",
-    "test": "vue-cli-service test:unit"
+    "lint:fix": "npm run lint -- --fix",
+    "test:unit": "vue-cli-service test:unit",
+    "test": "npm run test:unit && npm run lint"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^3.1.1",
