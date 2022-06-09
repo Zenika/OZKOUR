@@ -90,7 +90,7 @@ export default {
     </div>
 
     <div class="validate">
-      <ValidateBtn @click="sendTalks" />
+      <ValidateBtn @click="$emit('close'),sendTalks"/>
     </div>
   </div>
 </template>

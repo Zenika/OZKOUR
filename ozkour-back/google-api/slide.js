@@ -26,6 +26,14 @@ const greyForegroundColor = {
   },
 };
 
+const slideSpacing = {
+  EVENT: 45,
+  TALK: 40,
+  DATE: 40,
+};
+
+const DEFAULT_START_Y_INDEX = 100;
+
 async function createSlideFromTalks(talks,h) {
   try {
     const res = await connect.authMethode(createSlides, talks);
@@ -391,6 +399,7 @@ function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
+
 function addTableData(auth, idPage, data) {
   const slides = google.slides({ version: "v1", auth });
   const dataOrganized = clusterByDate(data);
@@ -400,12 +409,12 @@ function addTableData(auth, idPage, data) {
 
   let date = mapIter.next().value;
   let IndexRowInTableToInsert = 0;
-  let yNextElmt = 100;
+  let yNextElmt = DEFAULT_START_Y_INDEX;
 
   while (date !== undefined) {
     IndexRowInTableToInsert = 0;
     requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
-    yNextElmt += 40;
+    yNextElmt += slideSpacing.DATE;
 
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
@@ -427,6 +436,7 @@ function addTableData(auth, idPage, data) {
         )
       );
       IndexRowInTableToInsert++;
+      yNextElmt += slideSpacing.EVENT;
 
       //add all talk for the event
       for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
@@ -436,15 +446,11 @@ function addTableData(auth, idPage, data) {
           addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
         IndexRowInTableToInsert++;
+        yNextElmt += slideSpacing.TALK;
       }
     }
 
-    yNextElmt += checkSizeElement(
-      auth,
-      idPage,
-      presentationId,
-      date.replaceAll("/", "-") + "-table"
-    );
+    
     date = mapIter.next().value;
   }
   const promiseAddTableData = new Promise((resolve, reject) => {
@@ -472,12 +478,18 @@ function addTableData(auth, idPage, data) {
   return promiseAddTableData;
 }
 
-// TO DO
-function checkSizeElement(auth, idPage, elementId) {
-  const size = 130;
-  // TO DO
-
-  return size;
+  // Execute the request.
+  return slides.presentations.batchUpdate(
+    {
+      presentationId: presentationId,
+      resource: {
+        requests,
+      },
+    },
+    (err, res) => {
+      console.log(err);
+    }
+  );
 }
 
 /**
