@@ -20,28 +20,28 @@ export default {
   },
   methods: {
     showModal() {
-            this.talk.blur();
-        },
-        closeModal() {
-            this.talk.clarify()
-        },
+      this.talk.blur();
+    },
+    closeModal() {
+      this.talk.clarify()
+    },
   },
 };
 </script>
 
 <template>
   <button 
-      type="submit" 
-      class="generate-btn"
-      @click=showModal
-      :class="{'blurClass': talk.blured}"
+    type="submit" 
+    class="generate-btn"
+    :class="{'blurClass': talk.blured}"
+    @click="showModal"
   >
-      GÉNÉRER UN VISUEL
+    GÉNÉRER UN VISUEL
   </button>
 
   <Modal
-      v-show="talk.blured"
-      @close="closeModal"
+    v-show="talk.blured"
+    @close="closeModal"
   />
     
   <Modal

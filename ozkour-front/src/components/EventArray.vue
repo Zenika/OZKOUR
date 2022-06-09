@@ -1,5 +1,5 @@
 <template>
-  <h2 v-if="talk.retrieved == ''">
+  <h2 v-if="talks.retrieved == ''">
     Pas de talks entre les dates recherchées
   </h2>
   <div v-else>
@@ -68,7 +68,7 @@ export default {
   },
 
   setup() {
-    const talk = useTalkStore();
+    const talks = useTalkStore();
 
     const sort = ref("");
     const ascending = ref(false);
@@ -90,8 +90,8 @@ export default {
     }
 
     const sortedTalk = computed(() => {
-      if (ascending.value) return talk.retrieved.sort((a, b) => compare(a, b));
-      else return talk.retrieved.sort((a, b) => compare(b, a));
+      if (ascending.value) return talks.retrieved.sort((a, b) => compare(a, b));
+      else return talks.retrieved.sort((a, b) => compare(b, a));
     });
 
     function setSort(column) {
@@ -102,7 +102,7 @@ export default {
       }
     }
 
-    //console.log(talk)
+    //console.log(talks)
 
     function check(talkSelected, event) {
       const value = {
@@ -117,15 +117,15 @@ export default {
 
       if (event.target.checked) {
         //is selected
-        talk.checkTalk(value);
+        talks.checkTalk(value);
       } else {
         //is not selected
-        talk.uncheckTalk(value);
+        talks.uncheckTalk(value);
       }
     }
 
     return {
-      talk,
+      talks,
       sort,
       ascending,
       sortedTalk,
@@ -137,7 +137,7 @@ export default {
 };
 
 //setInterval(function(){
-// console.log(talk.talks)
+// console.log(talks.talks)
 //},1000);
 </script>
 
