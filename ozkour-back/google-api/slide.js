@@ -581,20 +581,6 @@ function addTableData (auth, idPage, data) {
   return promiseAddTableData
 }
 
-  // Execute the request.
-  return slides.presentations.batchUpdate(
-    {
-      presentationId: presentationId,
-      resource: {
-        requests,
-      },
-    },
-    (err, res) => {
-      console.log(err);
-    }
-  );
-}
-
 /**
  * delete the elements copied from the model used for the style of the data
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
