@@ -28,12 +28,13 @@ const greyForegroundColor = {
   },
 };
 
-const spaceEvent = 45;
-const spaceTalk = 40;
-const spaceDate = 40;
-const defaultStartYIndex = 100;
+const slideSpacing = {
+  EVENT: 45,
+  TALK: 40,
+  DATE: 40,
+};
 
-
+const DEFAULT_START_Y_INDEX = 100;
 
 async function createSlideFromTalks(talks,h) {
   try {
@@ -301,7 +302,9 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           },
           fields: "columnWidth",
         },
+        fields: "tableBorderFill",
       },
+<<<<<<< HEAD
     ];
   }
   
@@ -321,10 +324,29 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           },
           insertionIndex: 0,
           text: arrayOfTalksForAnEvent.eventName,
+=======
+    },
+  ];
+}
+
+function addEventNameWithStyleToTable(
+  date,
+  arrayOfTalksForAnEvent,
+  IndexRowInTableToInsert
+) {
+  return [
+    {
+      insertText: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+>>>>>>> b735be8 (refactoring space slides)
         },
         insertionIndex: 0,
         text: arrayOfTalksForAnEvent.eventName,
       },
+<<<<<<< HEAD
       {
         updateTextStyle: {
           objectId,
@@ -344,6 +366,22 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           fields: "bold,foregroundColor,fontFamily,fontSize",
           textRange: {
             type: "ALL",
+=======
+    },
+    {
+      updateTextStyle: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+        },
+        style: {
+          fontFamily: "Nunito",
+          bold: true,
+          fontSize: {
+            magnitude: 20,
+            unit: "PT",
+>>>>>>> b735be8 (refactoring space slides)
           },
           foregroundColor: defaultForegroundColor,
         },
@@ -352,6 +390,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           type: "ALL",
         },
       },
+<<<<<<< HEAD
     ];
   }
   
@@ -367,10 +406,25 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           },
           insertionIndex: 0,
           text: talk.talkTitle,
+=======
+    },
+  ];
+}
+
+function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  return [
+    {
+      insertText: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+>>>>>>> b735be8 (refactoring space slides)
         },
         insertionIndex: 0,
         text: talk.talkTitle,
       },
+<<<<<<< HEAD
       {
         updateTextStyle: {
           objectId,
@@ -390,6 +444,22 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           fields: "bold,foregroundColor,fontFamily,fontSize",
           textRange: {
             type: "ALL",
+=======
+    },
+    {
+      updateTextStyle: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0,
+        },
+        style: {
+          fontFamily: "Nunito",
+          bold: true,
+          fontSize: {
+            magnitude: 14,
+            unit: "PT",
+>>>>>>> b735be8 (refactoring space slides)
           },
           foregroundColor: defaultForegroundColor,
         },
@@ -398,6 +468,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           type: "ALL",
         },
       },
+<<<<<<< HEAD
     ];
   }
   
@@ -413,10 +484,25 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           },
           insertionIndex: 0,
           text: talk.speakers,
+=======
+    },
+  ];
+}
+
+function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  return [
+    {
+      insertText: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 1,
+>>>>>>> b735be8 (refactoring space slides)
         },
         insertionIndex: 0,
         text: talk.speakers,
       },
+<<<<<<< HEAD
       {
         updateTextStyle: {
           objectId,
@@ -435,6 +521,21 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           fields: "foregroundColor,fontFamily,fontSize",
           textRange: {
             type: "ALL",
+=======
+    },
+    {
+      updateTextStyle: {
+        objectId: date.replaceAll("/", "-") + "-table",
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 1,
+        },
+        style: {
+          fontFamily: "Nunito",
+          fontSize: {
+            magnitude: 13,
+            unit: "PT",
+>>>>>>> b735be8 (refactoring space slides)
           },
           foregroundColor: greyForegroundColor,
         },
@@ -443,6 +544,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           type: "ALL",
         },
       },
+<<<<<<< HEAD
     ];
   }
 
@@ -513,6 +615,10 @@ function addDateTextWithStyle(idPage, objectId, Y) {
     // TODO (developer) - Handle exception
     throw err;
   }
+=======
+    },
+  ];
+>>>>>>> b735be8 (refactoring space slides)
 }
 
 /**
@@ -522,25 +628,7 @@ function addDateTextWithStyle(idPage, objectId, Y) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-
-  function addTableData(auth, idPage, presentationId, data) {
-    const slides = google.slides({ version: "v1", auth });
-    const dataOrganized = clusterByDate(data);
-  
-    const requests = [];
-    let mapIter = dataOrganized.keys();
-  
-    let date = mapIter.next().value;
-    let IndexRowInTableToInsert = 0;
-    let yNextElmt = defaultStartYIndex;
-  
-    while (date !== undefined) {
-      IndexRowInTableToInsert = 0;
-      const dateId = date.replaceAll("/", "-")
-      requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt));
-      yNextElmt += spaceDate;
-  
-function addTableData(auth, idPage, data) {
+function addTableData(auth, idPage, presentationId, data) {
   const slides = google.slides({ version: "v1", auth });
   const dataOrganized = clusterByDate(data);
 
@@ -549,12 +637,13 @@ function addTableData(auth, idPage, data) {
 
   let date = mapIter.next().value;
   let IndexRowInTableToInsert = 0;
-  let yNextElmt = 100;
+  let yNextElmt = DEFAULT_START_Y_INDEX;
 
   while (date !== undefined) {
+    const dateId = date.replaceAll("/", "-")
     IndexRowInTableToInsert = 0;
     requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
-    yNextElmt += 40;
+    yNextElmt += slideSpacing.DATE;
 
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
@@ -566,24 +655,23 @@ function addTableData(auth, idPage, data) {
     );
 
     //for each event
-    for (let i = 0; i < dataOrganized.get(date).length; i++) {
-      const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
-      requests.push(
-        CreateTableWithStyleForAllEventsInDate(
-          idPage,
-          dateId,
-          yNextElmt,
-          dataOrganized
-        )
-      );
+
       for (let i = 0; i < dataOrganized.get(date).length; i++) {
         const arrayOfTalksForAnEvent = dataOrganized.get(date)[i];
+        addEventNameWithStyleToTable(
+          date,
+          arrayOfTalksForAnEvent,
+          IndexRowInTableToInsert
+        )
+      IndexRowInTableToInsert++;
+      yNextElmt += slideSpacing.EVENT;
+
+      //add all talk for the event
+      for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
+        const talk = arrayOfTalksForAnEvent.talks[j];
         requests.push(
-          addEventNameWithStyleToTable(
-            date,
-            arrayOfTalksForAnEvent,
-            IndexRowInTableToInsert
-          )
+          addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
+          addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
       IndexRowInTableToInsert++;
 
@@ -595,6 +683,7 @@ function addTableData(auth, idPage, data) {
           addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
         IndexRowInTableToInsert++;
+<<<<<<< HEAD
         createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
         yNextElmt += spaceEvent;
   
@@ -606,7 +695,7 @@ function addTableData(auth, idPage, data) {
             addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
           );
           IndexRowInTableToInsert++;
-          yNextElmt += spaceTalk;
+          yNextElmt += slideSpacing.TALK;
         }
       }
       date = mapIter.next().value;
@@ -646,6 +735,28 @@ function addTableData(auth, idPage, data) {
 }
 
 
+=======
+        yNextElmt += slideSpacing.TALK;
+      }
+    }
+
+    date = mapIter.next().value;
+  }
+>>>>>>> b735be8 (refactoring space slides)
+
+  // Execute the request.
+  return slides.presentations.batchUpdate(
+    {
+      presentationId: presentationId,
+      resource: {
+        requests,
+      },
+    },
+    (err, res) => {
+      console.log(err);
+    }
+  );
+}
 
 /**
  * delete the elements copied from the model used for the style of the data
