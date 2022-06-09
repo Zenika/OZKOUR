@@ -304,7 +304,6 @@ function addDateTextWithStyle(idPage, objectId, Y) {
         },
         fields: "tableBorderFill",
       },
-<<<<<<< HEAD
     ];
   }
   
@@ -324,29 +323,10 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           },
           insertionIndex: 0,
           text: arrayOfTalksForAnEvent.eventName,
-=======
-    },
-  ];
-}
-
-function addEventNameWithStyleToTable(
-  date,
-  arrayOfTalksForAnEvent,
-  IndexRowInTableToInsert
-) {
-  return [
-    {
-      insertText: {
-        objectId: date.replaceAll("/", "-") + "-table",
-        cellLocation: {
-          rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0,
->>>>>>> b735be8 (refactoring space slides)
         },
         insertionIndex: 0,
         text: arrayOfTalksForAnEvent.eventName,
       },
-<<<<<<< HEAD
       {
         updateTextStyle: {
           objectId,
@@ -366,22 +346,6 @@ function addEventNameWithStyleToTable(
           fields: "bold,foregroundColor,fontFamily,fontSize",
           textRange: {
             type: "ALL",
-=======
-    },
-    {
-      updateTextStyle: {
-        objectId: date.replaceAll("/", "-") + "-table",
-        cellLocation: {
-          rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0,
-        },
-        style: {
-          fontFamily: "Nunito",
-          bold: true,
-          fontSize: {
-            magnitude: 20,
-            unit: "PT",
->>>>>>> b735be8 (refactoring space slides)
           },
           foregroundColor: defaultForegroundColor,
         },
@@ -390,7 +354,6 @@ function addEventNameWithStyleToTable(
           type: "ALL",
         },
       },
-<<<<<<< HEAD
     ];
   }
   
@@ -406,25 +369,10 @@ function addEventNameWithStyleToTable(
           },
           insertionIndex: 0,
           text: talk.talkTitle,
-=======
-    },
-  ];
-}
-
-function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
-  return [
-    {
-      insertText: {
-        objectId: date.replaceAll("/", "-") + "-table",
-        cellLocation: {
-          rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0,
->>>>>>> b735be8 (refactoring space slides)
         },
         insertionIndex: 0,
         text: talk.talkTitle,
       },
-<<<<<<< HEAD
       {
         updateTextStyle: {
           objectId,
@@ -444,22 +392,6 @@ function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
           fields: "bold,foregroundColor,fontFamily,fontSize",
           textRange: {
             type: "ALL",
-=======
-    },
-    {
-      updateTextStyle: {
-        objectId: date.replaceAll("/", "-") + "-table",
-        cellLocation: {
-          rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0,
-        },
-        style: {
-          fontFamily: "Nunito",
-          bold: true,
-          fontSize: {
-            magnitude: 14,
-            unit: "PT",
->>>>>>> b735be8 (refactoring space slides)
           },
           foregroundColor: defaultForegroundColor,
         },
@@ -468,7 +400,6 @@ function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
           type: "ALL",
         },
       },
-<<<<<<< HEAD
     ];
   }
   
@@ -484,25 +415,10 @@ function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
           },
           insertionIndex: 0,
           text: talk.speakers,
-=======
-    },
-  ];
-}
-
-function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
-  return [
-    {
-      insertText: {
-        objectId: date.replaceAll("/", "-") + "-table",
-        cellLocation: {
-          rowIndex: IndexRowInTableToInsert,
-          columnIndex: 1,
->>>>>>> b735be8 (refactoring space slides)
         },
         insertionIndex: 0,
         text: talk.speakers,
       },
-<<<<<<< HEAD
       {
         updateTextStyle: {
           objectId,
@@ -521,21 +437,6 @@ function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
           fields: "foregroundColor,fontFamily,fontSize",
           textRange: {
             type: "ALL",
-=======
-    },
-    {
-      updateTextStyle: {
-        objectId: date.replaceAll("/", "-") + "-table",
-        cellLocation: {
-          rowIndex: IndexRowInTableToInsert,
-          columnIndex: 1,
-        },
-        style: {
-          fontFamily: "Nunito",
-          fontSize: {
-            magnitude: 13,
-            unit: "PT",
->>>>>>> b735be8 (refactoring space slides)
           },
           foregroundColor: greyForegroundColor,
         },
@@ -544,7 +445,6 @@ function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
           type: "ALL",
         },
       },
-<<<<<<< HEAD
     ];
   }
 
@@ -615,10 +515,6 @@ function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
     // TODO (developer) - Handle exception
     throw err;
   }
-=======
-    },
-  ];
->>>>>>> b735be8 (refactoring space slides)
 }
 
 /**
@@ -683,7 +579,6 @@ function addTableData(auth, idPage, presentationId, data) {
           addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
         IndexRowInTableToInsert++;
-<<<<<<< HEAD
         createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
         yNextElmt += spaceEvent;
   
@@ -735,14 +630,6 @@ function addTableData(auth, idPage, presentationId, data) {
 }
 
 
-=======
-        yNextElmt += slideSpacing.TALK;
-      }
-    }
-
-    date = mapIter.next().value;
-  }
->>>>>>> b735be8 (refactoring space slides)
 
   // Execute the request.
   return slides.presentations.batchUpdate(
