@@ -2,37 +2,34 @@
 import ValidateBtn from "./Buttons/ValidateBtn.vue";
 import { useTalkStore } from "../stores/talks";
 import axios from "axios";
-// import { dateStart, dateEnd } from '../components/ChoosingDate.vue'
 
 export default {
   components:{
     ValidateBtn
   },
+  emits: ['close'],
   setup(props, context) {
-    const talk = useTalkStore();
+    const talks = useTalkStore();
 
     const sendTalks = () => {
-      //console.log('talks', talk.getSelectedTalks);
-
       axios
-        .post("http://localhost:3000/selected-talks", talk.getSelectedTalks)
+        .post("http://localhost:3000/selected-talks", talks.getSelectedTalks)
         .then((response) => {
           console.log("res :", response);
           window.open(response.data.link, "_blank");
         })
         .catch(function (error) {
-          alert(error.response.data);
           console.log(error.response.data);
+          alert(error.response.data);
         }).finally(() => {
           context.emit("close")
         }
         );
-      //.then(window.location.replace("http://www.w3schools.com"))
     };
 
     return {
       sendTalks,
-      talk
+      talks,
     }
   },
 };
@@ -61,7 +58,7 @@ export default {
           >
         </div>
         <p data-test="template-detail">
-          <b>Visuel : </b>{{ talk.template.template }}
+          <b>Visuel : </b>{{ talks.template.template }}
         </p>
       </div>
       <div class="recap-details">
@@ -73,7 +70,7 @@ export default {
           >
         </div>
         <p data-test="date-detail">
-          <b>Dates : </b>{{ talk.date.start }} au {{ talk.date.end }}
+          <b>Dates : </b>{{ talks.date.start }} au {{ talks.date.end }}
         </p>
       </div>
       <div>
@@ -89,7 +86,7 @@ export default {
         </div>
         <ul class="events">
           <li
-            v-for="talk in talk.getSelectedTalks"
+            v-for="talk in talks.getSelectedTalks"
             :key="talk"
             data-test="talk-title"
           >
@@ -100,7 +97,7 @@ export default {
     </div>
 
     <div class="validate">
-      <ValidateBtn @click="$emit('close'),sendTalks" />
+      <ValidateBtn @click="sendTalks" />
     </div>
   </div>
 </template>

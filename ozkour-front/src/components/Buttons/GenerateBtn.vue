@@ -21,20 +21,11 @@ export default {
   },
   methods: {
     showModal() {
-      this.isModalVisible = true;
       this.talk.blur();
-      this.addClass()
     },
     closeModal() {
-      this.isModalVisible = false;
       this.talk.clarify()
     },
-    addClass() {
-      this.isAddClass = true;
-    },
-    deleteClass() {
-      this.isAddClass = false;
-    }
   },
 };
 </script>

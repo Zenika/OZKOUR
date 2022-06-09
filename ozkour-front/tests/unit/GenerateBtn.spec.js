@@ -1,4 +1,4 @@
-import GenerateBtn from "@/components/Buttons/GenerateBtn.vue";
+import GenerateBtn from "@/components/Buttons/GenerateBtn.vue"
 import { setActivePinia, createPinia } from "pinia";
 import { useTalkStore } from "../../src/stores/talks";
 import { createTestingPinia } from "@pinia/testing";
