@@ -274,8 +274,22 @@ function addDateTextWithStyle(idPage, objectId, Y) {
                     blue: 0,
                   },
                 },
+                alpha: 0,
               },
-              alpha: 0
+            },
+          },
+          fields: "tableBorderFill",
+        },
+      },
+      // Set the size of the first column of the table
+      {
+        updateTableColumnProperties : {
+          objectId,
+          columnIndices: [0],
+          tableColumnProperties : {
+            columnWidth: {
+              magnitude: 320,
+              unit
             }
           }
         },
@@ -308,7 +322,6 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           },
           fields: "columnWidth",
         },
-        fields: "tableBorderFill",
       },
     ];
   }
@@ -330,8 +343,6 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           insertionIndex: 0,
           text: arrayOfTalksForAnEvent.eventName,
         },
-        insertionIndex: 0,
-        text: arrayOfTalksForAnEvent.eventName,
       },
       {
         updateTextStyle: {
@@ -353,11 +364,6 @@ function addDateTextWithStyle(idPage, objectId, Y) {
           textRange: {
             type: "ALL",
           },
-          foregroundColor: defaultForegroundColor
-        },
-        fields: 'bold,foregroundColor,fontFamily,fontSize',
-        textRange: {
-          type: "ALL",
         },
       },
     ];
@@ -373,11 +379,47 @@ function addDateTextWithStyle(idPage, objectId, Y) {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 0,
           },
-          insertionIndex: 0,
-          text: talk.talkTitle,
+          foregroundColor: defaultForegroundColor
         },
-        insertionIndex: 0,
-        text: talk.talkTitle,
+      },
+      {
+        updateTextStyle: {
+          objectId,
+          cellLocation: {
+            rowIndex: IndexRowInTableToInsert,
+            columnIndex: 0,
+          },
+          style: {
+            fontFamily: "Nunito",
+            bold: true,
+            fontSize: {
+              magnitude: 14,
+              unit,
+            },
+            foregroundColor: defaultForegroundColor,
+          },
+          fields: "bold,foregroundColor,fontFamily,fontSize",
+          textRange: {
+            type: "ALL",
+          },
+        },
+      },
+    ];
+  }
+  
+  function addSpeakersWithStyleToTable(objectId, talk, IndexRowInTableToInsert) {
+    const objectId = date + '-table'
+    return [
+      {
+        insertText: {
+          objectId,
+          cellLocation: {
+            rowIndex: IndexRowInTableToInsert,
+            columnIndex: 1,
+          },
+          insertionIndex: 0,
+          text: talk.speakers,
+        },
       },
       {
         updateTextStyle: {
@@ -545,8 +587,6 @@ async function createImage (pageId, auth) {
 
 
   const imageUrl = pictogram.get(eventType)
-  console.log('show picto', imageUrl);
-  console.log(eventType);
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
   const imageId = function(){
     return Date.now().toString(36) + Math.random().toString(36);
@@ -554,8 +594,8 @@ async function createImage (pageId, auth) {
 
   const imgSize = {
     magnitude: 110,
-    unit: 'PT'
-  }
+    unit
+  };
   const requests = [{
     createImage: {
       objectId: imageId,
@@ -571,11 +611,11 @@ async function createImage (pageId, auth) {
           scaleY: 1,
           translateX: 455,
           translateY: 140,
-          unit: 'PT'
-        }
-      }
-    }
-  }]
+          unit
+        },
+      },
+    },
+  }];
 
   // Execute the request.
   const response = await service.presentations.batchUpdate({
@@ -615,7 +655,7 @@ function addTableData (auth, idPage, data) {
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
-        date,
+        dateId,
         yNextElmt,
         dataOrganized
       )
@@ -626,7 +666,7 @@ function addTableData (auth, idPage, data) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
       requests.push(
         addEventNameWithStyleToTable(
-          date,
+          dateId,
           arrayOfTalksForAnEvent,
           IndexRowInTableToInsert
         )
@@ -643,28 +683,8 @@ function addTableData (auth, idPage, data) {
           addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
         );
       IndexRowInTableToInsert++;
-
-      //add all talk for the event
-      for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
-        const talk = arrayOfTalksForAnEvent.talks[j];
-        requests.push(
-          addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
-          addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
-        );
-        IndexRowInTableToInsert++;
         createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
         yNextElmt += spaceEvent;
-  
-        //add all talk for the event
-        for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
-          const talk = arrayOfTalksForAnEvent.talks[j];
-          requests.push(
-            addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
-            addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
-          );
-          IndexRowInTableToInsert++;
-          yNextElmt += slideSpacing.TALK;
-        }
       }
       date = mapIter.next().value;
     }
