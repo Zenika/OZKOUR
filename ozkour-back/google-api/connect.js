@@ -28,11 +28,14 @@ function auth () {
  * @param {Object} credentials The authorization client credentials.
  */
 function authorize (credentials) {
-  const { client_secret, client_id, redirect_uris } = credentials.web
+  const clientId = credentials.web.client_id
+  const clientSecret = credentials.web.client_secret
+  const redirectUris = credentials.web.redirect_uris
+
   const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
+    clientId,
+    clientSecret,
+    redirectUris[0]
   )
 
   // Check if we have previously stored a token.
@@ -87,22 +90,16 @@ async function authMethode (callback, params) {
     (err, content) => {
       if (err) return console.log('Error loading client secret file:', err)
       // Authorize a client with credentials, then call the Google Sheets API.
-      const { client_secret, client_id, redirect_uris } =
-        JSON.parse(content).web
-
-      const oAuth2Client = new google.auth.OAuth2(
-        client_id,
-        client_secret,
-        redirect_uris[0]
-      )
     }
   )
-  const { client_secret, client_id, redirect_uris } = JSON.parse(content).web
 
+  const clientId = JSON.parse(content).web.client_id
+  const clientSecret = JSON.parse(content).web.client_secret
+  const redirectUris = JSON.parse(content).web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
-    client_id,
-    client_secret,
-    redirect_uris[0]
+    clientId,
+    clientSecret,
+    redirectUris[0]
   )
   const token = await fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client)
