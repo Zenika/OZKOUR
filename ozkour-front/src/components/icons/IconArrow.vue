@@ -1,7 +1,7 @@
 <template>
   <svg
-    version="1.1"
     id="Capa_1"
+    version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     x="0px"
@@ -16,21 +16,21 @@
 		c-20.4,20.4-20.4,53.6,0,74s53.6,20.4,74,0l154.2-154.2L397.7,376.1z"
       />
     </g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
-    <g></g>
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
+    <g />
   </svg>
 </template>
 

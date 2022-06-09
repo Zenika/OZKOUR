@@ -6,65 +6,68 @@ const talk = useTalkStore()
 
 const selected = ref('')
 
-  const visuals = [
-    {
-      id : "quoide9",
-      label : "QUOI DE 9",
-      value : "Quoi de 9",
-      frequency : "week" 
-    },
-    {
-      id : "emailing",
-      label : "E-MAILING",
-      value : "E-mailing",
-      frequency : "month"
-    },
-    {
-      id : "meetup",
-      label : "MEET-UP",
-      value : "Meet-up",
-      frequency : "month"
-    },
-    {
-      id : "slack",
-      label : "SLACK",
-      value : "Slack",
-      frequency : "month"
-    },
-  ]
+const visuals = [
+  {
+    id : "quoide9",
+    label : "QUOI DE 9",
+    value : "Quoi de 9",
+    frequency : "week" 
+  },
+  {
+    id : "emailing",
+    label : "E-MAILING",
+    value : "E-mailing",
+    frequency : "month"
+  },
+  {
+    id : "meetup",
+    label : "MEET-UP",
+    value : "Meet-up",
+    frequency : "month"
+  },
+  {
+    id : "slack",
+    label : "SLACK",
+    value : "Slack",
+    frequency : "month"
+  },
+]
   
-  talk.pickedTemplate(visuals[0].value,visuals[0].frequency);
+talk.pickedTemplate(visuals[0].value,visuals[0].frequency);
 
-  watch(selected, async (newSelect) => {
-    let n = 0
-    while(visuals[n].value !== newSelect){
-      n++;
-    }
-    talk.pickedTemplate(newSelect,visuals[n].frequency);
-  })
+watch(selected, async (newSelect) => {
+  let n = 0
+  while(visuals[n].value !== newSelect){
+    n++;
+  }
+  talk.pickedTemplate(newSelect,visuals[n].frequency);
+})
 
 </script>
 
 <template>
-    <div action="#">
-      <fieldset>
-        <legend>Choisir un visuel</legend>
-        <div class="templateChoice">
-          <div v-for="visual in visuals" v-bind:key="visual">
-            <input
-              type="radio"
-              :id="visual.id"
-              name="template"
-              :value="visual.value"
-              :checked="visual.id == 'quoide9'"
-              class="radio-btn"
-              v-model="selected"
-            />
-            <label :for="visual.id" >{{visual.label}}</label>
-          </div>
+  <div action="#">
+    <fieldset>
+      <legend>Choisir un visuel</legend>
+      <div class="templateChoice">
+        <div
+          v-for="visual in visuals"
+          :key="visual"
+        >
+          <input
+            :id="visual.id"
+            v-model="selected"
+            type="radio"
+            name="template"
+            :value="visual.value"
+            :checked="visual.id == 'quoide9'"
+            class="radio-btn"
+          >
+          <label :for="visual.id">{{ visual.label }}</label>
         </div>
-      </fieldset>
-    </div>
+      </div>
+    </fieldset>
+  </div>
 </template>
 
 <style scoped>

@@ -26,23 +26,23 @@ describe("ListEvent Component", () => {
     const todo = wrapper.get("h2");
     expect(todo.text()).toBe("Pas de talks entre les dates recherchées");
   }),
-    it("Display Title when talks", () => {
-      // Create an instance of our component
-      const wrapper = mount(EventArray, {
-        global: {
-          plugins: [
-            createTestingPinia({
-              initialState: {
-                talk: { retrieved: talksRetrieved },
-              },
-            }),
-          ],
-        },
-      });
-
-      const todo = wrapper.get("h2");
-      expect(todo.text()).toBe("Liste des événements sélectionnés");
+  it("Display Title when talks", () => {
+    // Create an instance of our component
+    const wrapper = mount(EventArray, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              talk: { retrieved: talksRetrieved },
+            },
+          }),
+        ],
+      },
     });
+
+    const todo = wrapper.get("h2");
+    expect(todo.text()).toBe("Liste des événements sélectionnés");
+  });
   it("Right amount of columns when talks", () => {
     // Create an instance of our component
     const wrapper = mount(EventArray, {
@@ -74,92 +74,92 @@ describe("ListEvent Component", () => {
     });
     expect(wrapper.findAll('[data-test="talks"]')).toHaveLength(5);
   }),
-    it("uncheck is working", async () => {
-      // Create an instance of our component
-      const wrapper = mount(EventArray, {
-        global: {
-          plugins: [
-            createTestingPinia({
-              initialState: {
-                talk: { retrieved: talksRetrieved },
-              },
-            }),
-          ],
-        },
-      });
-
-      const talk = useTalkStore();
-      const inputCheckbox = wrapper.find('[type="checkbox"]');
-      await inputCheckbox.setChecked(false);
-
-      expect(inputCheckbox.element.checked).toBe(false);
-      expect(talk.uncheckTalk).toHaveBeenCalledTimes(1);
-    }),
-    it("check talk is working", async () => {
-      // Create an instance of our component
-      const wrapper = mount(EventArray, {
-        global: {
-          plugins: [
-            createTestingPinia({
-              initialState: {
-                talk: { retrieved: talksRetrieved },
-              },
-            }),
-          ],
-        },
-      });
-
-      const talk = useTalkStore();
-      const inputCheckbox = wrapper.find('[type="checkbox"]');
-
-      await inputCheckbox.setChecked(false);
-      await inputCheckbox.setChecked(true);
-
-      expect(inputCheckbox.element.checked).toBe(true);
-      expect(talk.checkTalk).toHaveBeenCalledTimes(1);
-    }),
-    it("check order(ascending/discending) when clicking on column", async () => {
-      // Create an instance of our component
-      const wrapper = mount(EventArray, {
-        global: {
-          plugins: [
-            createTestingPinia({
-              initialState: {
-                talk: { retrieved: talksRetrieved },
-              },
-            }),
-          ],
-        },
-      });
-
-      const talk = useTalkStore();
-
-      let columns = wrapper.find('[data-test="speakers"]');
-      let talksLines = wrapper.findAll('[data-test="talks"]');
-      let listSpeakersOrderedAsTheyAppear = [];
-
-      await columns.trigger("click");
-
-      talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
-
-      talksLines.forEach((element) => {
-        listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
-      });
-
-      expect(isAscending(listSpeakersOrderedAsTheyAppear)).toBe(true);
-
-      await columns.trigger("click");
-
-      talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
-      listSpeakersOrderedAsTheyAppear = [];
-
-      talksLines.forEach((element) => {
-        listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
-      });
-
-      expect(isDescending(listSpeakersOrderedAsTheyAppear)).toBe(true);
-
+  it("uncheck is working", async () => {
+    // Create an instance of our component
+    const wrapper = mount(EventArray, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              talk: { retrieved: talksRetrieved },
+            },
+          }),
+        ],
+      },
     });
+
+    const talk = useTalkStore();
+    const inputCheckbox = wrapper.find('[type="checkbox"]');
+    await inputCheckbox.setChecked(false);
+
+    expect(inputCheckbox.element.checked).toBe(false);
+    expect(talk.uncheckTalk).toHaveBeenCalledTimes(1);
+  }),
+  it("check talk is working", async () => {
+    // Create an instance of our component
+    const wrapper = mount(EventArray, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              talk: { retrieved: talksRetrieved },
+            },
+          }),
+        ],
+      },
+    });
+
+    const talk = useTalkStore();
+    const inputCheckbox = wrapper.find('[type="checkbox"]');
+
+    await inputCheckbox.setChecked(false);
+    await inputCheckbox.setChecked(true);
+
+    expect(inputCheckbox.element.checked).toBe(true);
+    expect(talk.checkTalk).toHaveBeenCalledTimes(1);
+  }),
+  it("check order(ascending/discending) when clicking on column", async () => {
+    // Create an instance of our component
+    const wrapper = mount(EventArray, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              talk: { retrieved: talksRetrieved },
+            },
+          }),
+        ],
+      },
+    });
+
+    const talk = useTalkStore();
+
+    let columns = wrapper.find('[data-test="speakers"]');
+    let talksLines = wrapper.findAll('[data-test="talks"]');
+    let listSpeakersOrderedAsTheyAppear = [];
+
+    await columns.trigger("click");
+
+    talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
+
+    talksLines.forEach((element) => {
+      listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
+    });
+
+    expect(isAscending(listSpeakersOrderedAsTheyAppear)).toBe(true);
+
+    await columns.trigger("click");
+
+    talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
+    listSpeakersOrderedAsTheyAppear = [];
+
+    talksLines.forEach((element) => {
+      listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
+    });
+
+    expect(isDescending(listSpeakersOrderedAsTheyAppear)).toBe(true);
+
+  });
 });
 
 const talksRetrieved = [

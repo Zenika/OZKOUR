@@ -5,9 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "npm run lint -- --fix",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
-    "test": "vue-cli-service test:unit"
+    "test": "npm run test:unit && npm run lint"
   },
   "dependencies": {
     "@vuepic/vue-datepicker": "^3.1.1",
@@ -39,41 +40,8 @@
     "jest-junit": "^13.2.0",
     "sass": "^1.50.1",
     "sass-loader": "^12.6.0",
-    "vitest": "^0.10.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {},
-    "overrides": [
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      },
-      {
-        "files": [
-          "**/__tests__/*.{j,t}s?(x)",
-          "**/tests/unit/**/*.spec.{j,t}s?(x)"
-        ],
-        "env": {
-          "jest": true
-        }
-      }
-    ]
+    "vitest": "^0.10.0",
+    "vue-eslint-parser": "^9.0.2"
   },
   "browserslist": [
     "> 1%",

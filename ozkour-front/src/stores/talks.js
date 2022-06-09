@@ -22,12 +22,12 @@ export const useTalkStore = defineStore({
     },
     checkTalk(selected) {
       this.retrieved.find(talk => 
-              talk.talkTitle === selected.talkTitle).checked = true;
+        talk.talkTitle === selected.talkTitle).checked = true;
     },
     uncheckTalk(selected) {
       this.retrieved.find(talk => 
         talk.talkTitle === selected.talkTitle).checked = false;
-},
+    },
     blur() {
       this.blured = true;
     },

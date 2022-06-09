@@ -1,45 +1,53 @@
 <script >
 import { useTalkStore } from '@/stores/talks';
 import Modal from '../RecapModal.vue';
-  
-  export default {
-    components: {
-      Modal,
-    },
-    setup() {
-        const talk = useTalkStore();
 
-        return{
-            talk
-        }
+export default {
+  components: {
+    Modal,
+  },
+  setup() {
+    const talk = useTalkStore();
+    return{
+      talk
+    }
+  },
+  data () {
+    return {
+      isModalVisible: false,
+      isAddClass: false,
+    };
+  },
+  methods: {
+    showModal() {
+      this.talk.blur();
     },
-    methods: {
-        showModal() {
-            this.talk.blur();
-        },
-        closeModal() {
-            this.talk.clarify()
-        },
+    closeModal() {
+      this.talk.clarify()
     },
-  };
+  },
+};
 </script>
 
 <template>
-    <button 
-        type="submit" 
-        class="generate-btn"
-        @click=showModal
-        v-on:click="addClass"
-        :class="{'blurClass': talk.blured}"
-    >
-        GÉNÉRER UN VISUEL
-    </button>
+  <button 
+    type="submit" 
+    class="generate-btn"
+    :class="{'blurClass': talk.blured}"
+    @click="showModal"
+  >
+    GÉNÉRER UN VISUEL
+  </button>
+
+  <Modal
+    v-show="talk.blured"
+    @close="closeModal"
+  />
     
-    <Modal
-        v-show="talk.blured"
-        @close="closeModal"
-    />
-    
+  <Modal
+    v-show="talk.blured"
+    @close="closeModal"
+  />
 </template>
 
 <style scoped>
