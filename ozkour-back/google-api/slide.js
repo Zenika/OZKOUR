@@ -268,12 +268,11 @@ function CreateTableWithStyleForAllEventsInDate (
                   blue: 0
                 }
               },
-              alpha: 0
-            }
-          }
+            },
+          },
+          fields: "tableBorderFill",
         },
-        fields: 'tableBorderFill'
-      }
+      },
     },
     // Set the size of the first column of the table
     {
@@ -375,8 +374,7 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
             magnitude: 14,
             unit
           },
-          insertionIndex: 0,
-          text: talk.talkTitle,
+          foregroundColor: defaultForegroundColor
         },
       }
     }
@@ -515,7 +513,7 @@ function addTableData (auth, idPage, data) {
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
-        date,
+        dateId,
         yNextElmt,
         dataOrganized
       )
