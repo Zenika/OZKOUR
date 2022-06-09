@@ -16,7 +16,7 @@ module.exports = [
     method: 'POST',
     path: '/selected-talks',
     handler: function (request, h) {
-      return createSlideFromTalks(request.payload)
+      return createSlideFromTalks(request.payload, h)
     }
   }
 ]
