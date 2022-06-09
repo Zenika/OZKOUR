@@ -15,6 +15,8 @@ const defaultForegroundColor = {
   },
 };
 
+const unit = "PT"
+
 const greyForegroundColor = {
   opaqueColor: {
     rgbColor: {
@@ -132,21 +134,21 @@ function test(auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addDateTextWithStyle(idPage, date, Y) {
+function addDateTextWithStyle(idPage, objectId, Y) {
   const pt350 = {
     magnitude: 350,
-    unit: "PT",
+    unit
   };
   const pt30 = {
     magnitude: 30,
-    unit: "PT",
+    unit
   };
 
   return [
     {
       //create a shape to put text in it
       createShape: {
-        objectId: date.replaceAll("/", "-"),
+        objectId,
         shapeType: "TEXT_BOX",
         elementProperties: {
           pageObjectId: idPage,
@@ -159,7 +161,7 @@ function addDateTextWithStyle(idPage, date, Y) {
             scaleY: 1,
             translateX: 70,
             translateY: Y,
-            unit: "PT",
+            unit,
           },
         },
       },
@@ -168,21 +170,21 @@ function addDateTextWithStyle(idPage, date, Y) {
     {
       insertText: {
         //add date to the text
-        objectId: date.replaceAll("/", "-"),
+        objectId,
         insertionIndex: 0,
-        text: date,
+        text: objectId.replaceAll('-','/')
       },
     },
     {
       updateTextStyle: {
         //add style to the date
-        objectId: date.replaceAll("/", "-"),
+        objectId,
         style: {
           underline: true,
           fontFamily: "Nunito",
           fontSize: {
             magnitude: 17,
-            unit: "PT",
+            unit,
           },
           foregroundColor: defaultForegroundColor,
         },
@@ -192,7 +194,7 @@ function addDateTextWithStyle(idPage, date, Y) {
     {
       //center the date
       updateParagraphStyle: {
-        objectId: date.replaceAll("/", "-"),
+        objectId,
         style: {
           alignment: "CENTER",
         },
@@ -208,6 +210,7 @@ function addDateTextWithStyle(idPage, date, Y) {
     Y,
     dataOrganized
   ) {
+    const objectId = date + '-table'
     //calculate size of Table
     let nbTalkForDate = dataOrganized.get(date).length;
     for (let i = 0; i < dataOrganized.get(date).length; i++)
@@ -215,14 +218,14 @@ function addDateTextWithStyle(idPage, date, Y) {
     return [
       {
         createTable: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           elementProperties: {
             pageObjectId: idPage,
             transform: {
               scaleX: 1,
               scaleY: 1,
               translateY: Y,
-              unit: "PT",
+              unit,
             },
           },
           rows: nbTalkForDate,
@@ -231,7 +234,7 @@ function addDateTextWithStyle(idPage, date, Y) {
       },
       {
         updateTableBorderProperties: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           borderPosition: "ALL",
           tableBorderProperties: {
             tableBorderFill: {
@@ -250,29 +253,29 @@ function addDateTextWithStyle(idPage, date, Y) {
           fields: "tableBorderFill",
         },
       },
-      // Définir la taille de la première colonne du tableau de la slide
+      // Set the size of the first column of the table
       {
         updateTableColumnProperties : {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           columnIndices: [0],
           tableColumnProperties : {
             columnWidth: {
               magnitude: 320,
-              unit: "PT"
+              unit
             }
           },
           fields: "columnWidth",
         },
       },
-      // Définir la taille de la seconde colonne du tableau de la slide
+      // Set the size of the second column of the table
       {
         updateTableColumnProperties : {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           columnIndices: [1],
           tableColumnProperties : {
             columnWidth: {
               magnitude: 130,
-              unit: "PT"
+              unit
             }
           },
           fields: "columnWidth",
@@ -286,10 +289,11 @@ function addDateTextWithStyle(idPage, date, Y) {
     arrayOfTalksForAnEvent,
     IndexRowInTableToInsert
   ) {
+    const objectId = date + '-table'
     return [
       {
         insertText: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           cellLocation: {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 0,
@@ -300,7 +304,7 @@ function addDateTextWithStyle(idPage, date, Y) {
       },
       {
         updateTextStyle: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           cellLocation: {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 0,
@@ -310,7 +314,7 @@ function addDateTextWithStyle(idPage, date, Y) {
             bold: true,
             fontSize: {
               magnitude: 20,
-              unit: "PT",
+              unit,
             },
             foregroundColor: defaultForegroundColor,
           },
@@ -323,11 +327,12 @@ function addDateTextWithStyle(idPage, date, Y) {
     ];
   }
   
-  function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  function addTalkTitleWithStyleToTable(objectId, talk, IndexRowInTableToInsert) {
+    const objectId = date + '-table'
     return [
       {
         insertText: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           cellLocation: {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 0,
@@ -338,7 +343,7 @@ function addDateTextWithStyle(idPage, date, Y) {
       },
       {
         updateTextStyle: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           cellLocation: {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 0,
@@ -348,7 +353,7 @@ function addDateTextWithStyle(idPage, date, Y) {
             bold: true,
             fontSize: {
               magnitude: 14,
-              unit: "PT",
+              unit,
             },
             foregroundColor: defaultForegroundColor,
           },
@@ -361,11 +366,12 @@ function addDateTextWithStyle(idPage, date, Y) {
     ];
   }
   
-  function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  function addSpeakersWithStyleToTable(objectId, talk, IndexRowInTableToInsert) {
+    const objectId = date + '-table'
     return [
       {
         insertText: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           cellLocation: {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 1,
@@ -376,7 +382,7 @@ function addDateTextWithStyle(idPage, date, Y) {
       },
       {
         updateTextStyle: {
-          objectId: date.replaceAll("/", "-") + "-table",
+          objectId,
           cellLocation: {
             rowIndex: IndexRowInTableToInsert,
             columnIndex: 1,
@@ -385,7 +391,7 @@ function addDateTextWithStyle(idPage, date, Y) {
             fontFamily: "Nunito",
             fontSize: {
               magnitude: 13,
-              unit: "PT",
+              unit,
             },
             foregroundColor: greyForegroundColor,
           },
@@ -404,7 +410,6 @@ function addDateTextWithStyle(idPage, date, Y) {
  * @param {string} pageId The presentation page ID.
  */
  async function createImage(presentationId, pageId, auth, eventType) {
-  console.log("create picto");
   const {GoogleAuth} = require('google-auth-library');
   const {google} = require('googleapis');
 
@@ -423,8 +428,6 @@ function addDateTextWithStyle(idPage, date, Y) {
 
 
   const imageUrl = pictogram.get(eventType)
-  console.log('show picto', imageUrl);
-  console.log(eventType);
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
   const imageId = function(){
     return Date.now().toString(36) + Math.random().toString(36);
@@ -432,7 +435,7 @@ function addDateTextWithStyle(idPage, date, Y) {
 
   const imgSize = {
     magnitude: 110,
-    unit: 'PT',
+    unit
   };
   const requests = [{
     createImage: {
@@ -449,7 +452,7 @@ function addDateTextWithStyle(idPage, date, Y) {
           scaleY: 1,
           translateX: 455,
           translateY: 140,
-          unit: 'PT',
+          unit
         },
       },
     },
@@ -490,13 +493,14 @@ function addDateTextWithStyle(idPage, date, Y) {
   
     while (date !== undefined) {
       IndexRowInTableToInsert = 0;
-      requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
+      const dateId = date.replaceAll("/", "-")
+      requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt));
       yNextElmt += 40;
   
       requests.push(
         CreateTableWithStyleForAllEventsInDate(
           idPage,
-          date,
+          dateId,
           yNextElmt,
           dataOrganized
         )
@@ -530,7 +534,7 @@ function addDateTextWithStyle(idPage, date, Y) {
         auth,
         idPage,
         presentationId,
-        date.replaceAll("/", "-") + "-table"
+        objectId + "-table"
       );
       date = mapIter.next().value;
     }
