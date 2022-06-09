@@ -329,16 +329,15 @@ function addEventNameWithStyleToTable (
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0
+          columnIndex: 0,
         },
         style: {
-          fontFamily: 'Nunito',
+          fontFamily: "Nunito",
           bold: true,
           fontSize: {
             magnitude: 20,
             unit
           },
-          foregroundColor: defaultForegroundColor
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
@@ -376,12 +375,9 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
             magnitude: 14,
             unit
           },
-          foregroundColor: defaultForegroundColor
+          insertionIndex: 0,
+          text: talk.talkTitle,
         },
-        fields: 'bold,foregroundColor,fontFamily,fontSize',
-        textRange: {
-          type: 'ALL'
-        }
       }
     }
   ]
@@ -425,7 +421,6 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
     }
   ]
 }
-
 /**
  * Adds an image to a presentation.
  * @param {string} presentationId The presentation ID.
