@@ -1,9 +1,10 @@
 const { google } = require("googleapis");
 const connect = require("./connect.js");
 const dayjs = require("dayjs");
-const utilitary = require("../utilitary");
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
+
+const presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -33,9 +34,13 @@ const slideSpacing = {
 
 const DEFAULT_START_Y_INDEX = 100;
 
-async function createSlideFromTalks(talks) {
-  const res = await connect.authMethode(test, talks);
-  return "Created !";
+async function createSlideFromTalks(talks, h) {
+  try {
+    const res = await connect.authMethode(createSlides, talks);
+    return h.response(res).code(200);
+  } catch (e) {
+    return h.response(e).code(500);
+  }
 }
 
 /**
@@ -115,18 +120,37 @@ function clusterByEventName(dataOrganized) {
   return dataOrganized;
 }
 
-function test(auth, talks) {
+async function createSlides(auth, talks) {
   const slides = google.slides({ version: "v1", auth });
-  presentationId = "1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug";
-  slides.presentations.get(
-    {
-      presentationId: presentationId,
-    },
-    (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
-      copySlide(auth, res.data.slides[0].objectId, presentationId, talks);
-    }
-  );
+  const promiseCreateSlide = new Promise((resolve, reject) => {
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        if (err) reject(err.message);
+        try {
+          copySlide(auth, res.data.slides[0].objectId, talks)
+            .then((result) => {
+              resolve({
+                message: result,
+                link:
+                  "https://docs.google.com/presentation/d/" +
+                  presentationId +
+                  "/",
+              });
+            })
+            .catch((e) => {
+              reject({ message: e });
+            });
+        } catch (e) {
+          console.log(e.response.data.error);
+          //reject(e.response.data.error);
+        }
+      }
+    );
+  });
+  return promiseCreateSlide;
 }
 
 /**
@@ -381,7 +405,8 @@ function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addTableData(auth, idPage, presentationId, data) {
+
+function addTableData(auth, idPage, data) {
   const slides = google.slides({ version: "v1", auth });
   const dataOrganized = clusterByDate(data);
 
@@ -433,19 +458,29 @@ function addTableData(auth, idPage, presentationId, data) {
 
     date = mapIter.next().value;
   }
-
-  // Execute the request.
-  return slides.presentations.batchUpdate(
-    {
-      presentationId: presentationId,
-      resource: {
-        requests,
+  const promiseAddTableData = new Promise((resolve, reject) => {
+    // Execute the request.
+    slides.presentations.batchUpdate(
+      {
+        presentationId: presentationId,
+        resource: {
+          requests,
+        },
       },
-    },
-    (err, res) => {
-      console.log(err);
-    }
-  );
+      (err, res) => {
+        try {
+          if (err) {
+            reject(err.message);
+          } else {
+            resolve("Table Added");
+          }
+        } catch (e) {
+          reject("error catch copy");
+        }
+      }
+    );
+  });
+  return promiseAddTableData;
 }
 
 /**
@@ -454,57 +489,71 @@ function addTableData(auth, idPage, presentationId, data) {
  * @param {string} the id of the page where the elements need to be deleted
  * @param {string} the id of the google slide presentation
  */
-function deleteTemplateInfo(auth, idPage, presentationId) {
+function deleteTemplateInfo(auth, idPage) {
   const slides = google.slides({ version: "v1", auth });
-  slides.presentations.get(
-    {
-      presentationId: presentationId,
-    },
-    async (err, res) => {
-      if (err) return console.log("The API returned an error: " + err);
+  const promiseDeleteTemplateInfo = new Promise((resolve, reject) => {
+    slides.presentations.get(
+      {
+        presentationId: presentationId,
+      },
+      async (err, res) => {
+        //if (err) return console.log("The API returned an error: " + err);
 
-      res.data.slides.map((slide) => {
-        if (slide.objectId === idPage) {
+        const slide = res.data.slides.find(
+          (slide) => slide.objectId === idPage
+        );
+        if (slide !== undefined) {
           // if the page is the one we're looking for
           let pageElements = slide.pageElements;
 
           let requests = [];
-          requests.push({
-            deleteObject: {
-              //delete icon
-              objectId: pageElements[pageElements.length - 1].objectId,
-            },
-          });
-          requests.push({
-            deleteObject: {
-              //delete table event
-              objectId: pageElements[pageElements.length - 2].objectId,
-            },
-          });
-          requests.push({
-            deleteObject: {
-              //delete date
-              objectId: pageElements[pageElements.length - 3].objectId,
-            },
-          });
-          slides.presentations.batchUpdate(
-            {
-              presentationId: presentationId,
-              resource: {
-                requests,
+          try {
+            requests.push({
+              deleteObject: {
+                //delete icon
+                objectId: pageElements[pageElements.length - 1].objectId,
               },
-            },
-            (err, res) => {
-              console.log(err);
-            }
-          );
+            });
+            requests.push({
+              deleteObject: {
+                //delete table event
+                objectId: pageElements[pageElements.length - 2].objectId,
+              },
+            });
+            requests.push({
+              deleteObject: {
+                //delete date
+                objectId: pageElements[pageElements.length - 3].objectId,
+              },
+            });
+            slides.presentations.batchUpdate(
+              {
+                presentationId: presentationId,
+                resource: {
+                  requests,
+                },
+              },
+              (err, res) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve("style template element deleted");
+                }
+              }
+            );
+          } catch (e) {
+            reject("missing element on template slide");
+          }
+        } else {
+          reject("error delete template element");
         }
-      });
-    }
-  );
+      }
+    );
+  });
+  return promiseDeleteTemplateInfo;
 }
 
-function copySlide(auth, idPage, presentationId, talkSelected) {
+function copySlide(auth, idPage, talkSelected) {
   const slides = google.slides({ version: "v1", auth });
   const newIdPage = Date.now().toString(); //New id is supposed to be unique
   let requests = [
@@ -517,18 +566,29 @@ function copySlide(auth, idPage, presentationId, talkSelected) {
       },
     },
   ];
-  slides.presentations.batchUpdate(
-    {
-      presentationId: presentationId,
-      resource: {
-        requests,
+  const promiseCopySlide = new Promise((resolve, reject) => {
+    slides.presentations.batchUpdate(
+      {
+        presentationId: presentationId,
+        resource: {
+          requests,
+        },
       },
-    },
-    (err, res) => {
-      deleteTemplateInfo(auth, newIdPage, presentationId);
-      addTableData(auth, newIdPage, presentationId, talkSelected);
-    }
-  );
+      async (err, res) => {
+        try {
+          if (err) {
+            reject(err.message);
+          }
+          await deleteTemplateInfo(auth, newIdPage);
+          await addTableData(auth, newIdPage, talkSelected);
+          resolve("Created !");
+        } catch (e) {
+          reject(e);
+        }
+      }
+    );
+  });
+  return promiseCopySlide;
 }
 
 module.exports = {
