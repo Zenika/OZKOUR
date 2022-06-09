@@ -13,6 +13,7 @@
             class="selectable"
             :class="{ columnSelected: sort === columnsValue.columnName }"
             @click="setSort(columnsValue.columnName)"
+            :data-test=columnsValue.columnName
           >
             {{ columnsValue.displayColumns }}
 
@@ -35,7 +36,7 @@
           <td>{{ talk.universe }}</td>
           <td>{{ talk.eventType }}</td>
           <td>{{ talk.eventName }}</td>
-          <td>{{ talk.talkTitle }}</td>
+          <td data-test="talks-test">{{ talk.talkTitle }}</td>
           <td>{{ talk.speakers }}</td>
         </tr>
       </table>
