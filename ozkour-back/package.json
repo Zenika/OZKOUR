@@ -7,7 +7,7 @@
     "test": "npm run test:unit && npm run lint",
     "test:unit": "jest",
     "dev": "node .",
-    "lint": "eslint . --ext .js",
+    "lint": "eslint --ext .js .",
     "lint:fix": "npm run lint -- --fix"
   },
   "author": "ZENIKA",

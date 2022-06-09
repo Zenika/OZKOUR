@@ -143,7 +143,7 @@ async function createSlides (auth, talks) {
               })
             })
             .catch((e) => {
-              reject(new Error({ message: e }))
+              reject(e)
             })
         } catch (e) {
           console.log(e.response.data.error)

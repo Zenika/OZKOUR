@@ -21,8 +21,8 @@ export default {
           window.open(response.data.link, "_blank");
         })
         .catch(function (error) {
-          alert(error.response.data.message);
-          console.log(error.response.data.message);
+          alert(error.response.data);
+          console.log(error.response.data);
         }).finally(() => {
           context.emit("close")
         }
