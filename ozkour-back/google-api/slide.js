@@ -34,7 +34,7 @@ const slideSpacing = {
 
 const DEFAULT_START_Y_INDEX = 100;
 
-async function createSlideFromTalks(talks,h) {
+async function createSlideFromTalks(talks, h) {
   try {
     const res = await connect.authMethode(createSlides, talks);
     return h.response(res).code(200);
@@ -132,10 +132,16 @@ async function createSlides(auth, talks) {
         try {
           copySlide(auth, res.data.slides[0].objectId, talks)
             .then((result) => {
-              resolve({message : result, link: "https://docs.google.com/presentation/d/"+presentationId+"/"});
+              resolve({
+                message: result,
+                link:
+                  "https://docs.google.com/presentation/d/" +
+                  presentationId +
+                  "/",
+              });
             })
             .catch((e) => {
-              reject({message : e});
+              reject({ message: e });
             });
         } catch (e) {
           console.log(e.response.data.error);
@@ -450,7 +456,6 @@ function addTableData(auth, idPage, data) {
       }
     }
 
-    
     date = mapIter.next().value;
   }
   const promiseAddTableData = new Promise((resolve, reject) => {
@@ -478,20 +483,6 @@ function addTableData(auth, idPage, data) {
   return promiseAddTableData;
 }
 
-  // Execute the request.
-  return slides.presentations.batchUpdate(
-    {
-      presentationId: presentationId,
-      resource: {
-        requests,
-      },
-    },
-    (err, res) => {
-      console.log(err);
-    }
-  );
-}
-
 /**
  * delete the elements copied from the model used for the style of the data
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
@@ -508,54 +499,54 @@ function deleteTemplateInfo(auth, idPage) {
       async (err, res) => {
         //if (err) return console.log("The API returned an error: " + err);
 
-        const slide = res.data.slides.find(slide => slide.objectId === idPage)
-        if(slide !== undefined) {
-            // if the page is the one we're looking for
-            let pageElements = slide.pageElements;
+        const slide = res.data.slides.find(
+          (slide) => slide.objectId === idPage
+        );
+        if (slide !== undefined) {
+          // if the page is the one we're looking for
+          let pageElements = slide.pageElements;
 
-            let requests = [];
-            try {
-              requests.push({
-                deleteObject: {
-                  //delete icon
-                  objectId: pageElements[pageElements.length - 1].objectId,
+          let requests = [];
+          try {
+            requests.push({
+              deleteObject: {
+                //delete icon
+                objectId: pageElements[pageElements.length - 1].objectId,
+              },
+            });
+            requests.push({
+              deleteObject: {
+                //delete table event
+                objectId: pageElements[pageElements.length - 2].objectId,
+              },
+            });
+            requests.push({
+              deleteObject: {
+                //delete date
+                objectId: pageElements[pageElements.length - 3].objectId,
+              },
+            });
+            slides.presentations.batchUpdate(
+              {
+                presentationId: presentationId,
+                resource: {
+                  requests,
                 },
-              });
-              requests.push({
-                deleteObject: {
-                  //delete table event
-                  objectId: pageElements[pageElements.length - 2].objectId,
-                },
-              });
-              requests.push({
-                deleteObject: {
-                  //delete date
-                  objectId: pageElements[pageElements.length - 3].objectId,
-                },
-              });
-              slides.presentations.batchUpdate(
-                {
-                  presentationId: presentationId,
-                  resource: {
-                    requests,
-                  },
-                },
-                (err, res) => {
-                  if (err) {
-                    reject(err);
-                  }
-                  else{
-                    resolve("style template element deleted");
-                  }
+              },
+              (err, res) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve("style template element deleted");
                 }
-              );
-            } catch (e) {
-              reject("missing element on template slide");
-            }
+              }
+            );
+          } catch (e) {
+            reject("missing element on template slide");
           }
-          else{
-            reject("error delete template element")
-          }
+        } else {
+          reject("error delete template element");
+        }
       }
     );
   });
@@ -590,7 +581,7 @@ function copySlide(auth, idPage, talkSelected) {
           }
           await deleteTemplateInfo(auth, newIdPage);
           await addTableData(auth, newIdPage, talkSelected);
-          resolve("Created !")
+          resolve("Created !");
         } catch (e) {
           reject(e);
         }
