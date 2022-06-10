@@ -522,6 +522,57 @@ function addDateTextWithStyle(idPage, objectId, Y) {
     throw err;
   }
 }
+/**
+ * Adds an image to a presentation.
+ * @param {string} pageId The presentation page ID.
+ */
+async function createImage (pageId, auth) {
+  console.log('create picto')
+  const { google } = require('googleapis')
+
+  // const auth = new GoogleAuth(
+  //     {scopes: 'https://www.googleapis.com/auth/presentations'});
+
+  const service = google.slides({ version: 'v1', auth })
+
+  const imageUrl =
+    'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png'
+  // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
+  const imageId = 'Picto_Conference'
+  const emu4M = {
+    magnitude: 110,
+    unit: 'PT'
+  }
+  const requests = [{
+    createImage: {
+      objectId: imageId,
+      url: imageUrl,
+      elementProperties: {
+        pageObjectId: pageId,
+        size: {
+          height: emu4M,
+          width: emu4M
+        },
+        transform: {
+          scaleX: 1,
+          scaleY: 1,
+          translateX: 455,
+          translateY: 140,
+          unit: 'PT'
+        }
+      }
+    }
+  }]
+
+  // Execute the request.
+  const response = await service.presentations.batchUpdate({
+    presentationId,
+    resource: { requests }
+  })
+  const createImageResponse = response.data.replies
+  console.log(`Created image with ID: ${createImageResponse[0].createImage.objectId}`)
+  return createImageResponse
+}
 
 /**
  * generate the requests to add a date text to a slide
@@ -568,6 +619,7 @@ function addTableData (auth, idPage, data) {
         )
       )
       IndexRowInTableToInsert++
+      createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
       yNextElmt += slideSpacing.EVENT
 
       // add all talk for the event
