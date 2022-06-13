@@ -269,9 +269,9 @@ function CreateTableWithStyleForAllEventsInDate (
                 }
               }
             }
-          },
-          fields: 'tableBorderFill'
-        }
+          }
+        },
+        fields: 'tableBorderFill'
       }
     },
     // Set the size of the first column of the table
@@ -336,7 +336,7 @@ function addEventNameWithStyleToTable (
           fontSize: {
             magnitude: 20,
             unit
-          },
+          }
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
@@ -377,6 +377,7 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
           },
           foregroundColor: defaultForegroundColor
         },
+        fields: 'bold,foregroundColor,fontFamily,fontSize'
       }
     }
   ]
