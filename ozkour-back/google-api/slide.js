@@ -16,7 +16,7 @@ const defaultForegroundColor = {
   }
 }
 
-const unit = "PT"
+const unit = 'PT'
 
 const greyForegroundColor = {
   opaqueColor: {
@@ -41,7 +41,7 @@ async function createSlideFromTalks (talks, h) {
     const res = await connect.authMethode(createSlides, talks)
     return h.response(res).code(200)
   } catch (e) {
-    return h.response(e).code(500)
+    return h.response(e.message).code(500)
   }
 }
 
@@ -131,24 +131,20 @@ async function createSlides (auth, talks) {
       },
       async (err, res) => {
         if (err) reject(err.message)
-        try {
-          copySlide(auth, res.data.slides[0].objectId, talks)
-            .then((result) => {
-              resolve({
-                message: result,
-                link:
+        copySlide(auth, res.data.slides[0].objectId, talks)
+          .then((result) => {
+            resolve({
+              message: result,
+              link:
                   'https://docs.google.com/presentation/d/' +
                   presentationId +
                   '/'
-              })
             })
-            .catch((e) => {
-              reject(e)
-            })
-        } catch (e) {
-          console.log(e.response.data.error)
-          // reject(e.response.data.error);
-        }
+          })
+          .catch((e) => {
+            console.log(e);
+            reject(e)
+          })
       }
     )
   })
@@ -162,22 +158,22 @@ async function createSlides (auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addDateTextWithStyle(idPage, objectId, Y) {
+function addDateTextWithStyle (idPage, objectId, Y) {
   const pt350 = {
     magnitude: 350,
     unit
-  };
+  }
   const pt30 = {
     magnitude: 30,
     unit
-  };
+  }
 
   return [
     {
       // create a shape to put text in it
       createShape: {
         objectId,
-        shapeType: "TEXT_BOX",
+        shapeType: 'TEXT_BOX',
         elementProperties: {
           pageObjectId: idPage,
           size: {
@@ -189,30 +185,30 @@ function addDateTextWithStyle(idPage, objectId, Y) {
             scaleY: 1,
             translateX: 70,
             translateY: Y,
-            unit,
-          },
-        },
-      },
+            unit
+          }
+        }
+      }
     },
 
     {
       insertText: {
-        //add date to the text
+        // add date to the text
         objectId,
         insertionIndex: 0,
-        text: objectId.replaceAll('-','/')
-      },
+        text: objectId.replaceAll('-', '/')
+      }
     },
     {
       updateTextStyle: {
-        //add style to the date
+        // add style to the date
         objectId,
         style: {
           underline: true,
           fontFamily: 'Nunito',
           fontSize: {
             magnitude: 17,
-            unit,
+            unit
           },
           foregroundColor: defaultForegroundColor
         },
@@ -231,371 +227,241 @@ function addDateTextWithStyle(idPage, objectId, Y) {
     }
   ]
 }
-  
-  function CreateTableWithStyleForAllEventsInDate(
-    idPage,
-    date,
-    Y,
-    dataOrganized
-  ) {
-    const objectId = date + '-table'
-    //calculate size of Table
-    let nbTalkForDate = dataOrganized.get(date).length;
-    for (let i = 0; i < dataOrganized.get(date).length; i++)
-      nbTalkForDate += dataOrganized.get(date)[i].talks.length;
-    return [
-      {
-        createTable: {
-          objectId,
-          elementProperties: {
-            pageObjectId: idPage,
-            transform: {
-              scaleX: 1,
-              scaleY: 1,
-              translateY: Y,
-              unit,
-            },
-          },
+
+function CreateTableWithStyleForAllEventsInDate (
+  idPage,
+  date,
+  Y,
+  dataOrganized
+) {
+  const objectId = date.replaceAll('/', '-') + '-table'
+  // calculate size of Table
+  let nbTalkForDate = dataOrganized.get(date).length
+  for (let i = 0; i < dataOrganized.get(date).length; i++) { nbTalkForDate += dataOrganized.get(date)[i].talks.length }
+  return [
+    {
+      createTable: {
+        objectId,
+        elementProperties: {
+          pageObjectId: idPage,
+          transform: {
+            scaleX: 1,
+            scaleY: 1,
+            translateY: Y,
+            unit
+          }
         },
         rows: nbTalkForDate,
-        columns: 2,
-      },
-      {
-        updateTableBorderProperties: {
-          objectId,
-          borderPosition: "ALL",
-          tableBorderProperties: {
-            tableBorderFill: {
-              solidFill: {
-                color: {
-                  rgbColor: {
-                    red: 0,
-                    green: 0,
-                    blue: 0,
-                  },
-                },
-                alpha: 0,
+        columns: 2
+      }
+    },
+    {
+      updateTableBorderProperties: {
+        objectId,
+        borderPosition: 'ALL',
+        tableBorderProperties: {
+          tableBorderFill: {
+            solidFill: {
+              color: {
+                rgbColor: {
+                  red: 0,
+                  green: 0,
+                  blue: 0
+                }
               },
-            },
-          },
-          fields: "tableBorderFill",
-        },
-      },
-      // Set the size of the first column of the table
-      {
-        updateTableColumnProperties : {
-          objectId,
-          columnIndices: [0],
-          tableColumnProperties : {
-            columnWidth: {
-              magnitude: 320,
-              unit
+              alpha: 0
             }
           }
         },
-        fields: "tableBorderFill",
-      },
-      // Set the size of the first column of the table
-      {
-        updateTableColumnProperties : {
-          objectId,
-          columnIndices: [0],
-          tableColumnProperties : {
-            columnWidth: {
-              magnitude: 320,
-              unit
-            }
-          },
-          fields: "columnWidth",
+        fields: 'tableBorderFill'
+      }
+    },
+    // Set the size of the first column of the table
+    {
+      updateTableColumnProperties: {
+        objectId,
+        columnIndices: [0],
+        tableColumnProperties: {
+          columnWidth: {
+            magnitude: 320,
+            unit
+          }
         },
-      },
-      // Set the size of the second column of the table
-      {
-        updateTableColumnProperties : {
-          objectId,
-          columnIndices: [1],
-          tableColumnProperties : {
-            columnWidth: {
-              magnitude: 130,
-              unit
-            }
-          },
-          fields: "columnWidth",
+        fields: 'columnWidth'
+      }
+    },
+    // Set the size of the second column of the table
+    {
+      updateTableColumnProperties: {
+        objectId,
+        columnIndices: [1],
+        tableColumnProperties: {
+          columnWidth: {
+            magnitude: 130,
+            unit
+          }
         },
-      },
-    ];
-  }
-  
-  function addEventNameWithStyleToTable(
-    date,
-    arrayOfTalksForAnEvent,
-    IndexRowInTableToInsert
-  ) {
-    const objectId = date + '-table'
-    return [
-      {
-        insertText: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          insertionIndex: 0,
-          text: arrayOfTalksForAnEvent.eventName,
+        fields: 'columnWidth'
+      }
+    }
+  ]
+}
+
+function addEventNameWithStyleToTable (
+  date,
+  eventName,
+  IndexRowInTableToInsert
+) {
+  const objectId = date + '-table'
+  return [
+    {
+      insertText: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0
         },
-      },
-      {
-        updateTextStyle: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          style: {
-            fontFamily: "Nunito",
-            bold: true,
-            fontSize: {
-              magnitude: 20,
-              unit,
-            },
-            foregroundColor: defaultForegroundColor,
-          },
-          fields: "bold,foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
-          },
+        insertionIndex: 0,
+        text: eventName
+      }
+    },
+    {
+      updateTextStyle: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0
         },
-      },
-    ];
-  }
-  
-  function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
-    const objectId = date + '-table'
-    return [
-      {
-        insertText: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          foregroundColor: defaultForegroundColor
-        },
-      },
-      {
-        updateTextStyle: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          style: {
-            fontFamily: "Nunito",
-            bold: true,
-            fontSize: {
-              magnitude: 14,
-              unit,
-            },
-            foregroundColor: defaultForegroundColor,
-          },
-          fields: "bold,foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
-          },
-        },
-      },
-    ];
-  }
-  
-  function addSpeakersWithStyleToTable(objectId, talk, IndexRowInTableToInsert) {
-    const objectId = date + '-table'
-    return [
-      {
-        insertText: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 1,
-          },
-          insertionIndex: 0,
-          text: talk.speakers,
-        },
-      },
-      {
-        updateTextStyle: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 0,
-          },
-          style: {
-            fontFamily: "Nunito",
-            bold: true,
-            fontSize: {
-              magnitude: 14,
-              unit,
-            },
-            foregroundColor: defaultForegroundColor,
-          },
-          fields: "bold,foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
+        style: {
+          fontFamily: 'Nunito',
+          bold: true,
+          fontSize: {
+            magnitude: 20,
+            unit
           },
           foregroundColor: defaultForegroundColor
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
-          type: "ALL",
+          type: 'ALL'
+        }
+      }
+    }
+  ]
+}
+
+function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
+  const objectId = date + '-table'
+  return [
+    {
+      insertText: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0
         },
-      },
-    ];
-  }
-  
-  function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
-    const objectId = date + '-table'
-    return [
-      {
-        insertText: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 1,
+        text: talk.talkTitle
+      }
+    },
+    {
+      updateTextStyle: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0
+        },
+        style: {
+          fontFamily: 'Nunito',
+          bold: true,
+          fontSize: {
+            magnitude: 14,
+            unit
           },
-          insertionIndex: 0,
-          text: talk.speakers,
+          foregroundColor: defaultForegroundColor
+        },
+        fields: 'bold,foregroundColor,fontFamily,fontSize',
+        textRange: {
+          type: 'ALL'
+        }
+      }
+    }
+  ]
+}
+
+function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
+  const objectId = date + '-table'
+  return [
+    {
+      insertText: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 1
         },
         insertionIndex: 0,
-        text: talk.speakers,
-      },
-      {
-        updateTextStyle: {
-          objectId,
-          cellLocation: {
-            rowIndex: IndexRowInTableToInsert,
-            columnIndex: 1,
-          },
-          style: {
-            fontFamily: "Nunito",
-            fontSize: {
-              magnitude: 13,
-              unit,
-            },
-            foregroundColor: greyForegroundColor,
-          },
-          fields: "foregroundColor,fontFamily,fontSize",
-          textRange: {
-            type: "ALL",
+        text: talk.speakers
+      }
+    },
+    {
+      updateTextStyle: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 1
+        },
+        style: {
+          fontFamily: 'Nunito',
+          bold: true,
+          fontSize: {
+            magnitude: 14,
+            unit
           },
           foregroundColor: greyForegroundColor
         },
-        fields: 'foregroundColor,fontFamily,fontSize',
+        fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
-          type: "ALL",
-        },
-      },
-    ];
-  }
+          type: 'ALL'
+        }
+      }
+    }
+  ]
+}
 
 /**
  * Adds an image to a presentation.
  * @param {string} presentationId The presentation ID.
  * @param {string} pageId The presentation page ID.
  */
- async function createImage(presentationId, pageId, auth, eventType) {
-  const {GoogleAuth} = require('google-auth-library');
-  const {google} = require('googleapis');
-
-  // const auth = new GoogleAuth(
-  //     {scopes: 'https://www.googleapis.com/auth/presentations'});
-
-  const service = google.slides({version: 'v1', auth});
-
-  const pictogram = new Map();
-
-  pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-  pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-  pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-  pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-  pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
-
-
-  const imageUrl = pictogram.get(eventType)
-  // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = function(){
-    return Date.now().toString(36) + Math.random().toString(36);
-  };
-
-  const imgSize = {
-    magnitude: 110,
-    unit
-  };
-  const requests = [{
-    createImage: {
-      objectId: imageId,
-      url: imageUrl,
-      elementProperties: {
-        pageObjectId: pageId,
-        size: {
-          height: imgSize,
-          width: imgSize,
-        },
-        transform: {
-          scaleX: 1,
-          scaleY: 1,
-          translateX: 455,
-          translateY: 140,
-          unit
-        },
-      },
-    },
-  }];
-
-  // Execute the request.
-  try {
-    const response = await service.presentations.batchUpdate({
-      presentationId,
-      resource: {requests},
-    });
-    const createImageResponse = response.data.replies;
-    console.log(`Created image with ID: ${createImageResponse[0].createImage.objectId}`);
-    return createImageResponse;
-  } catch (err) {
-    // TODO (developer) - Handle exception
-    throw err;
-  }
-}
-/**
- * Adds an image to a presentation.
- * @param {string} pageId The presentation page ID.
- */
-async function createImage (pageId, auth) {
-  console.log('create picto')
+async function createImage (pageId, auth, eventType) {
   const { google } = require('googleapis')
-
-  // const auth = new GoogleAuth(
-  //     {scopes: 'https://www.googleapis.com/auth/presentations'});
 
   const service = google.slides({ version: 'v1', auth })
 
-  const pictogram = new Map();
+  const pictogram = new Map()
+  // Problem de droit avec les images
+  // pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+  // pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+  // pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+  // pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+  // pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
 
-  pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-  pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-  pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-  pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-  pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
-
+  // image temporaire en attendant
+  pictogram.set('Conference', 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg')
+  pictogram.set('Matinale', 'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg')
+  pictogram.set('Meetup', 'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg')
+  pictogram.set('NightClazz', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
+  pictogram.set('Webinar', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
 
   const imageUrl = pictogram.get(eventType)
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = function(){
-    return Date.now().toString(36) + Math.random().toString(36);
-  };
+  const imageId = function () {
+    return Date.now().toString(36) + Math.random().toString(36)
+  }
 
   const imgSize = {
     magnitude: 110,
     unit
-  };
+  }
   const requests = [{
     createImage: {
       objectId: imageId,
@@ -604,7 +470,7 @@ async function createImage (pageId, auth) {
         pageObjectId: pageId,
         size: {
           height: imgSize,
-          width: imgSize,
+          width: imgSize
         },
         transform: {
           scaleX: 1,
@@ -612,12 +478,13 @@ async function createImage (pageId, auth) {
           translateX: 455,
           translateY: 140,
           unit
-        },
-      },
-    },
-  }];
+        }
+      }
+    }
+  }]
 
   // Execute the request.
+
   const response = await service.presentations.batchUpdate({
     presentationId,
     resource: { requests }
@@ -647,47 +514,48 @@ function addTableData (auth, idPage, data) {
   let yNextElmt = DEFAULT_START_Y_INDEX
 
   while (date !== undefined) {
-    const dateId = date.replaceAll("/", "-")
-    IndexRowInTableToInsert = 0;
-    requests.push(addDateTextWithStyle(idPage, date, yNextElmt));
-    yNextElmt += slideSpacing.DATE;
+    const dateId = date.replaceAll('/', '-')
+    IndexRowInTableToInsert = 0
+    requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt))
+    yNextElmt += slideSpacing.DATE
 
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
-        dateId,
+        date,
         yNextElmt,
         dataOrganized
       )
     )
 
-    // for each event
-    for (let i = 0; i < dataOrganized.get(date).length; i++) {
+    console.log(dataOrganized.get(date))
+
+    const nbEvent = dataOrganized.get(date).length
+    for (let i = 0; i < nbEvent; i++) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
+      console.log(arrayOfTalksForAnEvent)
       requests.push(
         addEventNameWithStyleToTable(
           dateId,
-          arrayOfTalksForAnEvent,
+          arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
         )
       )
       IndexRowInTableToInsert++
-      createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
+      createImage(idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
       yNextElmt += slideSpacing.EVENT
 
       // add all talk for the event
       for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
         const talk = arrayOfTalksForAnEvent.talks[j]
         requests.push(
-          addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
-          addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
-        );
-      IndexRowInTableToInsert++;
-        createImage(presentationId, idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
-        yNextElmt += spaceEvent;
+          addTalkTitleWithStyleToTable(dateId, talk, IndexRowInTableToInsert),
+          addSpeakersWithStyleToTable(dateId, talk, IndexRowInTableToInsert)
+        )
+        IndexRowInTableToInsert++
       }
-      date = mapIter.next().value;
     }
+    date = mapIter.next().value
   }
   const promiseAddTableData = new Promise((resolve, reject) => {
     // Execute the request.
@@ -714,22 +582,6 @@ function addTableData (auth, idPage, data) {
   return promiseAddTableData
 }
 
-
-
-  // Execute the request.
-  return slides.presentations.batchUpdate(
-    {
-      presentationId: presentationId,
-      resource: {
-        requests,
-      },
-    },
-    (err, res) => {
-      console.log(err);
-    }
-  );
-}
-
 /**
  * delete the elements copied from the model used for the style of the data
  * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
@@ -747,53 +599,51 @@ function deleteTemplateInfo (auth, idPage) {
         if (err) return console.log('The API returned an error: ' + err)
 
         const slide = res.data.slides.find(slide => slide.objectId === idPage)
-        if(slide !== undefined) {
-            // if the page is the one we're looking for
-            let pageElements = slide.pageElements;
+        if (slide !== undefined) {
+          // if the page is the one we're looking for
+          const pageElements = slide.pageElements
 
-            let requests = [];
-            try {
-              requests.push({
-                deleteObject: {
-                  //delete icon
-                  objectId: pageElements[pageElements.length - 1].objectId,
-                },
-              });
-              requests.push({
-                deleteObject: {
-                  //delete table event
-                  objectId: pageElements[pageElements.length - 2].objectId,
-                },
-              });
-              requests.push({
-                deleteObject: {
-                  //delete date
-                  objectId: pageElements[pageElements.length - 3].objectId,
-                },
-              });
-              slides.presentations.batchUpdate(
-                {
-                  presentationId: presentationId,
-                  resource: {
-                    requests,
-                  },
-                },
-                (err, res) => {
-                  if (err) {
-                    reject(err);
-                  }
-                  else{
-                    resolve("style template element deleted");
-                  }
+          const requests = []
+          try {
+            requests.push({
+              deleteObject: {
+                // delete icon
+                objectId: pageElements[pageElements.length - 1].objectId
+              }
+            })
+            requests.push({
+              deleteObject: {
+                // delete table event
+                objectId: pageElements[pageElements.length - 2].objectId
+              }
+            })
+            requests.push({
+              deleteObject: {
+                // delete date
+                objectId: pageElements[pageElements.length - 3].objectId
+              }
+            })
+            slides.presentations.batchUpdate(
+              {
+                presentationId,
+                resource: {
+                  requests
                 }
-              );
-            } catch (e) {
-              reject("missing element on template slide");
-            }
+              },
+              (err, res) => {
+                if (err) {
+                  reject(err)
+                } else {
+                  resolve('style template element deleted')
+                }
+              }
+            )
+          } catch (e) {
+            reject(new Error('missing element on template slide'))
           }
-          else{
-            reject("error delete template element")
-          }
+        } else {
+          reject(new Error('error delete template element'))
+        }
       }
     )
   })
@@ -826,9 +676,9 @@ function copySlide (auth, idPage, talkSelected) {
           if (err) {
             reject(err.message)
           }
-          await deleteTemplateInfo(auth, newIdPage);
-          await addTableData(auth, newIdPage, talkSelected);
-          resolve("Created !")
+          await deleteTemplateInfo(auth, newIdPage)
+          await addTableData(auth, newIdPage, talkSelected)
+          resolve('Created !')
         } catch (e) {
           reject(e)
         }
@@ -837,7 +687,6 @@ function copySlide (auth, idPage, talkSelected) {
   })
   return promiseCopySlide
 }
-
 
 module.exports = {
   createSlideFromTalks,
