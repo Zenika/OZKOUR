@@ -29,8 +29,8 @@ const greyForegroundColor = {
 }
 
 const slideSpacing = {
-  EVENT: 45,
-  TALK: 40,
+  EVENT: 80,
+  TALK: 45,
   DATE: 40
 }
 
@@ -432,7 +432,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
  * @param {string} presentationId The presentation ID.
  * @param {string} pageId The presentation page ID.
  */
-async function createImage (pageId, auth, eventType) {
+async function createImage (pageId, auth, eventType, yNextElmt) {
   const { google } = require('googleapis')
 
   const service = google.slides({ version: 'v1', auth })
@@ -449,7 +449,7 @@ async function createImage (pageId, auth, eventType) {
   pictogram.set('Conference', 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg')
   pictogram.set('Matinale', 'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg')
   pictogram.set('Meetup', 'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg')
-  pictogram.set('NightClazz', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
+  pictogram.set('NightClazz', 'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg')
   pictogram.set('Webinar', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
 
   const imageUrl = pictogram.get(eventType)
@@ -476,7 +476,7 @@ async function createImage (pageId, auth, eventType) {
           scaleX: 1,
           scaleY: 1,
           translateX: 455,
-          translateY: 140,
+          translateY: yNextElmt,
           unit
         }
       }
@@ -542,7 +542,7 @@ function addTableData (auth, idPage, data) {
         )
       )
       IndexRowInTableToInsert++
-      createImage(idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType)
+      createImage(idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType, yNextElmt)
       yNextElmt += slideSpacing.EVENT
 
       // add all talk for the event
