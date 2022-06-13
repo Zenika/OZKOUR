@@ -267,7 +267,8 @@ function CreateTableWithStyleForAllEventsInDate (
                   green: 0,
                   blue: 0
                 }
-              }
+              },
+              alpha:0
             }
           }
         },
@@ -336,7 +337,8 @@ function addEventNameWithStyleToTable (
           fontSize: {
             magnitude: 20,
             unit
-          }
+          },
+          foregroundColor: defaultForegroundColor
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
