@@ -41,7 +41,7 @@ async function createSlideFromTalks (talks, h) {
     const res = await connect.authMethode(createSlides, talks)
     return h.response(res).code(200)
   } catch (e) {
-    return h.response(e.message).code(500)
+    return h.response(e).code(500)
   }
 }
 
@@ -142,7 +142,6 @@ async function createSlides (auth, talks) {
             })
           })
           .catch((e) => {
-            console.log(e);
             reject(e)
           })
       }
