@@ -41,7 +41,7 @@ async function createSlideFromTalks (talks, h) {
     const res = await connect.authMethode(createSlides, talks)
     return h.response(res).code(200)
   } catch (e) {
-    return h.response(e).code(500)
+    return h.response(e.message).code(500)
   }
 }
 
@@ -513,7 +513,7 @@ function addTableData (auth, idPage, data) {
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
-        dateId,
+        date,
         yNextElmt,
         dataOrganized
       )
@@ -678,7 +678,6 @@ function copySlide (auth, idPage, talkSelected) {
   })
   return promiseCopySlide
 }
-
 
 module.exports = {
   createSlideFromTalks,
