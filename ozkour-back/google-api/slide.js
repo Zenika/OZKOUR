@@ -363,6 +363,7 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
     {
       updateTextStyle: {
         objectId,
+
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 0
@@ -419,6 +420,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
     }
   ]
 }
+
 /**
  * Adds an image to a presentation.
  * @param {string} presentationId The presentation ID.

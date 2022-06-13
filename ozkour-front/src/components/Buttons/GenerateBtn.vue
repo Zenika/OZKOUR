@@ -39,7 +39,6 @@ export default {
   >
     GÉNÉRER UN VISUEL
   </button>
-    
   <Modal
     v-show="talk.blured"
     @close="closeModal"
