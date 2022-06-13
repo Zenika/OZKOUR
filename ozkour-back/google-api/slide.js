@@ -267,12 +267,12 @@ function CreateTableWithStyleForAllEventsInDate (
                   green: 0,
                   blue: 0
                 }
-              },
-            },
+              }
+            }
           },
-          fields: "tableBorderFill",
-        },
-      },
+          fields: 'tableBorderFill'
+        }
+      }
     },
     // Set the size of the first column of the table
     {
@@ -328,10 +328,10 @@ function addEventNameWithStyleToTable (
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0,
+          columnIndex: 0
         },
         style: {
-          fontFamily: "Nunito",
+          fontFamily: 'Nunito',
           bold: true,
           fontSize: {
             magnitude: 20,
