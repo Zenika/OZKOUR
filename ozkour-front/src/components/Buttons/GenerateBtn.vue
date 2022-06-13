@@ -1,13 +1,14 @@
 <script >
 import { useTalkStore } from '@/stores/talks';
 import Modal from '../RecapModal.vue';
-
+  
 export default {
   components: {
     Modal,
   },
   setup() {
     const talk = useTalkStore();
+
     return{
       talk
     }
@@ -38,12 +39,6 @@ export default {
   >
     GÉNÉRER UN VISUEL
   </button>
-
-  <Modal
-    v-show="talk.blured"
-    @close="closeModal"
-  />
-    
   <Modal
     v-show="talk.blured"
     @close="closeModal"

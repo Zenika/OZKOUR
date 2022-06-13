@@ -16,6 +16,8 @@ const defaultForegroundColor = {
   }
 }
 
+const unit = 'PT'
+
 const greyForegroundColor = {
   opaqueColor: {
     rgbColor: {
@@ -27,8 +29,8 @@ const greyForegroundColor = {
 }
 
 const slideSpacing = {
-  EVENT: 45,
-  TALK: 40,
+  EVENT: 80,
+  TALK: 45,
   DATE: 40
 }
 
@@ -129,24 +131,19 @@ async function createSlides (auth, talks) {
       },
       async (err, res) => {
         if (err) reject(err.message)
-        try {
-          copySlide(auth, res.data.slides[0].objectId, talks)
-            .then((result) => {
-              resolve({
-                message: result,
-                link:
+        copySlide(auth, res.data.slides[0].objectId, talks)
+          .then((result) => {
+            resolve({
+              message: result,
+              link:
                   'https://docs.google.com/presentation/d/' +
                   presentationId +
                   '/'
-              })
             })
-            .catch((e) => {
-              reject(e)
-            })
-        } catch (e) {
-          console.log(e.response.data.error)
-          // reject(e.response.data.error);
-        }
+          })
+          .catch((e) => {
+            reject(e)
+          })
       }
     )
   })
@@ -160,21 +157,21 @@ async function createSlides (auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addDateTextWithStyle (idPage, date, Y) {
+function addDateTextWithStyle (idPage, objectId, Y) {
   const pt350 = {
     magnitude: 350,
-    unit: 'PT'
+    unit
   }
   const pt30 = {
     magnitude: 30,
-    unit: 'PT'
+    unit
   }
 
   return [
     {
       // create a shape to put text in it
       createShape: {
-        objectId: date.replaceAll('/', '-'),
+        objectId,
         shapeType: 'TEXT_BOX',
         elementProperties: {
           pageObjectId: idPage,
@@ -187,7 +184,7 @@ function addDateTextWithStyle (idPage, date, Y) {
             scaleY: 1,
             translateX: 70,
             translateY: Y,
-            unit: 'PT'
+            unit
           }
         }
       }
@@ -196,21 +193,21 @@ function addDateTextWithStyle (idPage, date, Y) {
     {
       insertText: {
         // add date to the text
-        objectId: date.replaceAll('/', '-'),
+        objectId,
         insertionIndex: 0,
-        text: date
+        text: objectId.replaceAll('-', '/')
       }
     },
     {
       updateTextStyle: {
         // add style to the date
-        objectId: date.replaceAll('/', '-'),
+        objectId,
         style: {
           underline: true,
           fontFamily: 'Nunito',
           fontSize: {
             magnitude: 17,
-            unit: 'PT'
+            unit
           },
           foregroundColor: defaultForegroundColor
         },
@@ -220,7 +217,7 @@ function addDateTextWithStyle (idPage, date, Y) {
     {
       // center the date
       updateParagraphStyle: {
-        objectId: date.replaceAll('/', '-'),
+        objectId,
         style: {
           alignment: 'CENTER'
         },
@@ -236,22 +233,21 @@ function CreateTableWithStyleForAllEventsInDate (
   Y,
   dataOrganized
 ) {
+  const objectId = date.replaceAll('/', '-') + '-table'
   // calculate size of Table
   let nbTalkForDate = dataOrganized.get(date).length
-  for (let i = 0; i < dataOrganized.get(date).length; i++) {
-    nbTalkForDate += dataOrganized.get(date)[i].talks.length
-  }
+  for (let i = 0; i < dataOrganized.get(date).length; i++) { nbTalkForDate += dataOrganized.get(date)[i].talks.length }
   return [
     {
       createTable: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         elementProperties: {
           pageObjectId: idPage,
           transform: {
             scaleX: 1,
             scaleY: 1,
             translateY: Y,
-            unit: 'PT'
+            unit
           }
         },
         rows: nbTalkForDate,
@@ -260,7 +256,7 @@ function CreateTableWithStyleForAllEventsInDate (
     },
     {
       updateTableBorderProperties: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         borderPosition: 'ALL',
         tableBorderProperties: {
           tableBorderFill: {
@@ -271,12 +267,39 @@ function CreateTableWithStyleForAllEventsInDate (
                   green: 0,
                   blue: 0
                 }
-              },
-              alpha: 0
+              }
             }
           }
         },
         fields: 'tableBorderFill'
+      }
+    },
+    // Set the size of the first column of the table
+    {
+      updateTableColumnProperties: {
+        objectId,
+        columnIndices: [0],
+        tableColumnProperties: {
+          columnWidth: {
+            magnitude: 320,
+            unit
+          }
+        },
+        fields: 'columnWidth'
+      }
+    },
+    // Set the size of the second column of the table
+    {
+      updateTableColumnProperties: {
+        objectId,
+        columnIndices: [1],
+        tableColumnProperties: {
+          columnWidth: {
+            magnitude: 130,
+            unit
+          }
+        },
+        fields: 'columnWidth'
       }
     }
   ]
@@ -284,24 +307,25 @@ function CreateTableWithStyleForAllEventsInDate (
 
 function addEventNameWithStyleToTable (
   date,
-  arrayOfTalksForAnEvent,
+  eventName,
   IndexRowInTableToInsert
 ) {
+  const objectId = date + '-table'
   return [
     {
       insertText: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 0
         },
         insertionIndex: 0,
-        text: arrayOfTalksForAnEvent.eventName
+        text: eventName
       }
     },
     {
       updateTextStyle: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 0
@@ -311,9 +335,8 @@ function addEventNameWithStyleToTable (
           bold: true,
           fontSize: {
             magnitude: 20,
-            unit: 'PT'
-          },
-          foregroundColor: defaultForegroundColor
+            unit
+          }
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
@@ -325,21 +348,22 @@ function addEventNameWithStyleToTable (
 }
 
 function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
+  const objectId = date + '-table'
   return [
     {
       insertText: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 0
         },
-        insertionIndex: 0,
         text: talk.talkTitle
       }
     },
     {
       updateTextStyle: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
+
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 0
@@ -349,24 +373,22 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
           bold: true,
           fontSize: {
             magnitude: 14,
-            unit: 'PT'
+            unit
           },
           foregroundColor: defaultForegroundColor
         },
-        fields: 'bold,foregroundColor,fontFamily,fontSize',
-        textRange: {
-          type: 'ALL'
-        }
+        fields: 'bold,foregroundColor,fontFamily,fontSize'
       }
     }
   ]
 }
 
 function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
+  const objectId = date + '-table'
   return [
     {
       insertText: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 1
@@ -377,26 +399,94 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
     },
     {
       updateTextStyle: {
-        objectId: date.replaceAll('/', '-') + '-table',
+        objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
           columnIndex: 1
         },
         style: {
           fontFamily: 'Nunito',
+          bold: true,
           fontSize: {
-            magnitude: 13,
-            unit: 'PT'
+            magnitude: 14,
+            unit
           },
           foregroundColor: greyForegroundColor
         },
-        fields: 'foregroundColor,fontFamily,fontSize',
+        fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
           type: 'ALL'
         }
       }
     }
   ]
+}
+
+/**
+ * Adds an image to a presentation.
+ * @param {string} presentationId The presentation ID.
+ * @param {string} pageId The presentation page ID.
+ */
+async function createImage (pageId, auth, eventType, yNextElmt) {
+  const { google } = require('googleapis')
+
+  const service = google.slides({ version: 'v1', auth })
+
+  const pictogram = new Map()
+  // Problem de droit avec les images
+  // pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+  // pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+  // pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+  // pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+  // pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+
+  // image temporaire en attendant
+  pictogram.set('Conference', 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg')
+  pictogram.set('Matinale', 'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg')
+  pictogram.set('Meetup', 'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg')
+  pictogram.set('NightClazz', 'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg')
+  pictogram.set('Webinar', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
+
+  const imageUrl = pictogram.get(eventType)
+  // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
+  const imageId = function () {
+    return Date.now().toString(36) + Math.random().toString(36)
+  }
+
+  const imgSize = {
+    magnitude: 110,
+    unit
+  }
+  const requests = [{
+    createImage: {
+      objectId: imageId,
+      url: imageUrl,
+      elementProperties: {
+        pageObjectId: pageId,
+        size: {
+          height: imgSize,
+          width: imgSize
+        },
+        transform: {
+          scaleX: 1,
+          scaleY: 1,
+          translateX: 455,
+          translateY: yNextElmt,
+          unit
+        }
+      }
+    }
+  }]
+
+  // Execute the request.
+
+  const response = await service.presentations.batchUpdate({
+    presentationId,
+    resource: { requests }
+  })
+  const createImageResponse = response.data.replies
+  console.log(`Created image with ID: ${createImageResponse[0].createImage.objectId}`)
+  return createImageResponse
 }
 
 /**
@@ -419,10 +509,10 @@ function addTableData (auth, idPage, data) {
   let yNextElmt = DEFAULT_START_Y_INDEX
 
   while (date !== undefined) {
+    const dateId = date.replaceAll('/', '-')
     IndexRowInTableToInsert = 0
-    requests.push(addDateTextWithStyle(idPage, date, yNextElmt))
+    requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt))
     yNextElmt += slideSpacing.DATE
-
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
@@ -432,31 +522,33 @@ function addTableData (auth, idPage, data) {
       )
     )
 
-    // for each event
-    for (let i = 0; i < dataOrganized.get(date).length; i++) {
+    console.log(dataOrganized.get(date))
+
+    const nbEvent = dataOrganized.get(date).length
+    for (let i = 0; i < nbEvent; i++) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
+      console.log(arrayOfTalksForAnEvent)
       requests.push(
         addEventNameWithStyleToTable(
-          date,
-          arrayOfTalksForAnEvent,
+          dateId,
+          arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
         )
       )
       IndexRowInTableToInsert++
+      createImage(idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType, yNextElmt)
       yNextElmt += slideSpacing.EVENT
 
       // add all talk for the event
       for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
         const talk = arrayOfTalksForAnEvent.talks[j]
         requests.push(
-          addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert),
-          addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert)
+          addTalkTitleWithStyleToTable(dateId, talk, IndexRowInTableToInsert),
+          addSpeakersWithStyleToTable(dateId, talk, IndexRowInTableToInsert)
         )
         IndexRowInTableToInsert++
-        yNextElmt += slideSpacing.TALK
       }
     }
-
     date = mapIter.next().value
   }
   const promiseAddTableData = new Promise((resolve, reject) => {
@@ -500,9 +592,7 @@ function deleteTemplateInfo (auth, idPage) {
       async (err, res) => {
         if (err) return console.log('The API returned an error: ' + err)
 
-        const slide = res.data.slides.find(
-          (slide) => slide.objectId === idPage
-        )
+        const slide = res.data.slides.find(slide => slide.objectId === idPage)
         if (slide !== undefined) {
           // if the page is the one we're looking for
           const pageElements = slide.pageElements

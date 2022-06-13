@@ -15,11 +15,9 @@ export default {
       axios
         .post("http://localhost:3000/selected-talks", talks.getSelectedTalks)
         .then((response) => {
-          console.log("res :", response);
           window.open(response.data.link, "_blank");
         })
         .catch(function (error) {
-          console.log(error.response.data);
           alert(error.response.data);
         }).finally(() => {
           context.emit("close")
