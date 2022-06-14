@@ -1,10 +1,7 @@
 import { shallowMount } from "@vue/test-utils";
 import { createTestingPinia } from "@pinia/testing";
 import RecapModal from "@/components/RecapModal.vue"
-import ValidateBtn from '@/components/Buttons/ValidateBtn.vue'
 import { useTalkStore } from "../../src/stores/talks";
-
-// On utilise 'shallowMount' pour ne pas mount les composants enfants (ici ValidateBtn)
 
 describe("RecapModal Component", () => {
   beforeEach(() => {

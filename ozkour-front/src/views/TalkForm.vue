@@ -1,16 +1,18 @@
 <script>
-import ChoosingTemplate from "../components/ChoosingTemplate.vue";
-import ChoosingDate from "../components/ChoosingDate.vue";
-import GenerateButton from "../components/Buttons/GenerateBtn.vue";
-import EventArray from "../components/EventArray.vue";
+import ChoosingTemplate from "@/components/ChoosingTemplate.vue";
+import ChoosingDate from "@/components/ChoosingDate.vue";
+import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
+import EventArray from "@/components/EventArray.vue";
+import RecapModal from '@/components/RecapModal.vue';
 import { useTalkStore } from "@/stores/talks";
 
 export default {
   components: {
     ChoosingTemplate,
     ChoosingDate,
-    GenerateButton,
+    PrimaryBtn,
     EventArray,
+    RecapModal
   },
   setup() {
     const talk = useTalkStore();
@@ -18,31 +20,56 @@ export default {
       talk,
     };
   },
+  data () {
+    return {
+      isModalVisible: false
+    };
+  },
+  methods: {
+    showModal() {
+      this.isModalVisible = true;
+    },
+    closeModal() {
+      this.isModalVisible = false;
+    },
+  },
 };
 </script>
 
 <template>
-  <main class="container">
-    <div :class="{ blurClass: talk.blured }">
-      <h1>Visuels pour les Talks</h1>
-    </div>
+  <main
+    :class="{ 'container--blured': isModalVisible }"
+    class="container"
+  >
+    <h1 class="container__title">
+      Visuels pour les Talks
+    </h1>
 
-    <section :class="{ blurClass: talk.blured , section:true}">
+    <section class="container__section">
       <ChoosingTemplate />
       <ChoosingDate />
     </section>
 
-    <section :class="{ blurClass: talk.blured ,eventList : true }">
+    <section class="container__eventList">
       <EventArray />
     </section>
 
-    <section class="section lastSection">
-      <GenerateButton />
-    </section>
+    <PrimaryBtn
+      class="container__section container__lastSection"
+      @click="showModal"
+    >
+      Générer un visuel
+    </PrimaryBtn>
+
+    <RecapModal
+      v-if="isModalVisible"
+      id="talk-recap-modal"
+      @close="closeModal"
+    />
   </main>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
   width: 100%;
   display: flex;
@@ -50,39 +77,40 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 30px;
-}
-.section {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 50px;
-}
 
-h1 {
-  font-family: "Nunito", sans-serif;
-  font-size: 48px;
-  font-weight: 700;
-  text-align: center;
-}
+  &--blured > :not(#talk-recap-modal) {
+    filter: blur(5px);
+  }
 
-.eventList {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: rgba(242, 242, 242, 0.4);
-  border-radius: 20px;
-}
+  &__section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+  }
 
-.lastSection {
-  margin-bottom: 50px;
-}
+  &__eventList {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(242, 242, 242, 0.4);
+    border-radius: 20px;
+  }
 
-.blurClass {
-  -webkit-filter: blur(5px);
-  filter: blur(5px);
+  &__lastSection {
+    margin-bottom: 50px;
+    width: auto;
+  }
+
+  &__title {
+    font-family: "Nunito", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+  }
 }
 </style>

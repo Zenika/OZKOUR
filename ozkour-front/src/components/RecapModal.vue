@@ -1,11 +1,11 @@
 <script>
-import ValidateBtn from "./Buttons/ValidateBtn.vue";
-import { useTalkStore } from "../stores/talks";
+import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
+import { useTalkStore } from "@/stores/talks";
 import axios from "axios";
 
 export default {
   components:{
-    ValidateBtn
+    PrimaryBtn
   },
   emits: ['close'],
   setup(props, context) {
@@ -95,7 +95,9 @@ export default {
     </div>
 
     <div class="validate">
-      <ValidateBtn @click="sendTalks" />
+      <PrimaryBtn @click="sendTalks">
+        Valider
+      </PrimaryBtn>
     </div>
   </div>
 </template>

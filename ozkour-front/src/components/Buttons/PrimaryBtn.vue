@@ -1,14 +1,14 @@
 <template>
   <button
     type="button"
-    class="validate-btn"
+    class="primary-btn"
   >
-    VALIDER
+    <slot />
   </button>
 </template>
 
 <style scoped>
-    .validate-btn{
+    .primary-btn{
         /* width: 15%; */
         background: linear-gradient(90deg, #EE2238 0%, #C21E65 100%);
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -21,7 +21,7 @@
         padding: 10px 30px;
         cursor: pointer;
     }
-    .validate-btn:hover {
+    .primary-btn:hover {
         background: black;
         color: white;
     }

@@ -6,7 +6,6 @@ export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
     retrieved: [],
-    blured: false,
     template: {template : "", frequency : ""},
     date: {},
   }),
