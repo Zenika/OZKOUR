@@ -1,10 +1,9 @@
-import {jest} from '@jest/globals'
-import axios from "axios";
+import { api } from "@/api/apiConfig";
 import { setActivePinia, createPinia } from "pinia";
 
 import { useTalkStore } from "../../src/stores/talks";
 
-jest.mock(axios);
+jest.mock("@/api/apiConfig");
 
 describe("Talk Store", () => {
   beforeEach(() => {
@@ -85,14 +84,14 @@ describe("Talk Store", () => {
 
       talk.updateTalks(talksRetrieved);
 
-      axios.get.mockResolvedValueOnce({
+      api.post.mockResolvedValueOnce({
         data: {
           link : 'https://monliendeslide.com'
         } 
       })
       const link = await talk.generateSlidesForSelectedTalks(talksRetrieved);
 
-      expected(link).toBe('https://monliendeslide.com')
+      expect(link).toBe('https://monliendeslide.com')
     })
   })
 });
