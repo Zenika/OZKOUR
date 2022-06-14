@@ -6,5 +6,6 @@ exports[`RecapModal Component Display a list of the chosen talks, only their tit
   <li data-test="talk-title">Migration JS vers TS sur du react</li>
   <li data-test="talk-title">Nuxt 2021</li>
   <li data-test="talk-title">Simplify Remote Hands-On Training and Improve Engagement</li>
+  <li data-test="talk-title">Techniques minimalistes pour Node.js</li>
 </ul>
 `;

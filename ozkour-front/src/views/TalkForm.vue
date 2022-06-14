@@ -14,18 +14,25 @@ export default {
     EventArray,
     RecapModal
   },
-  setup() {
-    const talk = useTalkStore();
-    return {
-      talk,
-    };
-  },
   data () {
     return {
-      isModalVisible: false
+      isModalVisible: false,
+      isSlidesGenerationFailed : false,
+      talks : useTalkStore()
     };
   },
   methods: {
+    async onRecapSubmit() {
+      try {
+        const link = await this.talks.generateSlidesForSelectedTalks();
+
+        window.open(link, "_blank");
+      } catch (e) {
+        this.isSlidesGenerationFailed = true;
+      }
+
+      this.closeModal();
+    },
     showModal() {
       this.isModalVisible = true;
     },
@@ -61,9 +68,15 @@ export default {
       Générer un visuel
     </PrimaryBtn>
 
+    <span v-if="isSlidesGenerationFailed">Sorry, c'est pas OK</span>
+
     <RecapModal
       v-if="isModalVisible"
       id="talk-recap-modal"
+      :talks="talks.getSelectedTalks"
+      :template="talks.template.template"
+      :dates="talks.date"
+      @submit="onRecapSubmit"
       @close="closeModal"
     />
   </main>
