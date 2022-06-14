@@ -18,6 +18,7 @@ export default {
     return {
       isModalVisible: false,
       isSlidesGenerationFailed : false,
+      isGetTalksFailed : false,
       talks : useTalkStore()
     };
   },
@@ -32,6 +33,13 @@ export default {
       }
 
       this.closeModal();
+    },
+    async handleSearchTalk({dateStart, dateEnd}) {
+      try {
+        await this.talks.getTalks(dateStart, dateEnd)
+      } catch (e) {
+        this.isGetTalksFailed = true;
+      }
     },
     showModal() {
       this.isModalVisible = true;
@@ -54,7 +62,7 @@ export default {
 
     <section class="container__section">
       <ChoosingTemplate />
-      <ChoosingDate />
+      <ChoosingDate @on-search-talk="handleSearchTalk" />
     </section>
 
     <section class="container__eventList">

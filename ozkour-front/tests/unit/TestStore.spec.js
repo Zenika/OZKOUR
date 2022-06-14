@@ -1,5 +1,10 @@
+import {jest} from '@jest/globals'
+import axios from "axios";
 import { setActivePinia, createPinia } from "pinia";
+
 import { useTalkStore } from "../../src/stores/talks";
+
+jest.mock(axios);
 
 describe("Talk Store", () => {
   beforeEach(() => {
@@ -73,6 +78,23 @@ describe("Talk Store", () => {
     talk.checkTalk(talkToBeRemovedAndAdded);
     expect(talk.getSelectedTalks[0]).toStrictEqual(talkToBeRemovedAndAdded);
   });
+
+  describe.only("generateSlidesForSelectedTalks action", () => {
+    it('should return the slide\'s link given status code to be 200', async () => {
+      const talk = useTalkStore();
+
+      talk.updateTalks(talksRetrieved);
+
+      axios.get.mockResolvedValueOnce({
+        data: {
+          link : 'https://monliendeslide.com'
+        } 
+      })
+      const link = await talk.generateSlidesForSelectedTalks(talksRetrieved);
+
+      expected(link).toBe('https://monliendeslide.com')
+    })
+  })
 });
 
 const talksRetrieved = [
