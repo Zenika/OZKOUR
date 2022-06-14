@@ -267,7 +267,8 @@ function CreateTableWithStyleForAllEventsInDate (
                   green: 0,
                   blue: 0
                 }
-              }
+              },
+              alpha: 0
             }
           }
         },
@@ -336,7 +337,8 @@ function addEventNameWithStyleToTable (
           fontSize: {
             magnitude: 20,
             unit
-          }
+          },
+          foregroundColor: defaultForegroundColor
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize',
         textRange: {
@@ -427,11 +429,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
  * @param {string} presentationId The presentation ID.
  * @param {string} pageId The presentation page ID.
  */
-async function createImage (pageId, auth, eventType, yNextElmt) {
-  const { google } = require('googleapis')
-
-  const service = google.slides({ version: 'v1', auth })
-
+function createImage (pageId, eventType, yNextElmt) {
   const pictogram = new Map()
   // Problem de droit avec les images
   // pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
@@ -450,14 +448,15 @@ async function createImage (pageId, auth, eventType, yNextElmt) {
   const imageUrl = pictogram.get(eventType)
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
   const imageId = function () {
-    return Date.now().toString(36) + Math.random().toString(36)
+    return Date.now().toString(36) + Math.random().toString(36).replace('.', '-')
   }
 
   const imgSize = {
     magnitude: 110,
     unit
   }
-  const requests = [{
+
+  return [{
     createImage: {
       objectId: imageId,
       url: imageUrl,
@@ -477,16 +476,6 @@ async function createImage (pageId, auth, eventType, yNextElmt) {
       }
     }
   }]
-
-  // Execute the request.
-
-  const response = await service.presentations.batchUpdate({
-    presentationId,
-    resource: { requests }
-  })
-  const createImageResponse = response.data.replies
-  console.log(`Created image with ID: ${createImageResponse[0].createImage.objectId}`)
-  return createImageResponse
 }
 
 /**
@@ -522,21 +511,19 @@ function addTableData (auth, idPage, data) {
       )
     )
 
-    console.log(dataOrganized.get(date))
-
     const nbEvent = dataOrganized.get(date).length
     for (let i = 0; i < nbEvent; i++) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
-      console.log(arrayOfTalksForAnEvent)
       requests.push(
         addEventNameWithStyleToTable(
           dateId,
           arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
-        )
+        ),
+        createImage(idPage, arrayOfTalksForAnEvent.talks[0].eventType, yNextElmt)
       )
       IndexRowInTableToInsert++
-      createImage(idPage, auth, arrayOfTalksForAnEvent.talks[0].eventType, yNextElmt)
+
       yNextElmt += slideSpacing.EVENT
 
       // add all talk for the event
@@ -551,6 +538,7 @@ function addTableData (auth, idPage, data) {
     }
     date = mapIter.next().value
   }
+
   const promiseAddTableData = new Promise((resolve, reject) => {
     // Execute the request.
     slides.presentations.batchUpdate(
@@ -590,7 +578,7 @@ function deleteTemplateInfo (auth, idPage) {
         presentationId
       },
       async (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err)
+        if (err) reject(new Error(err))
 
         const slide = res.data.slides.find(slide => slide.objectId === idPage)
         if (slide !== undefined) {
