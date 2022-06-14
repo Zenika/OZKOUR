@@ -2,7 +2,8 @@
   "root": true,
   "env": {
     "node": true,
-    "vue/setup-compiler-macros": true
+    "vue/setup-compiler-macros": true,
+    "jest/globals": true
   },
   "extends": [
     "plugin:vue/vue3-recommended",
@@ -15,5 +16,7 @@
   },
   "rules": {
     "indent": ["error", 2]
-  }
+  },
+  "plugins": ["jest"]
+
 }
