@@ -79,7 +79,7 @@ describe("Talk Store", () => {
     expect(talk.getSelectedTalks[0]).toStrictEqual(talkToBeRemovedAndAdded);
   });
 
-  describe.only("generateSlidesForSelectedTalks action", () => {
+  describe("generateSlidesForSelectedTalks action", () => {
     it('should return the slide\'s link given status code to be 200', async () => {
       const talk = useTalkStore();
 

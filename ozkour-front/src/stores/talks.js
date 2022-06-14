@@ -46,7 +46,7 @@ export const useTalkStore = defineStore({
       return data.link;
     },
     async getTalks(dateStart, dateEnd) {
-      await api
+      const {data} = await api
         .get("/talk", {
           params: {
             start: dateStart.value,
@@ -54,31 +54,25 @@ export const useTalkStore = defineStore({
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
-        .then((response) => {
-          let res = [];
-          for (let i = 0; i < response.data.length; i++) {
-            const talk = response.data[i];
-            const value = {
-              date: talk[4],
-              universe: talk[3],
-              eventType: talk[1],
-              eventName: talk[2],
-              talkTitle: talk[6],
-              speakers: talk[5],
-              checked : true
-            };
+        
+      let res = [];
 
-            res.push(value);
-          }
+      data.forEach(([, eventType, eventName, universe, date, speakers, talkTitle]) => {
+        const value = {
+          date,
+          universe,
+          eventType,
+          eventName,
+          talkTitle,
+          speakers,
+          checked : true
+        };
 
-          this.updateTalks(res);
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .then(function () {
-          // always executed
-        });
+        res.push(value);
+      });
+
+      this.updateTalks(res);
+        
         
       this.selectedDate(dateStart, dateEnd);
     }
