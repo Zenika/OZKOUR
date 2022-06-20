@@ -29,7 +29,7 @@ const greyForegroundColor = {
 }
 
 const slideSpacing = {
-  EVENT: 80,
+  EVENT: 50,
   TALK: 45,
   DATE: 40
 }
@@ -74,7 +74,51 @@ function clusterByDate (data) {
       })
     }
   }
-  return clusterByEventName(dataOrganized)
+  // console.log(
+  return divideInMultipleSlides(clusterByEventName(dataOrganized))
+}
+
+function divideInMultipleSlides (dataOrganized) {
+  const mapIter = dataOrganized.keys()
+  let date = mapIter.next().value
+  let isEndOfData = false
+  let isEndOfSlideReached = false
+  const dataOrganizedBySlides = []
+  const map = new Map()
+  dataOrganizedBySlides.push(map)
+
+  while (!isEndOfData) {
+    let yNextElmt = DEFAULT_START_Y_INDEX
+    isEndOfSlideReached = false
+    while (!isEndOfData && !isEndOfSlideReached) {
+      yNextElmt += slideSpacing.DATE
+
+      const nbEvent = dataOrganized.get(date).length
+      for (let i = 0; i < nbEvent; i++) {
+        const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
+
+        yNextElmt += slideSpacing.EVENT
+
+        // add all talk for the event
+        for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
+          yNextElmt += slideSpacing.TALK
+        }
+      }
+      if (yNextElmt >= 500) { // crer aurtre slide
+        isEndOfSlideReached = true
+        const map = new Map()
+        map.set(date, dataOrganized.get(date))
+        dataOrganizedBySlides.push(map)
+      } else { // ca passe
+        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, dataOrganized.get(date))
+      }
+      date = mapIter.next().value
+      if (date === undefined) {
+        isEndOfData = true
+      }
+    }
+  }
+  return dataOrganizedBySlides
 }
 
 /**
@@ -131,19 +175,22 @@ async function createSlides (auth, talks) {
       },
       async (err, res) => {
         if (err) reject(err.message)
-        copySlide(auth, res.data.slides[0].objectId, talks)
-          .then((result) => {
-            resolve({
-              message: result,
-              link:
-                  'https://docs.google.com/presentation/d/' +
-                  presentationId +
-                  '/'
+        const dataOrganizedBySlide = clusterByDate(talks)
+        dataOrganizedBySlide.forEach(dataOrganized =>
+          copySlide(auth, res.data.slides[0].objectId, dataOrganized)
+            .then((result) => {
+              resolve({
+                message: result,
+                link:
+                    'https://docs.google.com/presentation/d/' +
+                    presentationId +
+                    '/'
+              })
             })
-          })
-          .catch((e) => {
-            reject(e)
-          })
+            .catch((e) => {
+              reject(e)
+            })
+        )
       }
     )
   })
@@ -486,9 +533,8 @@ function createImage (pageId, eventType, yNextElmt) {
  * @return {Array} return an array of the requests
  */
 
-function addTableData (auth, idPage, data) {
+function addTableData (auth, idPage, dataOrganized) {
   const slides = google.slides({ version: 'v1', auth })
-  const dataOrganized = clusterByDate(data)
 
   const requests = []
   const mapIter = dataOrganized.keys()
@@ -533,6 +579,7 @@ function addTableData (auth, idPage, data) {
           addTalkTitleWithStyleToTable(dateId, talk, IndexRowInTableToInsert),
           addSpeakersWithStyleToTable(dateId, talk, IndexRowInTableToInsert)
         )
+        yNextElmt += slideSpacing.TALK
         IndexRowInTableToInsert++
       }
     }
@@ -634,7 +681,7 @@ function deleteTemplateInfo (auth, idPage) {
 
 function copySlide (auth, idPage, talkSelected) {
   const slides = google.slides({ version: 'v1', auth })
-  const newIdPage = Date.now().toString() // New id is supposed to be unique
+  const newIdPage = Date.now().toString(36) + Math.random().toString(36).replace('.', '-') // New id is supposed to be unique
   const requests = [
     {
       duplicateObject: {
