@@ -1,33 +1,15 @@
 import { shallowMount } from "@vue/test-utils";
-import { createTestingPinia } from "@pinia/testing";
 import RecapModal from "@/components/RecapModal.vue"
-import ValidateBtn from '@/components/Buttons/ValidateBtn.vue'
-import { useTalkStore } from "../../src/stores/talks";
-
-// On utilise 'shallowMount' pour ne pas mount les composants enfants (ici ValidateBtn)
 
 describe("RecapModal Component", () => {
-  beforeEach(() => {
-
-  })
   //--- Afficher le visuel choisi par l'utilisateur
   it("Display the template chosen", async () => {
     const wrapper = shallowMount(RecapModal, {
-      global: {
-        plugins: [
-          createTestingPinia({
-            initialState: {
-              talk: { 
-                retrieved: talks,
-                template : {
-                  template : 'E-mailing', 
-                  frequency : 'month' 
-                }
-              },
-            },
-          }),
-        ],
-      },
+      props : {
+        talks : [],
+        dates : {},
+        template : 'E-mailing'
+      }
     });
 
     const template = wrapper.find('[data-test="template-detail"]').text()
@@ -38,21 +20,14 @@ describe("RecapModal Component", () => {
   //--- Afficher la plage de dates choisi par l'utilisateur
   it("Display the date range chosen", async () => {
     const wrapper = shallowMount(RecapModal, {
-      global: {
-        plugins: [
-          createTestingPinia({
-            initialState: {
-              talk: { 
-                retrieved: talks,
-                date : { 
-                  start : '11/01/2021', 
-                  end : '12/02/2021'
-                }
-              },
-            },
-          }),
-        ],
-      },
+      props : {
+        talks : [],
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      }
     });
 
     const dateText = wrapper.find('[data-test="date-detail"]').text()
@@ -65,16 +40,14 @@ describe("RecapModal Component", () => {
   //--- Afficher la liste des titres des talks choisi par l'utilisateur 
   it("Display a list of the chosen talks, only their titles", async () => {
     const wrapper = shallowMount(RecapModal, {
-      global: {
-        plugins: [
-          createTestingPinia({
-            plugins: [useTalkStore],
-            initialState: {
-              talk: { retrieved: talks },
-            },
-          }),
-        ],
-      },
+      props : {
+        talks,
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      }
     });
     
     const talkTitle = wrapper.find('.events').html()
@@ -83,10 +56,19 @@ describe("RecapModal Component", () => {
   })
 
   //--- Bouton fermer la pop up
-  it("Close the pop up when you click on the cross button", async () => {
-    const wrapper = shallowMount (RecapModal)
+  it("should emit a close event when the close button is triggered", async () => {
+    const wrapper = shallowMount (RecapModal, {
+      props : {
+        talks,
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      }
+    });
 
-    wrapper.find('.close-btn').trigger('click')
+    await wrapper.find('.close-btn').trigger('click')
 
     expect(wrapper.emitted('close')).toHaveLength(1)
   })

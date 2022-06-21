@@ -1,6 +1,4 @@
 <script>
-import axios from "axios";
-import qs from "qs";
 import dateFormat from "dateformat";
 import { ref, watch } from "vue";
 import { useTalkStore } from "../stores/talks";
@@ -11,7 +9,8 @@ export default {
   components: {
     Datepicker,
   },
-  setup() {
+  emits: ['onSearchTalk'],
+  setup(props, context) {
     const date = ref(new Date());
     const dateStart = ref(""); 
     const dateEnd = ref("");
@@ -33,8 +32,6 @@ export default {
         searchTalk();
       }
     });
-
-    //const test = false
 
     function defaultDateNextMonth(d = new Date()) {
       if (d.getDate() < 7) {
@@ -103,45 +100,8 @@ export default {
       date.value[1] = dateEnd.value;
     }
 
-    function searchTalk(){
-      axios
-        .get("http://localhost:3000/talk", {
-          params: {
-            start: dateStart.value,
-            end: dateEnd.value,
-          },
-          paramsSerializer: (params) => qs.stringify(params, { encode: false }),
-        })
-        .then(function (response) {
-
-          talks.updateTalks(response.data);
-          let res = [];
-          for (let i = 0; i < response.data.length; i++) {
-            const talk = response.data[i];
-            const value = {
-              date: talk[4],
-              universe: talk[3],
-              eventType: talk[1],
-              eventName: talk[2],
-              talkTitle: talk[6],
-              speakers: talk[5],
-              checked : true
-            };
-            //console.log(value);
-            res.push(value);
-          }
-
-          talks.updateTalks(res);
-          
-          //console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        })
-        .then(function () {
-          // always executed
-        });
-      talks.selectedDate(dateStart, dateEnd);
+    function searchTalk() {
+      context.emit('onSearchTalk', {dateStart, dateEnd});
     }
 
     watch(date, async (newDate) => {

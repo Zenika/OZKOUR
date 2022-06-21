@@ -1,35 +1,25 @@
 <script>
-import ValidateBtn from "./Buttons/ValidateBtn.vue";
-import { useTalkStore } from "../stores/talks";
-import axios from "axios";
+import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
 
 export default {
   components:{
-    ValidateBtn
+    PrimaryBtn
   },
-  emits: ['close'],
-  setup(props, context) {
-    const talks = useTalkStore();
-
-    const sendTalks = () => {
-      axios
-        .post("http://localhost:3000/selected-talks", talks.getSelectedTalks)
-        .then((response) => {
-          window.open(response.data.link, "_blank");
-        })
-        .catch(function (error) {
-          alert(error.response.data);
-        }).finally(() => {
-          context.emit("close")
-        }
-        );
-    };
-
-    return {
-      sendTalks,
-      talks,
+  props: {
+    talks : {
+      type : Array,
+      required : true
+    },
+    dates : {
+      type : Object,
+      required : true
+    },
+    template : {
+      type : String,
+      required : true
     }
   },
+  emits:['close', 'submit']
 };
 </script>
 
@@ -56,7 +46,7 @@ export default {
           >
         </div>
         <p data-test="template-detail">
-          <b>Visuel : </b>{{ talks.template.template }}
+          <b>Visuel : </b>{{ template }}
         </p>
       </div>
       <div class="recap-details">
@@ -68,7 +58,7 @@ export default {
           >
         </div>
         <p data-test="date-detail">
-          <b>Dates : </b>{{ talks.date.start }} au {{ talks.date.end }}
+          <b>Dates : </b>{{ dates.start }} au {{ dates.end }}
         </p>
       </div>
       <div>
@@ -84,7 +74,7 @@ export default {
         </div>
         <ul class="events">
           <li
-            v-for="talk in talks.getSelectedTalks"
+            v-for="talk in talks"
             :key="talk"
             data-test="talk-title"
           >
@@ -95,7 +85,9 @@ export default {
     </div>
 
     <div class="validate">
-      <ValidateBtn @click="sendTalks" />
+      <PrimaryBtn @click="$emit('submit')">
+        Valider
+      </PrimaryBtn>
     </div>
   </div>
 </template>

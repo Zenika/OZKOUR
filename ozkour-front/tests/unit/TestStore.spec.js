@@ -1,5 +1,9 @@
+import { api } from "@/api/apiConfig";
 import { setActivePinia, createPinia } from "pinia";
+
 import { useTalkStore } from "../../src/stores/talks";
+
+jest.mock("@/api/apiConfig");
 
 describe("Talk Store", () => {
   beforeEach(() => {
@@ -73,6 +77,23 @@ describe("Talk Store", () => {
     talk.checkTalk(talkToBeRemovedAndAdded);
     expect(talk.getSelectedTalks[0]).toStrictEqual(talkToBeRemovedAndAdded);
   });
+
+  describe("generateSlidesForSelectedTalks action", () => {
+    it('should return the slide\'s link given status code to be 200', async () => {
+      const talk = useTalkStore();
+
+      talk.updateTalks(talksRetrieved);
+
+      api.post.mockResolvedValueOnce({
+        data: {
+          link : 'https://monliendeslide.com'
+        } 
+      })
+      const link = await talk.generateSlidesForSelectedTalks(talksRetrieved);
+
+      expect(link).toBe('https://monliendeslide.com')
+    })
+  })
 });
 
 const talksRetrieved = [
