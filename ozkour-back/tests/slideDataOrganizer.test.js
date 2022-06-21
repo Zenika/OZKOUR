@@ -1,9 +1,9 @@
-const slide = require('../google-api/slide')
+const slide = require('../google-api/slideDataOrganizer')
 const simpleTalk = require('./dataset/talk1.json')
 const talksWithOverflowDate = require('./dataset/talk1.json')
 const talksWithOverflowEvent = require('./dataset/talk2.json')
 const talksWithOverflowEventByFar = require('./dataset/talk2.json')
-describe('Slides', () => {
+describe('DataOrganizer', () => {
   describe('data concistency', () => {
     it('check clustering by date and by EventName', () => {
       expect(slide.clusterByDate(simpleTalk)).toMatchSnapshot()

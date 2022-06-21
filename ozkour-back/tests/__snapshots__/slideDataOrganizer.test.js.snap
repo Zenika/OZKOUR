@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Slides data concistency check clustering by date and by EventName 1`] = `
+exports[`DataOrganizer data concistency check clustering by date and by EventName 1`] = `
 Array [
   Map {
     "19/01/2021" => Array [
@@ -72,7 +72,7 @@ Array [
 ]
 `;
 
-exports[`Slides write on another slide when it overflows displays additional date on another slide  1`] = `
+exports[`DataOrganizer write on another slide when it overflows displays additional date on another slide  1`] = `
 Array [
   Map {
     "19/01/2021" => Array [
@@ -144,7 +144,7 @@ Array [
 ]
 `;
 
-exports[`Slides write on another slide when it overflows displays additional date on another slides  1`] = `
+exports[`DataOrganizer write on another slide when it overflows displays additional date on another slides  1`] = `
 Array [
   Map {
     "19/01/2021" => Array [
@@ -217,7 +217,7 @@ Array [
 ]
 `;
 
-exports[`Slides write on another slide when it overflows displays additional events on another slide 1`] = `
+exports[`DataOrganizer write on another slide when it overflows displays additional events on another slide 1`] = `
 Array [
   Map {
     "19/01/2021" => Array [
