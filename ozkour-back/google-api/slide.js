@@ -85,39 +85,34 @@ function divideInMultipleSlides (dataOrganized) {
   let date = mapIter.next().value
   let isEndOfData = false
   let isEndOfSlideReached = false
+  let yNextElmt = DEFAULT_START_Y_INDEX
+  let yNextElmtTemp
+  let DoesDateFits
   const dataOrganizedBySlides = []
-  const map = new Map()
-  dataOrganizedBySlides.push(map)
+  dataOrganizedBySlides.push(new Map())
 
   while (!isEndOfData) {
-    let yNextElmt = DEFAULT_START_Y_INDEX
-    let yNextElmtAvantDate = 0
     isEndOfSlideReached = false
     while (!isEndOfData && !isEndOfSlideReached) {
-      let DoesDateFits = true
-      yNextElmtAvantDate = yNextElmt
-      const resDate = testDate(yNextElmt, dataOrganized.get(date))
+      DoesDateFits = true
+      yNextElmtTemp = yNextElmt
+      const resDate = tryDate(yNextElmt, dataOrganized.get(date))
       DoesDateFits = resDate.DoesDateFits
       yNextElmt = resDate.yNextElmt
 
       if (!DoesDateFits) { // toute la date ne rentre pas
-        yNextElmt = yNextElmtAvantDate
+        yNextElmt = yNextElmtTemp
         let i = 0
         let listOfEventThatFits = []
         const allEventsInADate = dataOrganized.get(date)
         let atLeastOneEventCanFit = false
-        let firstIteration = true
-        let worthToContinue = true
-        // let atLeastOneTalkCanFit = false
+        let worthToContinue = (i === 0 || atLeastOneEventCanFit)
+        let DoesEventFits = true
+
         while (i < allEventsInADate.length && worthToContinue) {
-          if (firstIteration) {
-            firstIteration = false
-          } else if (!atLeastOneEventCanFit) {
-            worthToContinue = false
-          }
-          let DoesEventFits = true
+          worthToContinue = (i === 0 || atLeastOneEventCanFit)
           const event = allEventsInADate[i]
-          const resEvent = testEvent(yNextElmt, event)
+          const resEvent = tryEvent(yNextElmt, event)
           DoesEventFits = resEvent.DoesEventFits
           yNextElmt = resEvent.yNextElmt
           if (DoesEventFits) {
@@ -133,6 +128,7 @@ function divideInMultipleSlides (dataOrganized) {
               const map = new Map()
               dataOrganizedBySlides.push(map)
               listOfEventThatFits.push(event)
+              yNextElmt = DEFAULT_START_Y_INDEX
             } else {
               i = allEventsInADate.length
             }
@@ -147,6 +143,7 @@ function divideInMultipleSlides (dataOrganized) {
           const map = new Map()
           map.set(date, dataOrganized.get(date))
           dataOrganizedBySlides.push(map)
+          yNextElmt = DEFAULT_START_Y_INDEX
         }
       } else { // toute la date rentre
         dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, dataOrganized.get(date))
@@ -162,22 +159,19 @@ function divideInMultipleSlides (dataOrganized) {
   return dataOrganizedBySlides
 }
 
-function testDate (yNextElmt, data) {
+function tryDate (yNextElmt, data) {
   yNextElmt += slideSpacing.DATE
-  const nbEvent = data.length
-  for (let i = 0; i < nbEvent; i++) {
-    const event = data[i]
-    const res = testEvent(yNextElmt, event)
-    yNextElmt = res.yNextElmt
-  }
+  data.forEach(event => {
+    yNextElmt = tryEvent(yNextElmt, event).yNextElmt
+  })
   return { yNextElmt, DoesDateFits: yNextElmt <= END_OF_SLIDE }
 }
 
-function testEvent (yNextElmt, event) {
+function tryEvent (yNextElmt, event) {
   yNextElmt += slideSpacing.EVENT
-  for (let j = 0; j < event.talks.length; j++) {
+  event.talks.forEach(talk => {
     yNextElmt += slideSpacing.TALK
-  }
+  })
 
   return { yNextElmt, DoesEventFits: yNextElmt <= END_OF_SLIDE }
 }

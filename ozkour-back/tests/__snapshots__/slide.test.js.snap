@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Slides data concistency check clustering by date and by EventName 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "21/01/2021" => Array [
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yann Bertrand",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "25/01/2021" => Array [
+      Object {
+        "eventName": "RemoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Hugo Wood",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "26/01/2021" => Array [
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`Slides write on another slide when it overflows displays additional date on another slide  1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "21/01/2021" => Array [
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yann Bertrand",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "25/01/2021" => Array [
+      Object {
+        "eventName": "RemoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Hugo Wood",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "26/01/2021" => Array [
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`Slides write on another slide when it overflows displays additional date on another slides  1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yann Bertrand",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "RemoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Hugo Wood",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Thibault Lognaise ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`Slides write on another slide when it overflows displays additional events on another slide 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yann Bertrand",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "RemoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Hugo Wood",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Thibault Lognaise ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
