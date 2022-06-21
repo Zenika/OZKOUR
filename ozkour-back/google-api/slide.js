@@ -77,7 +77,6 @@ function clusterByDate (data) {
       })
     }
   }
-  // console.log(
   return divideInMultipleSlides(clusterByEventName(dataOrganized))
 }
 
@@ -92,28 +91,68 @@ function divideInMultipleSlides (dataOrganized) {
 
   while (!isEndOfData) {
     let yNextElmt = DEFAULT_START_Y_INDEX
+    let yNextElmtAvantDate = 0
     isEndOfSlideReached = false
     while (!isEndOfData && !isEndOfSlideReached) {
-      yNextElmt += slideSpacing.DATE
+      let DoesDateFits = true
+      yNextElmtAvantDate = yNextElmt
+      const resDate = testDate(yNextElmt, dataOrganized.get(date))
+      DoesDateFits = resDate.DoesDateFits
+      yNextElmt = resDate.yNextElmt
 
-      const nbEvent = dataOrganized.get(date).length
-      for (let i = 0; i < nbEvent; i++) {
-        const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
-        yNextElmt += slideSpacing.EVENT
+      if (!DoesDateFits) { // toute la date ne rentre pas
+        yNextElmt = yNextElmtAvantDate
+        let i = 0
+        let listOfEventThatFits = []
+        const allEventsInADate = dataOrganized.get(date)
+        let atLeastOneEventCanFit = false
+        let firstIteration = true
+        let worthToContinue = true
+        // let atLeastOneTalkCanFit = false
+        while (i < allEventsInADate.length && worthToContinue) {
+          if (firstIteration) {
+            firstIteration = false
+          } else if (!atLeastOneEventCanFit) {
+            worthToContinue = false
+          }
+          let DoesEventFits = true
+          const event = allEventsInADate[i]
+          const resEvent = testEvent(yNextElmt, event)
+          DoesEventFits = resEvent.DoesEventFits
+          yNextElmt = resEvent.yNextElmt
+          if (DoesEventFits) {
+            atLeastOneEventCanFit = true
+            listOfEventThatFits.push(event)
+          } else {
+            if (atLeastOneEventCanFit) {
+              // on ajoute ce qui rentre
+              dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, listOfEventThatFits)
 
-        // add all talk for the event
-        for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
-          yNextElmt += slideSpacing.TALK
+              // on prepare la prochaine fois que ça rentre
+              listOfEventThatFits = []
+              const map = new Map()
+              dataOrganizedBySlides.push(map)
+              listOfEventThatFits.push(event)
+            } else {
+              i = allEventsInADate.length
+            }
+          }
+          i++
+          if (i >= allEventsInADate.length && atLeastOneEventCanFit) {
+            dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, listOfEventThatFits)
+          }
         }
-      }
-      if (yNextElmt >= END_OF_SLIDE) { // crer aurtre slide
-        isEndOfSlideReached = true
-        const map = new Map()
-        map.set(date, dataOrganized.get(date))
-        dataOrganizedBySlides.push(map)
-      } else { // ca passe
+        if (!atLeastOneEventCanFit) {
+          isEndOfSlideReached = true
+          const map = new Map()
+          map.set(date, dataOrganized.get(date))
+          dataOrganizedBySlides.push(map)
+        }
+      } else { // toute la date rentre
         dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, dataOrganized.get(date))
       }
+
+      // on verifie s'il reste des données
       date = mapIter.next().value
       if (date === undefined) {
         isEndOfData = true
@@ -121,6 +160,26 @@ function divideInMultipleSlides (dataOrganized) {
     }
   }
   return dataOrganizedBySlides
+}
+
+function testDate (yNextElmt, data) {
+  yNextElmt += slideSpacing.DATE
+  const nbEvent = data.length
+  for (let i = 0; i < nbEvent; i++) {
+    const event = data[i]
+    const res = testEvent(yNextElmt, event)
+    yNextElmt = res.yNextElmt
+  }
+  return { yNextElmt, DoesDateFits: yNextElmt <= END_OF_SLIDE }
+}
+
+function testEvent (yNextElmt, event) {
+  yNextElmt += slideSpacing.EVENT
+  for (let j = 0; j < event.talks.length; j++) {
+    yNextElmt += slideSpacing.TALK
+  }
+
+  return { yNextElmt, DoesEventFits: yNextElmt <= END_OF_SLIDE }
 }
 
 /**
