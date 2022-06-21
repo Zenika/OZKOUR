@@ -1,4 +1,5 @@
 const { google } = require('googleapis')
+const utilitary = require('../utilitary')
 const connect = require('./connect.js')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -35,6 +36,8 @@ const slideSpacing = {
 }
 
 const DEFAULT_START_Y_INDEX = 100
+
+const END_OF_SLIDE = 520
 
 async function createSlideFromTalks (talks, h) {
   try {
@@ -96,7 +99,6 @@ function divideInMultipleSlides (dataOrganized) {
       const nbEvent = dataOrganized.get(date).length
       for (let i = 0; i < nbEvent; i++) {
         const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
-
         yNextElmt += slideSpacing.EVENT
 
         // add all talk for the event
@@ -104,7 +106,7 @@ function divideInMultipleSlides (dataOrganized) {
           yNextElmt += slideSpacing.TALK
         }
       }
-      if (yNextElmt >= 500) { // crer aurtre slide
+      if (yNextElmt >= END_OF_SLIDE) { // crer aurtre slide
         isEndOfSlideReached = true
         const map = new Map()
         map.set(date, dataOrganized.get(date))
@@ -141,17 +143,16 @@ function clusterByEventName (dataOrganized) {
       if (EventNameAdded.includes(talk.eventName)) {
         EventArray[EventNameAdded.indexOf(talk.eventName)].talks.push({
           universe: talk.universe,
-          eventType: talk.eventType,
           talkTitle: talk.talkTitle,
           speakers: talk.speakers
         })
       } else {
         EventArray.push({
           eventName: talk.eventName,
+          eventType: talk.eventType,
           talks: [
             {
               universe: talk.universe,
-              eventType: talk.eventType,
               talkTitle: talk.talkTitle,
               speakers: talk.speakers
             }
@@ -204,7 +205,7 @@ async function createSlides (auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addDateTextWithStyle (idPage, objectId, Y) {
+function addDateTextWithStyle (idPage, date, objectId, Y) {
   const pt350 = {
     magnitude: 350,
     unit
@@ -242,7 +243,7 @@ function addDateTextWithStyle (idPage, objectId, Y) {
         // add date to the text
         objectId,
         insertionIndex: 0,
-        text: objectId.replaceAll('-', '/')
+        text: date
       }
     },
     {
@@ -276,14 +277,14 @@ function addDateTextWithStyle (idPage, objectId, Y) {
 
 function CreateTableWithStyleForAllEventsInDate (
   idPage,
-  date,
+  dateId,
   Y,
-  dataOrganized
+  data
 ) {
-  const objectId = date.replaceAll('/', '-') + '-table'
+  const objectId = dateId + '-table'
   // calculate size of Table
-  let nbTalkForDate = dataOrganized.get(date).length
-  for (let i = 0; i < dataOrganized.get(date).length; i++) { nbTalkForDate += dataOrganized.get(date)[i].talks.length }
+  let nbTalkForDate = data.length
+  for (let i = 0; i < data.length; i++) { nbTalkForDate += data[i].talks.length }
   return [
     {
       createTable: {
@@ -354,11 +355,11 @@ function CreateTableWithStyleForAllEventsInDate (
 }
 
 function addEventNameWithStyleToTable (
-  date,
+  dateId,
   eventName,
   IndexRowInTableToInsert
 ) {
-  const objectId = date + '-table'
+  const objectId = dateId + '-table'
   return [
     {
       insertText: {
@@ -544,16 +545,17 @@ function addTableData (auth, idPage, dataOrganized) {
   let yNextElmt = DEFAULT_START_Y_INDEX
 
   while (date !== undefined) {
-    const dateId = date.replaceAll('/', '-')
+    const dateId = date.replaceAll('/', '-') + Math.random().toString(36).replaceAll('.', ':')
     IndexRowInTableToInsert = 0
-    requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt))
+    const dateFormated = date.substring(0, 2) + ' ' + utilitary.convDateToMonth(date) + ' ' + date.substring(6)
+    requests.push(addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt))
     yNextElmt += slideSpacing.DATE
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
         idPage,
-        date,
+        dateId,
         yNextElmt,
-        dataOrganized
+        dataOrganized.get(date)
       )
     )
 
@@ -566,7 +568,7 @@ function addTableData (auth, idPage, dataOrganized) {
           arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
         ),
-        createImage(idPage, arrayOfTalksForAnEvent.talks[0].eventType, yNextElmt)
+        createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
       )
       IndexRowInTableToInsert++
 

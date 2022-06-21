@@ -48,10 +48,10 @@ const talks = [
 
 const firstEvent = {
   eventName: 'GraalVM Night',
+  eventType: 'Meetup',
   talks: [
     {
       universe: '',
-      eventType: 'Meetup',
       talkTitle: 'GraalVM for Sustainable Software Development?',
       speakers: 'Adrien Nortain'
     }
@@ -59,10 +59,10 @@ const firstEvent = {
 }
 const secondEvent = {
   eventName: 'NightClass',
+  eventType: 'NightClazz',
   talks: [
     {
       universe: '',
-      eventType: 'NightClazz',
       talkTitle: 'Migration JS vers TS sur du react',
       speakers: 'Jules Hablot'
     }
@@ -70,16 +70,15 @@ const secondEvent = {
 }
 const thirdEvent = {
   eventName: 'Webinar Strigo',
+  eventType: 'Meetup',
   talks: [
     {
       universe: '',
-      eventType: 'Meetup',
       talkTitle: 'Nuxt 2021',
       speakers: 'Yann Bertrand'
     },
     {
       universe: '',
-      eventType: 'Autre',
       talkTitle: 'Simplify Remote Hands-On Training and Improve Engagement',
       speakers: 'Yoan Rousseau / Oliver Huber'
     }
@@ -87,18 +86,20 @@ const thirdEvent = {
 }
 const fourthEvent = {
   eventName: 'RemoteClazz Nodejs',
+  eventType: 'NightClazz',
   talks: [
     {
       universe: '',
-      eventType: 'NightClazz',
       talkTitle: 'Techniques minimalistes pour Node.js',
       speakers: 'Hugo Wood'
     }
   ]
 }
 
-const talkClusteredByDate = new Map([
-  ['19/01/2021', [firstEvent, secondEvent]],
-  ['21/01/2021', [thirdEvent]],
-  ['25/01/2021', [fourthEvent]]
-])
+const talkClusteredByDate = [
+  new Map([
+    ['19/01/2021', [firstEvent, secondEvent]]]),
+  new Map([
+    ['21/01/2021', [thirdEvent]],
+    ['25/01/2021', [fourthEvent]]])
+]
