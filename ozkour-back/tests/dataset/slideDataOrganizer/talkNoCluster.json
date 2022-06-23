@@ -1,0 +1,20 @@
+[
+    {
+        "date": "19/01/2021",
+        "universe": "",
+        "eventType": "Meetup",
+        "eventName": "GraalVM Night",
+        "talkTitle": "GraalVM for Sustainable Software Development?",
+        "speakers": "Adrien Nortain",
+        "checked": true
+    },
+    {
+        "date": "20/01/2021",
+        "universe": "",
+        "eventType": "Meetup",
+        "eventName": "GraalVM Night",
+        "talkTitle": "Migration JS vers TS sur du react",
+        "speakers": "Jules Hablot",
+        "checked": true
+    }
+]

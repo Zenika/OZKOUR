@@ -41,6 +41,7 @@ function clusterByDate (data) {
 }
 
 function divideInMultipleSlides (dataOrganized) {
+  // console.log(dataOrganized.get('19/01/2021')[0].talks);
   const mapIter = dataOrganized.keys()
   let date = mapIter.next().value
   let isEndOfData = false
@@ -58,34 +59,56 @@ function divideInMultipleSlides (dataOrganized) {
       yNextElmtTemp = yNextElmt
       const resDate = tryDate(yNextElmt, dataOrganized.get(date))
       DoesDateFits = resDate.DoesDateFits
-      yNextElmt = resDate.yNextElmt
+      yNextElmt += resDate.yAdded
 
-      if (!DoesDateFits) { // toute la date ne rentre pas
-        const resFilEvent = tryToFillWithEvent(yNextElmtTemp, dataOrganized.get(date), date, dataOrganizedBySlides)
-
-        yNextElmt = resFilEvent.yNextElmt
-        const atLeastOneEventCanFit = resFilEvent.atLeastOneEventCanFit
-        if (!atLeastOneEventCanFit) {
-          isEndOfSlideReached = true
-          const map = new Map()
-          map.set(date, dataOrganized.get(date))
-          dataOrganizedBySlides.push(map)
-          yNextElmt = DEFAULT_START_Y_INDEX
-        } else {
-          dataOrganizedBySlides.pop()
-          resFilEvent.data.forEach(event => dataOrganizedBySlides.push(event))
-        }
-      } else { // toute la date rentre
+      if (DoesDateFits) { // toute la date rentre
         dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, dataOrganized.get(date))
+      } else { // toute la date ne rentre pas
+        const resFillEvent = tryToFillWithEvent(yNextElmtTemp, dataOrganized.get(date), date, dataOrganizedBySlides)
+        yNextElmt += resFillEvent.yAdded
+        const atLeastOneEventCanFit = resFillEvent.atLeastOneEventCanFit
+
+        if (atLeastOneEventCanFit) {
+          dataOrganizedBySlides.pop()
+          resFillEvent.data.forEach(event => dataOrganizedBySlides.push(event))
+        } else {
+          const resFillTalk = tryToFillWithTalk(yNextElmtTemp, dataOrganized.get(date)[0].talks, date, dataOrganized.get(date)[0], dataOrganizedBySlides)
+          yNextElmt += resFillTalk.yAdded
+          const atLeastOneTalkCanFit = resFillTalk.atLeastOneTalkCanFit
+          if (atLeastOneTalkCanFit) {
+            dataOrganizedBySlides.pop()
+            resFillTalk.data.forEach(slide => dataOrganizedBySlides.push(slide))
+          } else {
+            isEndOfSlideReached = true
+            const map = new Map()
+            map.set(date, dataOrganized.get(date))
+            dataOrganizedBySlides.push(map)
+            yNextElmt = DEFAULT_START_Y_INDEX
+          }
+        }
       }
 
       // on verifie s'il reste des données
       date = mapIter.next().value
       if (date === undefined) {
         isEndOfData = true
+        // console.log(dataOrganizedBySlides[dataOrganizedBySlides.length - 1], 'no');
+        // console.log(dataOrganizedBySlides,' oui');
+        // console.log(dataOrganizedBySlides[0], 'ole');
+
+        // console.log('0', dataOrganizedBySlides[0]);
+        // console.log('1', dataOrganizedBySlides[1]);
+        // console.log('2', dataOrganizedBySlides[2]);
+
+        // if (dataOrganizedBySlides[dataOrganizedBySlides.length - 1].length === 0) {
+        //   dataOrganizedBySlides.pop()
+        // }
       }
     }
   }
+  // console.log(dataOrganizedBySlides)
+  // dataOrganizedBySlides.forEach(slide => console.log(slide.get('19/01/2021').talks))
+
   return dataOrganizedBySlides
 }
 
@@ -96,13 +119,13 @@ function tryToFillWithEvent (yNextElmt, allEventsInADate, date, data) {
   let atLeastOneEventCanFit = false
   let worthToContinue = (i === 0 || atLeastOneEventCanFit)
   let DoesEventFits = true
-
+  yNextElmt += slideSpacing.DATE
   while (i < allEventsInADate.length && worthToContinue) {
     worthToContinue = (i === 0 || atLeastOneEventCanFit)
     const event = allEventsInADate[i]
     const resEvent = tryEvent(yNextElmt, event)
     DoesEventFits = resEvent.DoesEventFits
-    yNextElmt = resEvent.yNextElmt
+    yNextElmt += resEvent.yAdded
     if (DoesEventFits) {
       atLeastOneEventCanFit = true
       listOfEventThatFits.push(event)
@@ -117,6 +140,8 @@ function tryToFillWithEvent (yNextElmt, allEventsInADate, date, data) {
         dataOrganizedBySlides.push(map)
         listOfEventThatFits.push(event)
         yNextElmt = DEFAULT_START_Y_INDEX
+        yNextElmt += slideSpacing.DATE
+        yNextElmt += resEvent.yAdded
       } else {
         i = allEventsInADate.length // to end the loop
       }
@@ -136,21 +161,22 @@ function tryToFillWithTalk (yNextElmt, allTalksInAnEvent, date, event, data) {
   let atLeastOneTalkCanFit = false
   let worthToContinue = (i === 0 || atLeastOneTalkCanFit)
   let DoesTalkFits = true
-
+  yNextElmt += slideSpacing.DATE
+  yNextElmt += slideSpacing.EVENT
   while (i < allTalksInAnEvent.length && worthToContinue) {
     worthToContinue = (i === 0 || atLeastOneTalkCanFit)
     const talk = allTalksInAnEvent[i]
     const resTalk = tryTalk(yNextElmt)
     DoesTalkFits = resTalk.DoesTalkFits
-    yNextElmt = resTalk.yNextElmt
+    yNextElmt += resTalk.yAdded
     if (DoesTalkFits) {
       atLeastOneTalkCanFit = true
       listOfTalksThatFits.push(talk)
     } else {
       if (atLeastOneTalkCanFit) {
         // on ajoute ce qui rentre
-        event.talks = listOfTalksThatFits
-        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, event)
+        const partOfTheEventThatFits = { eventName: event.eventName, eventType: event.eventType, talks: listOfTalksThatFits }
+        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, [partOfTheEventThatFits])
 
         // on prepare la prochaine fois que ça rentre
         listOfTalksThatFits = []
@@ -158,39 +184,47 @@ function tryToFillWithTalk (yNextElmt, allTalksInAnEvent, date, event, data) {
         dataOrganizedBySlides.push(map)
         listOfTalksThatFits.push(talk)
         yNextElmt = DEFAULT_START_Y_INDEX
+        yNextElmt += slideSpacing.DATE
+        yNextElmt += slideSpacing.EVENT
+        yNextElmt += slideSpacing.TALK
       } else {
         i = allTalksInAnEvent.length // to end the loop
       }
     }
     i++
     if (i >= allTalksInAnEvent.length && atLeastOneTalkCanFit) {
-      event.talks = listOfTalksThatFits
-      dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, event)
+      const partOfTheEventThatFits = { eventName: event.eventName, eventType: event.eventType, talks: listOfTalksThatFits }
+      dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, [partOfTheEventThatFits])
     }
   }
   return { data: dataOrganizedBySlides, yNextElmt, atLeastOneTalkCanFit }
 }
 
 function tryDate (yNextElmt, data) {
-  yNextElmt += slideSpacing.DATE
+  let sumYAdded = 0
+  sumYAdded += slideSpacing.DATE
   data.forEach(event => {
-    yNextElmt = tryEvent(yNextElmt, event).yNextElmt
+    const yAdded = tryEvent(yNextElmt, event).yAdded
+    sumYAdded += yAdded
   })
-  return { yNextElmt, DoesDateFits: yNextElmt <= END_OF_SLIDE }
+  return { yAdded: sumYAdded, DoesDateFits: sumYAdded + yNextElmt <= END_OF_SLIDE }
 }
 
 function tryEvent (yNextElmt, event) {
-  yNextElmt += slideSpacing.EVENT
+  let sumYAdded = 0
+  sumYAdded += slideSpacing.EVENT
   event.talks.forEach(talk => {
-    yNextElmt = tryTalk(yNextElmt).yNextElmt
+    sumYAdded += tryTalk(yNextElmt).yAdded
   })
 
-  return { yNextElmt, DoesEventFits: yNextElmt <= END_OF_SLIDE }
+  return { yAdded: sumYAdded, DoesEventFits: sumYAdded + yNextElmt <= END_OF_SLIDE }
 }
 
 function tryTalk (yNextElmt) {
   yNextElmt += slideSpacing.TALK
-  return { yNextElmt, DoesTalkFits: yNextElmt <= END_OF_SLIDE }
+  return {
+    yAdded: slideSpacing.TALK, DoesTalkFits: yNextElmt <= END_OF_SLIDE
+  }
 }
 
 /**

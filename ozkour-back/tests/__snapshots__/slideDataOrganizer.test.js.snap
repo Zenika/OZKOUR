@@ -1,6 +1,141 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DataOrganizer data concistency check clustering by date and by EventName 1`] = `
+exports[`DataOrganizer data concistency displays the talks clustered by date when they are on the same date 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer data concistency displays the talks clustered by event when they are on the same date and event  1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer data concistency displays the talks not clustered when they are on different date and event 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "20/01/2021" => Array [
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "21/01/2021" => Array [
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yann Bertrand",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer data concistency displays the talks not clustered when they are on different date but the same event 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "20/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer write on a slide when it fits on only one displays talks slide 1`] = `
 Array [
   Map {
     "19/01/2021" => Array [
@@ -35,34 +170,6 @@ Array [
           Object {
             "speakers": "Yann Bertrand",
             "talkTitle": "Nuxt 2021",
-            "universe": "",
-          },
-        ],
-      },
-    ],
-  },
-  Map {
-    "25/01/2021" => Array [
-      Object {
-        "eventName": "RemoteClazz Nodejs",
-        "eventType": "NightClazz",
-        "talks": Array [
-          Object {
-            "speakers": "Hugo Wood",
-            "talkTitle": "Techniques minimalistes pour Node.js",
-            "universe": "",
-          },
-        ],
-      },
-    ],
-    "26/01/2021" => Array [
-      Object {
-        "eventName": "Webinar",
-        "eventType": "Webinar",
-        "talks": Array [
-          Object {
-            "speakers": "Anna Logue ",
-            "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
         ],
@@ -160,7 +267,7 @@ Array [
         ],
       },
       Object {
-        "eventName": "NightClass",
+        "eventName": "NightCdlass",
         "eventType": "NightClazz",
         "talks": Array [
           Object {
@@ -182,7 +289,7 @@ Array [
         ],
       },
       Object {
-        "eventName": "RemoteClazz Nodejs",
+        "eventName": "RemoteCdlazz Nodejs",
         "eventType": "NightClazz",
         "talks": Array [
           Object {
@@ -197,7 +304,7 @@ Array [
   Map {
     "19/01/2021" => Array [
       Object {
-        "eventName": "Webinar",
+        "eventName": "Webdinar",
         "eventType": "Webinar",
         "talks": Array [
           Object {
@@ -206,8 +313,72 @@ Array [
             "universe": "",
           },
           Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
             "speakers": "Thibault Lognaise ",
             "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Thibault Lognaise ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "GdraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "NightdClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Jules Hablot",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Nandtes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yann Bertrand",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "RemdoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Hugo Wood",
+            "talkTitle": "Techniques minimalistes pour Node.js",
             "universe": "",
           },
         ],
@@ -222,45 +393,42 @@ Array [
   Map {
     "19/01/2021" => Array [
       Object {
-        "eventName": "GraalVM Night",
-        "eventType": "Meetup",
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
         "talks": Array [
           Object {
             "speakers": "Adrien Nortain",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
-        ],
-      },
-      Object {
-        "eventName": "NightClass",
-        "eventType": "NightClazz",
-        "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
-            "talkTitle": "Migration JS vers TS sur du react",
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
-        ],
-      },
-      Object {
-        "eventName": "Nantes JS #55",
-        "eventType": "Meetup",
-        "talks": Array [
           Object {
-            "speakers": "Yann Bertrand",
-            "talkTitle": "Nuxt 2021",
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
-        ],
-      },
-      Object {
-        "eventName": "RemoteClazz Nodejs",
-        "eventType": "NightClazz",
-        "talks": Array [
           Object {
-            "speakers": "Hugo Wood",
-            "talkTitle": "Techniques minimalistes pour Node.js",
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
         ],
@@ -270,17 +438,172 @@ Array [
   Map {
     "19/01/2021" => Array [
       Object {
-        "eventName": "Webinar",
-        "eventType": "Webinar",
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
         "talks": Array [
           Object {
-            "speakers": "Anna Logue ",
-            "talkTitle": "Migration JS vers TS sur du react",
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Thibault Lognaise ",
-            "talkTitle": "Migration JS vers TS sur du react",
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Adrien Nortain",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
         ],
