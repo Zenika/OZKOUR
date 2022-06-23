@@ -129,6 +129,48 @@ function tryToFillWithEvent (yNextElmt, allEventsInADate, date, data) {
   return { data: dataOrganizedBySlides, yNextElmt, atLeastOneEventCanFit }
 }
 
+function tryToFillWithTalk (yNextElmt, allTalksInAnEvent, date, event, data) {
+  const dataOrganizedBySlides = data.slice(-1)
+  let i = 0
+  let listOfTalksThatFits = []
+  let atLeastOneTalkCanFit = false
+  let worthToContinue = (i === 0 || atLeastOneTalkCanFit)
+  let DoesTalkFits = true
+
+  while (i < allTalksInAnEvent.length && worthToContinue) {
+    worthToContinue = (i === 0 || atLeastOneTalkCanFit)
+    const talk = allTalksInAnEvent[i]
+    const resTalk = tryTalk(yNextElmt)
+    DoesTalkFits = resTalk.DoesTalkFits
+    yNextElmt = resTalk.yNextElmt
+    if (DoesTalkFits) {
+      atLeastOneTalkCanFit = true
+      listOfTalksThatFits.push(talk)
+    } else {
+      if (atLeastOneTalkCanFit) {
+        // on ajoute ce qui rentre
+        event.talks = listOfTalksThatFits
+        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, event)
+
+        // on prepare la prochaine fois que ça rentre
+        listOfTalksThatFits = []
+        const map = new Map()
+        dataOrganizedBySlides.push(map)
+        listOfTalksThatFits.push(talk)
+        yNextElmt = DEFAULT_START_Y_INDEX
+      } else {
+        i = allTalksInAnEvent.length // to end the loop
+      }
+    }
+    i++
+    if (i >= allTalksInAnEvent.length && atLeastOneTalkCanFit) {
+      event.talks = listOfTalksThatFits
+      dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, event)
+    }
+  }
+  return { data: dataOrganizedBySlides, yNextElmt, atLeastOneTalkCanFit }
+}
+
 function tryDate (yNextElmt, data) {
   yNextElmt += slideSpacing.DATE
   data.forEach(event => {
@@ -140,10 +182,15 @@ function tryDate (yNextElmt, data) {
 function tryEvent (yNextElmt, event) {
   yNextElmt += slideSpacing.EVENT
   event.talks.forEach(talk => {
-    yNextElmt += slideSpacing.TALK
+    yNextElmt = tryTalk(yNextElmt).yNextElmt
   })
 
   return { yNextElmt, DoesEventFits: yNextElmt <= END_OF_SLIDE }
+}
+
+function tryTalk (yNextElmt) {
+  yNextElmt += slideSpacing.TALK
+  return { yNextElmt, DoesTalkFits: yNextElmt <= END_OF_SLIDE }
 }
 
 /**
