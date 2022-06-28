@@ -1,125 +1,72 @@
 const slide = require('../google-api/slide')
-describe('Verifier', () => {
-  describe('If Array', () => {
-    it('return true if parameter is an array with one element', () => {
+describe('Verifier data slides', () => {
+  describe('undefined value', () => {
+    test.each([
+      { property: 'date' },
+      { property: 'eventName' },
+      { property: 'eventType' },
+      { property: 'talkTitle' },
+      { property: 'speakers' }
+    ])('should return false when $property of an element is undefined',
+      ({ property }) => {
+        const slideTalks = [
+          {
+            ..._createValidTalk(),
+            [property]: undefined
+          }
+        ]
+        expect(slide.verifyTalks(slideTalks)).toBe(false)
+      }
+    )
+  })
+  describe('empty string property', () => {
+    test.each([
+      { property: 'date' },
+      { property: 'eventName' },
+      { property: 'eventType' },
+      { property: 'talkTitle' },
+      { property: 'speakers' }
+    ])('should return false when $property of an element is an empty string',
+      ({ property }) => {
+        const slideTalks = [
+          {
+            ..._createValidTalk(),
+            [property]: ''
+          }
+        ]
+        expect(slide.verifyTalks(slideTalks)).toBe(false)
+      }
+    )
+  })
+  describe('when the parameter is an array', () => {
+    it('should return true if parameter is an array with one element', () => {
       const array = [_createValidTalk()]
       // then
       expect(slide.verifyTalks(array)).toBe(true)
     })
-    it('return false if parameter is an array with zero element', () => {
+    it('should return false if parameter is an array with zero element', () => {
       const array = []
       // then
       expect(slide.verifyTalks(array)).toBe(false)
     })
-    it('return false if parameter is an array with one element and an undefined date', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          date: undefined
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
+  })
+  describe('when the parameter is not an array', () => {
+    describe('when the parameter is a String', () => {
+      it('should return false', () => {
+        // given
+        const notArray = 'This is not an array'
+        // when
+        const isNotAnArray = slide.verifyTalks(notArray)
+        // then
+        expect(isNotAnArray).toBe(false)
+      })
     })
-    it('return false if parameter is an array with one element and an undefined eventType', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          eventType: undefined
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an undefined eventName', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          eventName: undefined
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an undefined talkTitle', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          talkTitle: undefined
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an undefined speakers', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          speakers: undefined
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an empty date', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          date: ''
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an empty eventType', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          eventType: ''
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an empty eventName', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          eventName: ''
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an empty talkTitle', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          talkTitle: ''
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('return false if parameter is an array with one element and an empty speakers', () => {
-      const array = [
-        {
-          ..._createValidTalk(),
-          speakers: ''
-        }
-      ]
-      // then
-      expect(slide.verifyTalks(array)).toBe(false)
-    })
-    it('If not an Array return false', () => {
-      const notArray = 'This is not an array'
-      // then
-      expect(slide.verifyTalks(notArray)).toBe(false)
-    })
-    it('If undefined return false', () => {
-      const notArray = undefined
-      // then
-      expect(slide.verifyTalks(notArray)).toBe(false)
+    describe('when the parameter is undefined', () => {
+      it('should return false', () => {
+        const notArray = undefined
+        // then
+        expect(slide.verifyTalks(notArray)).toBe(false)
+      })
     })
   })
 })

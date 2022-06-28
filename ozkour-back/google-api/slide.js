@@ -78,28 +78,15 @@ function verifyTalks (talks) {
   if (!Array.isArray(talks) || talks.length <= 0) {
     return false
   }
-  let concistency = true
-  // TODO some instead of forEach
-  talks.forEach((talk) => {
-    if (
-      talk.date === undefined ||
-      talk.date === '' ||
-      talk.eventType === undefined ||
-      talk.eventType === '' ||
-      talk.eventName === undefined ||
-      talk.eventName === '' ||
-      talk.talkTitle === undefined ||
-      talk.talkTitle === '' ||
-      talk.speakers === undefined ||
-      talk.speakers === ''
-    ) {
-      concistency = false
-    }
-  })
-  if (!concistency) {
-    return false
-  }
-  return true
+
+  return talks.some(
+    ({ date, eventType, eventName, talkTitle, speakers }) =>
+      Boolean(date) &&
+      Boolean(eventType) &&
+      Boolean(eventName) &&
+      Boolean(talkTitle) &&
+      Boolean(speakers)
+  )
 }
 
 /**
