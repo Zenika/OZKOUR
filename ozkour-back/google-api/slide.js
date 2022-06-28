@@ -48,26 +48,58 @@ async function createSlides (auth, talks) {
       },
       async (err, res) => {
         if (err) reject(err.message)
-        const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
-        dataOrganizedBySlide.forEach(dataOrganized =>
-          copySlide(auth, res.data.slides[0].objectId, dataOrganized)
-            .then((result) => {
-              resolve({
-                message: result,
-                link:
+        if (!verifyTalks(talks)) {
+          reject(new Error('error : wrong format'))
+        } else {
+          const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
+          dataOrganizedBySlide.forEach((dataOrganized) =>
+            copySlide(auth, res.data.slides[0].objectId, dataOrganized)
+              .then((result) => {
+                resolve({
+                  message: result,
+                  link:
                     'https://docs.google.com/presentation/d/' +
                     presentationId +
                     '/'
+                })
               })
-            })
-            .catch((e) => {
-              reject(e)
-            })
-        )
+              .catch((e) => {
+                reject(e)
+              })
+          )
+        }
       }
     )
   })
   return promiseCreateSlide
+}
+
+function verifyTalks (talks) {
+  if (!Array.isArray(talks) || talks.length <= 0) {
+    return false
+  }
+  let concistency = true
+  // TODO some instead of forEach
+  talks.forEach((talk) => {
+    if (
+      talk.date === undefined ||
+      talk.date === '' ||
+      talk.eventType === undefined ||
+      talk.eventType === '' ||
+      talk.eventName === undefined ||
+      talk.eventName === '' ||
+      talk.talkTitle === undefined ||
+      talk.talkTitle === '' ||
+      talk.speakers === undefined ||
+      talk.speakers === ''
+    ) {
+      concistency = false
+    }
+  })
+  if (!concistency) {
+    return false
+  }
+  return true
 }
 
 /**
@@ -147,16 +179,13 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
   ]
 }
 
-function CreateTableWithStyleForAllEventsInDate (
-  idPage,
-  dateId,
-  Y,
-  data
-) {
+function CreateTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
   const objectId = dateId + '-table'
   // calculate size of Table
   let nbTalkForDate = data.length
-  for (let i = 0; i < data.length; i++) { nbTalkForDate += data[i].talks.length }
+  for (let i = 0; i < data.length; i++) {
+    nbTalkForDate += data[i].talks.length
+  }
   return [
     {
       createTable: {
@@ -359,16 +388,33 @@ function createImage (pageId, eventType, yNextElmt) {
   // pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
 
   // image temporaire en attendant
-  pictogram.set('Conférence', 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg')
-  pictogram.set('Matinale', 'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg')
-  pictogram.set('Meetup', 'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg')
-  pictogram.set('NightClazz', 'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg')
-  pictogram.set('Webinar', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
+  pictogram.set(
+    'Conférence',
+    'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg'
+  )
+  pictogram.set(
+    'Matinale',
+    'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg'
+  )
+  pictogram.set(
+    'Meetup',
+    'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg'
+  )
+  pictogram.set(
+    'NightClazz',
+    'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg'
+  )
+  pictogram.set(
+    'Webinar',
+    'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg'
+  )
 
   const imageUrl = pictogram.get(eventType)
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
   const imageId = function () {
-    return Date.now().toString(36) + Math.random().toString(36).replace('.', '-')
+    return (
+      Date.now().toString(36) + Math.random().toString(36).replace('.', '-')
+    )
   }
 
   const imgSize = {
@@ -376,26 +422,28 @@ function createImage (pageId, eventType, yNextElmt) {
     unit
   }
 
-  return [{
-    createImage: {
-      objectId: imageId,
-      url: imageUrl,
-      elementProperties: {
-        pageObjectId: pageId,
-        size: {
-          height: imgSize,
-          width: imgSize
-        },
-        transform: {
-          scaleX: 1,
-          scaleY: 1,
-          translateX: 455,
-          translateY: yNextElmt,
-          unit
+  return [
+    {
+      createImage: {
+        objectId: imageId,
+        url: imageUrl,
+        elementProperties: {
+          pageObjectId: pageId,
+          size: {
+            height: imgSize,
+            width: imgSize
+          },
+          transform: {
+            scaleX: 1,
+            scaleY: 1,
+            translateX: 455,
+            translateY: yNextElmt,
+            unit
+          }
         }
       }
     }
-  }]
+  ]
 }
 
 /**
@@ -417,10 +465,19 @@ function addTableData (auth, idPage, dataOrganized) {
   let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX
 
   while (date !== undefined) {
-    const dateId = date.replaceAll('/', '-') + Math.random().toString(36).replaceAll('.', ':')
+    const dateId =
+      date.replaceAll('/', '-') +
+      Math.random().toString(36).replaceAll('.', ':')
     IndexRowInTableToInsert = 0
-    const dateFormated = date.substring(0, 2) + ' ' + utilitary.convDateToMonth(date) + ' ' + date.substring(6)
-    requests.push(addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt))
+    const dateFormated =
+      date.substring(0, 2) +
+      ' ' +
+      utilitary.convDateToMonth(date) +
+      ' ' +
+      date.substring(6)
+    requests.push(
+      addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
+    )
     yNextElmt += slideDataOrganizer.slideSpacing.DATE
     requests.push(
       CreateTableWithStyleForAllEventsInDate(
@@ -501,7 +558,9 @@ function deleteTemplateInfo (auth, idPage) {
       async (err, res) => {
         if (err) reject(new Error(err))
 
-        const slide = res.data.slides.find(slide => slide.objectId === idPage)
+        const slide = res.data.slides.find(
+          (slide) => slide.objectId === idPage
+        )
         if (slide !== undefined) {
           // if the page is the one we're looking for
           const pageElements = slide.pageElements
@@ -555,7 +614,8 @@ function deleteTemplateInfo (auth, idPage) {
 
 function copySlide (auth, idPage, talkSelected) {
   const slides = google.slides({ version: 'v1', auth })
-  const newIdPage = Date.now().toString(36) + Math.random().toString(36).replace('.', '-') // New id is supposed to be unique
+  const newIdPage =
+    Date.now().toString(36) + Math.random().toString(36).replace('.', '-') // New id is supposed to be unique
   const requests = [
     {
       duplicateObject: {
@@ -592,5 +652,6 @@ function copySlide (auth, idPage, talkSelected) {
 }
 
 module.exports = {
-  createSlideFromTalks
+  createSlideFromTalks,
+  verifyTalks
 }
