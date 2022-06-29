@@ -110,8 +110,34 @@ async function authMethode (callback, params) {
   return res
 }
 
+async function getAuthentication () {
+  let content
+  try {
+    content = await fs.readFile(
+      'config/auth/credentials.json'
+    )
+  } catch (err) {
+    console.log('Error loading client secret file:', err)
+    throw err
+  }
+
+  const clientId = JSON.parse(content).web.client_id
+  const clientSecret = JSON.parse(content).web.client_secret
+  const redirectUris = JSON.parse(content).web.redirect_uris
+  const oAuth2Client = new google.auth.OAuth2(
+    clientId,
+    clientSecret,
+    redirectUris[0]
+  )
+  const token = await fs.readFile(TOKEN_PATH)
+
+  oAuth2Client.setCredentials(JSON.parse(token))
+  return oAuth2Client
+}
+
 module.exports = {
   auth,
   authorize,
-  authMethode
+  authMethode,
+  getAuthentication
 }

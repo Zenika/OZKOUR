@@ -75,7 +75,7 @@ async function createSlides (auth, talks) {
   })
   return promiseCreateSlide
 }
-
+// ---- TESTED ----
 function verifyTalks (talks) {
   if (!Array.isArray(talks) || talks.length <= 0) {
     return false
@@ -91,7 +91,7 @@ function verifyTalks (talks) {
   )
 }
 
-/**
+/** ---- TESTED ----
  * generate the requests to add a date text to a slide
  * @param {string} the id of the page where the elements need to be deleted
  * @param {string} the date we need to add to the slide
@@ -167,8 +167,8 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
     }
   ]
 }
-
-function CreateTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
+// ---- TESTED ----
+function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
   const objectId = dateId + '-table'
   // calculate size of Table
   let nbTalkForDate = data.length
@@ -243,7 +243,7 @@ function CreateTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
     }
   ]
 }
-
+// ---- TESTED ----
 function addEventNameWithStyleToTable (
   dateId,
   eventName,
@@ -286,7 +286,7 @@ function addEventNameWithStyleToTable (
     }
   ]
 }
-
+// ---- TESTED ----
 function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
   const objectId = date + '-table'
   return [
@@ -322,7 +322,7 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
     }
   ]
 }
-
+// ---- TESTED ----
 function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
   const objectId = date + '-table'
   return [
@@ -362,7 +362,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
   ]
 }
 
-/**
+/** ---- TESTED ----
  * Adds an image to a presentation.
  * @param {string} presentationId The presentation ID.
  * @param {string} pageId The presentation page ID.
@@ -399,8 +399,6 @@ function createImage (pageId, eventType, yNextElmt) {
   )
 
   const imageUrl = pictogram.get(eventType)
-  // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = uuidv4()
 
   const imgSize = {
     magnitude: 110,
@@ -410,7 +408,6 @@ function createImage (pageId, eventType, yNextElmt) {
   return [
     {
       createImage: {
-        objectId: imageId,
         url: imageUrl,
         elementProperties: {
           pageObjectId: pageId,
@@ -459,7 +456,7 @@ function addTableData (auth, idPage, dataOrganized) {
     )
     yNextElmt += slideDataOrganizer.slideSpacing.DATE
     requests.push(
-      CreateTableWithStyleForAllEventsInDate(
+      createTableWithStyleForAllEventsInDate(
         idPage,
         dateId,
         yNextElmt,
@@ -631,5 +628,12 @@ function copySlide (auth, idPage, talkSelected) {
 
 module.exports = {
   createSlideFromTalks,
-  verifyTalks
+  verifyTalks,
+  addDateTextWithStyle,
+  createTableWithStyleForAllEventsInDate,
+  addEventNameWithStyleToTable,
+  addTalkTitleWithStyleToTable,
+  addSpeakersWithStyleToTable,
+  createImage,
+  createSlides
 }
