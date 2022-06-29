@@ -89,36 +89,35 @@ function clusterByEventName (dataOrganized) {
 function divideInMultipleSlides (dataOrganized) {
   const mapIter = dataOrganized.keys()
   let date = mapIter.next().value
-  let isEndOfData = false
   let isEndOfSlideReached = false
-  let yNextElmt = DEFAULT_START_Y_INDEX
-  let yNextElmtTemp
+  let nextY = DEFAULT_START_Y_INDEX
+  let nextYTemp
   let doesDateFits
   const dataOrganizedBySlides = []
   dataOrganizedBySlides.push(new Map())
 
-  while (!isEndOfData) {
+  while (true) {
     isEndOfSlideReached = false
-    while (!isEndOfData && !isEndOfSlideReached) {
+    while (!isEndOfSlideReached) {
       doesDateFits = true
-      yNextElmtTemp = yNextElmt
-      const resDate = tryDate(yNextElmt, dataOrganized.get(date))
+      nextYTemp = nextY
+      const resDate = tryDate(nextY, dataOrganized.get(date))
       doesDateFits = resDate.doesDateFits
-      yNextElmt += resDate.yAdded
+      nextY += resDate.yAdded
 
       if (doesDateFits) {
-        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, dataOrganized.get(date))
+        dataOrganizedBySlides.at(-1).set(date, dataOrganized.get(date))
       } else {
-        const resFillEvent = tryToFillWithEvent(yNextElmtTemp, dataOrganized.get(date), date, dataOrganizedBySlides)
-        yNextElmt += resFillEvent.yAdded
+        const resFillEvent = tryToFillWithEvent(nextYTemp, dataOrganized.get(date), date, dataOrganizedBySlides)
+        nextY += resFillEvent.yAdded
         const atLeastOneEventCanFit = resFillEvent.atLeastOneEventCanFit
 
         if (atLeastOneEventCanFit) {
           dataOrganizedBySlides.pop()
           resFillEvent.data.forEach(event => dataOrganizedBySlides.push(event))
         } else {
-          const resFillTalk = tryToFillWithTalk(yNextElmtTemp, dataOrganized.get(date)[0].talks, date, dataOrganized.get(date)[0], dataOrganizedBySlides)
-          yNextElmt += resFillTalk.yAdded
+          const resFillTalk = tryToFillWithTalk(nextYTemp, dataOrganized.get(date)[0].talks, date, dataOrganized.get(date)[0], dataOrganizedBySlides)
+          nextY += resFillTalk.yAdded
           const atLeastOneTalkCanFit = resFillTalk.atLeastOneTalkCanFit
 
           if (atLeastOneTalkCanFit) {
@@ -129,62 +128,61 @@ function divideInMultipleSlides (dataOrganized) {
             const map = new Map()
             map.set(date, dataOrganized.get(date))
             dataOrganizedBySlides.push(map)
-            yNextElmt = DEFAULT_START_Y_INDEX
+            nextY = DEFAULT_START_Y_INDEX
           }
         }
       }
 
       // check if there is data left
       date = mapIter.next().value
-      if (date === undefined) {
-        isEndOfData = true
+      if (!date) {
+        return dataOrganizedBySlides
       }
     }
   }
-  return dataOrganizedBySlides
 }
 
 /**
  * try to fits as many as possible events for a date so it can fit on the slide
- * @param {Integer} yNextElmt the index of the next element to put in the slide
+ * @param {Integer} nextY the index of the next element to put in the slide
  * @param {Array} allEventsInADate an array of all the events in a date
  * @param {String} date a date
  * @param {Integer} slides the slides already generated
- * @return { Object } { data, yNextElmt, atLeastOneEventCanFit } an Object that contains the slides
+ * @return { Object } { data, nextY, atLeastOneEventCanFit } an Object that contains the slides
  * it changed/created to fill the last slide given with events, the spaces it need to display everything
  * for this date on the last slide generated and a boolean to see if at least one event and its talks
  * can fit on the last slide given in parameters
  */
-function tryToFillWithEvent (yNextElmt, allEventsInADate, date, slides) {
+function tryToFillWithEvent (nextY, allEventsInADate, date, slides) {
   const dataOrganizedBySlides = slides.slice(-1) // extract the last slide generated
   let i = 0
   let listOfEventThatFits = []
   let atLeastOneEventCanFit = false
   let worthToContinue = (i === 0 || atLeastOneEventCanFit)
   let doesEventFits = true
-  yNextElmt += slideSpacing.DATE
+  nextY += slideSpacing.DATE
   while (i < allEventsInADate.length && worthToContinue) {
     worthToContinue = (i === 0 || atLeastOneEventCanFit)
     const event = allEventsInADate[i]
-    const resEvent = tryEvent(yNextElmt, event)
+    const resEvent = tryEvent(nextY, event)
     doesEventFits = resEvent.doesEventFits
-    yNextElmt += resEvent.yAdded
+    nextY += resEvent.yAdded
     if (doesEventFits) {
       atLeastOneEventCanFit = true
       listOfEventThatFits.push(event)
     } else {
       if (atLeastOneEventCanFit) {
         // add what can fit
-        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, listOfEventThatFits)
+        dataOrganizedBySlides.at(-1).set(date, listOfEventThatFits)
 
         // prepare the next iteration
         listOfEventThatFits = []
         const map = new Map()
         dataOrganizedBySlides.push(map)
         listOfEventThatFits.push(event)
-        yNextElmt = DEFAULT_START_Y_INDEX
-        yNextElmt += slideSpacing.DATE
-        yNextElmt += resEvent.yAdded
+        nextY = DEFAULT_START_Y_INDEX
+        nextY += slideSpacing.DATE
+        nextY += resEvent.yAdded
       } else {
         i = allEventsInADate.length // to end the 'while' loop
       }
@@ -192,39 +190,39 @@ function tryToFillWithEvent (yNextElmt, allEventsInADate, date, slides) {
     i++
     if (i >= allEventsInADate.length && atLeastOneEventCanFit) {
       // flush what's left in listOfEventThatFits
-      dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, listOfEventThatFits)
+      dataOrganizedBySlides.at(-1).set(date, listOfEventThatFits)
     }
   }
-  return { data: dataOrganizedBySlides, yNextElmt, atLeastOneEventCanFit }
+  return { data: dataOrganizedBySlides, nextY, atLeastOneEventCanFit }
 }
 
 /**
  * try to fits as many as possible talks for a event so it can fit on the slide
- * @param {Integer} yNextElmt the index of the next element to put in the slide
+ * @param {Integer} nextY the index of the next element to put in the slide
  * @param {Array} allTalksInAnEvent an array of all the talks for an event
  * @param {String} date a date
  * @param {Object} event an event
  * @param {Integer} slides the slides already generated
- * @return { Object } { data, yNextElmt, atLeastOneTalkCanFit } an Object that contains the slides
+ * @return { Object } { data, nextY, atLeastOneTalkCanFit } an Object that contains the slides
  * it changed/created to fill the last slide given with talks, the spaces it need to display everything
  * for this date and this event on the last slide and a boolean to see if at least one talk can
  * fit on the last slide given in parameters
  */
-function tryToFillWithTalk (yNextElmt, allTalksInAnEvent, date, event, slides) {
+function tryToFillWithTalk (nextY, allTalksInAnEvent, date, event, slides) {
   const dataOrganizedBySlides = slides.slice(-1) // extract the last slide generated
   let i = 0
   let listOfTalksThatFits = []
   let atLeastOneTalkCanFit = false
   let worthToContinue = (i === 0 || atLeastOneTalkCanFit)
   let doesTalkFits = true
-  yNextElmt += slideSpacing.DATE
-  yNextElmt += slideSpacing.EVENT
+  nextY += slideSpacing.DATE
+  nextY += slideSpacing.EVENT
   while (i < allTalksInAnEvent.length && worthToContinue) {
     worthToContinue = (i === 0 || atLeastOneTalkCanFit)
     const talk = allTalksInAnEvent[i]
-    const resTalk = tryTalk(yNextElmt)
+    const resTalk = tryTalk(nextY)
     doesTalkFits = resTalk.doesTalkFits
-    yNextElmt += resTalk.yAdded
+    nextY += resTalk.yAdded
     if (doesTalkFits) {
       atLeastOneTalkCanFit = true
       listOfTalksThatFits.push(talk)
@@ -232,17 +230,17 @@ function tryToFillWithTalk (yNextElmt, allTalksInAnEvent, date, event, slides) {
       if (atLeastOneTalkCanFit) {
         // add what can fit
         const partOfTheEventThatFits = { eventName: event.eventName, eventType: event.eventType, talks: listOfTalksThatFits }
-        dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, [partOfTheEventThatFits])
+        dataOrganizedBySlides.at(-1).set(date, [partOfTheEventThatFits])
 
         // prepare the next iteration
         listOfTalksThatFits = []
         const map = new Map()
         dataOrganizedBySlides.push(map)
         listOfTalksThatFits.push(talk)
-        yNextElmt = DEFAULT_START_Y_INDEX
-        yNextElmt += slideSpacing.DATE
-        yNextElmt += slideSpacing.EVENT
-        yNextElmt += slideSpacing.TALK
+        nextY = DEFAULT_START_Y_INDEX
+        nextY += slideSpacing.DATE
+        nextY += slideSpacing.EVENT
+        nextY += slideSpacing.TALK
       } else {
         i = allTalksInAnEvent.length // to end the 'while' loop
       }
@@ -251,56 +249,55 @@ function tryToFillWithTalk (yNextElmt, allTalksInAnEvent, date, event, slides) {
     if (i >= allTalksInAnEvent.length && atLeastOneTalkCanFit) {
       // flush what's left in listOfTalksThatFits
       const partOfTheEventThatFits = { eventName: event.eventName, eventType: event.eventType, talks: listOfTalksThatFits }
-      dataOrganizedBySlides[dataOrganizedBySlides.length - 1].set(date, [partOfTheEventThatFits])
+      dataOrganizedBySlides.at(-1).set(date, [partOfTheEventThatFits])
     }
   }
-  return { data: dataOrganizedBySlides, yNextElmt, atLeastOneTalkCanFit }
+  return { data: dataOrganizedBySlides, nextY, atLeastOneTalkCanFit }
 }
 
 /**
  * check if all the events of a date can fit on the slide
- * @param {Integer} yNextElmt the index of the next element to put in the slide
+ * @param {Integer} nextY the index of the next element to put in the slide
  * @param {Object} data the data for one date
  * @return {Object} {yAdded, doesEventFits} an Object that contains the spaces it need to display everything for this date
  * and a boolean to see if it fits on the slide
  */
-function tryDate (yNextElmt, data) {
+function tryDate (nextY, data) {
   let sumYAdded = 0
   sumYAdded += slideSpacing.DATE
   data.forEach(event => {
-    const yAdded = tryEvent(yNextElmt, event).yAdded
+    const yAdded = tryEvent(nextY, event).yAdded
     sumYAdded += yAdded
   })
-  return { yAdded: sumYAdded, doesDateFits: sumYAdded + yNextElmt <= END_OF_SLIDE }
+  return { yAdded: sumYAdded, doesDateFits: sumYAdded + nextY <= END_OF_SLIDE }
 }
 
 /**
  * check if all the talks of an event can fit on the slide
- * @param {Integer} yNextElmt the index of the next element to put in the slide
+ * @param {Integer} nextY the index of the next element to put in the slide
  * @param {Object} event the event we want to check
  * @return { Object } {yAdded, doesEventFits} an Object that contains the spaces it need to display everything for this event
  * and a boolean to see if it fits on the slide
  */
-function tryEvent (yNextElmt, event) {
+function tryEvent (nextY, event) {
   let sumYAdded = 0
   sumYAdded += slideSpacing.EVENT
-  event.talks.forEach(talk => {
-    sumYAdded += tryTalk(yNextElmt).yAdded
-  })
+  const spaceToAdd = slideSpacing.TALK * event.talks.length
+  sumYAdded += spaceToAdd
 
-  return { yAdded: sumYAdded, doesEventFits: sumYAdded + yNextElmt <= END_OF_SLIDE }
+  return { yAdded: sumYAdded, doesEventFits: sumYAdded + nextY <= END_OF_SLIDE }
 }
 
 /**
  * check if a talks can fit on the slide
- * @param {Integer} yNextElmt the index of the next element to put in the slide
+ * @param {Integer} nextY the index of the next element to put in the slide
  * @return { Object } {yAdded, doesTalkFits} an Object that contains the spaces it need to display a talk
  * and a boolean to see if it fits on the slide
  */
-function tryTalk (yNextElmt) {
-  yNextElmt += slideSpacing.TALK
+function tryTalk (nextY) {
+  nextY += slideSpacing.TALK
   return {
-    yAdded: slideSpacing.TALK, doesTalkFits: yNextElmt <= END_OF_SLIDE
+    yAdded: slideSpacing.TALK, doesTalkFits: nextY <= END_OF_SLIDE
   }
 }
 

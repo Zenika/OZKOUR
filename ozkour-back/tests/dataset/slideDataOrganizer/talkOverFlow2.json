@@ -5,7 +5,7 @@
         "eventType": "Meetup",
         "eventName": "GraalVM Night",
         "talkTitle": "GraalVM for Sustainable Software Development?",
-        "speakers": "Adrien Nortain",
+        "speakers": "Anne Imal",
         "checked": true
     },
     {
@@ -14,7 +14,7 @@
         "eventType": "NightClazz",
         "eventName": "NightCdlass",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Jules Hablot",
+        "speakers": "Yves Rogne",
         "checked": true
     },
     {
@@ -23,7 +23,7 @@
         "eventType": "Meetup",
         "eventName": "Nantes JS #55",
         "talkTitle": "Nuxt 2021",
-        "speakers": "Yann Bertrand",
+        "speakers": "Guy Tarenbois",
         "checked": true
     },
     {
@@ -32,7 +32,7 @@
         "eventType": "NightClazz",
         "eventName": "RemoteCdlazz Nodejs",
         "talkTitle": "Techniques minimalistes pour Node.js",
-        "speakers": "Hugo Wood",
+        "speakers": "Sophie Stiqué",
         "checked": true
     },
     {
@@ -59,7 +59,7 @@
         "eventType": "Meetup",
         "eventName": "GdraalVM Night",
         "talkTitle": "GraalVM for Sustainable Software Development?",
-        "speakers": "Adrien Nortain",
+        "speakers": "Anne Imal",
         "checked": true
     },
     {
@@ -68,7 +68,7 @@
         "eventType": "NightClazz",
         "eventName": "NightdClass",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Jules Hablot",
+        "speakers": "Yves Rogne",
         "checked": true
     },
     {
@@ -77,7 +77,7 @@
         "eventType": "Meetup",
         "eventName": "Nandtes JS #55",
         "talkTitle": "Nuxt 2021",
-        "speakers": "Yann Bertrand",
+        "speakers": "Guy Tarenbois",
         "checked": true
     },
     {
@@ -86,7 +86,7 @@
         "eventType": "NightClazz",
         "eventName": "RemdoteClazz Nodejs",
         "talkTitle": "Techniques minimalistes pour Node.js",
-        "speakers": "Hugo Wood",
+        "speakers": "Sophie Stiqué",
         "checked": true
     },
     {

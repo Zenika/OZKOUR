@@ -1,4 +1,5 @@
 const slide = require('../google-api/slide')
+
 describe('Verifier data slides', () => {
   describe('undefined value', () => {
     test.each([
@@ -78,7 +79,7 @@ function _createValidTalk () {
     eventType: 'Conférence',
     eventName: 'Devoxx',
     talkTitle: 'GraalVM for Sustainable Software Development?',
-    speakers: 'Adrien Nortain',
+    speakers: 'Anne Imal',
     checked: true
   }
 }

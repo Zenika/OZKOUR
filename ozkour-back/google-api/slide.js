@@ -1,5 +1,6 @@
+const { v4: uuidv4 } = require('uuid')
 const { google } = require('googleapis')
-const utilitary = require('../utilitary')
+const dateUtils = require('../Utils/dateUtils')
 const connect = require('./connect.js')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -64,6 +65,7 @@ async function createSlides (auth, talks) {
                 })
               })
               .catch((e) => {
+                console.log(e)
                 reject(e)
               })
           )
@@ -398,11 +400,7 @@ function createImage (pageId, eventType, yNextElmt) {
 
   const imageUrl = pictogram.get(eventType)
   // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = function () {
-    return (
-      Date.now().toString(36) + Math.random().toString(36).replace('.', '-')
-    )
-  }
+  const imageId = uuidv4()
 
   const imgSize = {
     magnitude: 110,
@@ -451,17 +449,11 @@ function addTableData (auth, idPage, dataOrganized) {
   let IndexRowInTableToInsert = 0
   let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX
 
-  while (date !== undefined) {
-    const dateId =
-      date.replaceAll('/', '-') +
-      Math.random().toString(36).replaceAll('.', ':')
+  while (date) {
+    const dateId = uuidv4()
     IndexRowInTableToInsert = 0
     const dateFormated =
-      date.substring(0, 2) +
-      ' ' +
-      utilitary.convDateToMonth(date) +
-      ' ' +
-      date.substring(6)
+    dateUtils.displayFullDateWithWords(date)
     requests.push(
       addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
     )
@@ -548,7 +540,7 @@ function deleteTemplateInfo (auth, idPage) {
         const slide = res.data.slides.find(
           (slide) => slide.objectId === idPage
         )
-        if (slide !== undefined) {
+        if (slide) {
           // if the page is the one we're looking for
           const pageElements = slide.pageElements
 
@@ -601,8 +593,7 @@ function deleteTemplateInfo (auth, idPage) {
 
 function copySlide (auth, idPage, talkSelected) {
   const slides = google.slides({ version: 'v1', auth })
-  const newIdPage =
-    Date.now().toString(36) + Math.random().toString(36).replace('.', '-') // New id is supposed to be unique
+  const newIdPage = uuidv4()
   const requests = [
     {
       duplicateObject: {

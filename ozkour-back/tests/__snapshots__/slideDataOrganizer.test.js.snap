@@ -9,7 +9,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -20,7 +20,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -40,12 +40,12 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -65,7 +65,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -78,7 +78,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -91,7 +91,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Yann Bertrand",
+            "speakers": "Guy Tarenbois",
             "talkTitle": "Nuxt 2021",
             "universe": "",
           },
@@ -111,7 +111,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -124,7 +124,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -144,7 +144,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -155,7 +155,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -168,7 +168,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Yann Bertrand",
+            "speakers": "Guy Tarenbois",
             "talkTitle": "Nuxt 2021",
             "universe": "",
           },
@@ -188,7 +188,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -199,7 +199,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -212,7 +212,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Yann Bertrand",
+            "speakers": "Guy Tarenbois",
             "talkTitle": "Nuxt 2021",
             "universe": "",
           },
@@ -227,7 +227,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Hugo Wood",
+            "speakers": "Sophie Stiqué",
             "talkTitle": "Techniques minimalistes pour Node.js",
             "universe": "",
           },
@@ -260,7 +260,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -271,7 +271,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -282,7 +282,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Yann Bertrand",
+            "speakers": "Guy Tarenbois",
             "talkTitle": "Nuxt 2021",
             "universe": "",
           },
@@ -293,7 +293,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Hugo Wood",
+            "speakers": "Sophie Stiqué",
             "talkTitle": "Techniques minimalistes pour Node.js",
             "universe": "",
           },
@@ -340,7 +340,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -355,7 +355,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Jules Hablot",
+            "speakers": "Yves Rogne",
             "talkTitle": "Migration JS vers TS sur du react",
             "universe": "",
           },
@@ -366,7 +366,7 @@ Array [
         "eventType": "Meetup",
         "talks": Array [
           Object {
-            "speakers": "Yann Bertrand",
+            "speakers": "Guy Tarenbois",
             "talkTitle": "Nuxt 2021",
             "universe": "",
           },
@@ -377,7 +377,7 @@ Array [
         "eventType": "NightClazz",
         "talks": Array [
           Object {
-            "speakers": "Hugo Wood",
+            "speakers": "Sophie Stiqué",
             "talkTitle": "Techniques minimalistes pour Node.js",
             "universe": "",
           },
@@ -397,82 +397,37 @@ Array [
         "eventType": "Conférence",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-        ],
-      },
-    ],
-  },
-  Map {
-    "19/01/2021" => Array [
-      Object {
-        "eventName": "Devoxx",
-        "eventType": "Conférence",
-        "talks": Array [
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -487,82 +442,37 @@ Array [
         "eventType": "Conférence",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-        ],
-      },
-    ],
-  },
-  Map {
-    "19/01/2021" => Array [
-      Object {
-        "eventName": "Devoxx",
-        "eventType": "Conférence",
-        "talks": Array [
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
@@ -577,32 +487,122 @@ Array [
         "eventType": "Conférence",
         "talks": Array [
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
           Object {
-            "speakers": "Adrien Nortain",
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
