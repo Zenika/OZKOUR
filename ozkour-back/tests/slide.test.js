@@ -1,5 +1,5 @@
 const slide = require('../google-api/slide')
-const { presentationId, getSlides } = require('../google-api/slideWrapper')
+// const { presentationId, getSlides } = require('../google-api/slideWrapper')
 const wrapper = require('../google-api/slideService')
 
 describe('Verify data slides', () => {
@@ -138,32 +138,32 @@ describe('Slides creation', () => {
     expect(registerSpeakers).toMatchSnapshot()
   })
 })
-
-describe('Integration test on create a slide', () => {
-  it('should return a promise that tells if a new slide is created in the Google Slide file', async () => {
-    // given
-    const talks = [_createValidTalk()]
-    try {
-      // when
-      const res = await wrapper.createSlides(talks)
-      const slides = await getSlides()
-      // then
-      expect(res).toStrictEqual({
-        message: 'Created !',
-        link: 'https://docs.google.com/presentation/d/' +
-            presentationId +
-            '/'
-      })
-      expect(JSON.stringify(slides[1])
-        .replace(/"objectId":".*?",/g, '"objectId":"id",')
-        .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
-        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
-      return await slides
-    } catch (e) {
-      console.log(e)
-    }
-  })
-})
+// test d'integration a revoir
+// describe('Integration test on create a slide', () => {
+//   it('should return a promise that tells if a new slide is created in the Google Slide file', async () => {
+//     // given
+//     const talks = [_createValidTalk()]
+//     try {
+//       // when
+//       const res = await wrapper.createSlides(talks)
+//       const slides = await getSlides()
+//       // then
+//       expect(res).toStrictEqual({
+//         message: 'Created !',
+//         link: 'https://docs.google.com/presentation/d/' +
+//             presentationId +
+//             '/'
+//       })
+//       expect(JSON.stringify(slides[1])
+//         .replace(/"objectId":".*?",/g, '"objectId":"id",')
+//         .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
+//         .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
+//       return await slides
+//     } catch (e) {
+//       console.log(e)
+//     }
+//   })
+// })
 
 function _createValidTalk () {
   return {

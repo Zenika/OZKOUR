@@ -1,15 +1,6 @@
 const slide = require('./slide')
 const slideDataOrganizer = require('./slideDataOrganizer')
 
-async function createSlideFromTalks (talks, h) {
-  try {
-    const res = await createSlides(talks)
-    return h.response(res).code(200)
-  } catch (e) {
-    return h.response(e).code(500)
-  }
-}
-
 // Fonction pour créer les slides
 async function createSlides (talks) {
   if (!verifyTalks(talks)) {
@@ -58,7 +49,6 @@ async function addTableData (idPage, data) {
 // une fonction pour récupérer les données des slides (à voir)
 
 module.exports = {
-  createSlideFromTalks,
   deleteTemplateInfo,
   addTableData,
   copySlide,
