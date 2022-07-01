@@ -1,7 +1,7 @@
 
 const { getTalkFromDate } = require('../../google-api/sheets')
 
-const { createSlideFromTalks } = require('../../google-api/slide')
+const { createSlideFromTalks } = require('../../google-api/wrapperSlide')
 
 module.exports = [
   {

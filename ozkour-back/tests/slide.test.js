@@ -1,6 +1,7 @@
 const slide = require('../google-api/slide')
 const connect = require('../google-api/connect')
 const { google } = require('googleapis')
+const wrapper = require('../google-api/wrapperSlide')
 
 describe('Verify data slides', () => {
   describe('undefined value', () => {
@@ -18,7 +19,7 @@ describe('Verify data slides', () => {
             [property]: undefined
           }
         ]
-        expect(slide.verifyTalks(slideTalks)).toBe(false)
+        expect(wrapper.verifyTalks(slideTalks)).toBe(false)
       }
     )
   })
@@ -37,7 +38,7 @@ describe('Verify data slides', () => {
             [property]: ''
           }
         ]
-        expect(slide.verifyTalks(slideTalks)).toBe(false)
+        expect(wrapper.verifyTalks(slideTalks)).toBe(false)
       }
     )
   })
@@ -45,12 +46,12 @@ describe('Verify data slides', () => {
     it('should return true if parameter is an array with one element', () => {
       const array = [_createValidTalk()]
       // then
-      expect(slide.verifyTalks(array)).toBe(true)
+      expect(wrapper.verifyTalks(array)).toBe(true)
     })
     it('should return false if parameter is an array with zero element', () => {
       const array = []
       // then
-      expect(slide.verifyTalks(array)).toBe(false)
+      expect(wrapper.verifyTalks(array)).toBe(false)
     })
   })
   describe('the talks are not in an array', () => {
@@ -59,7 +60,7 @@ describe('Verify data slides', () => {
         // given
         const notArray = 'This is not an array'
         // when
-        const isNotAnArray = slide.verifyTalks(notArray)
+        const isNotAnArray = wrapper.verifyTalks(notArray)
         // then
         expect(isNotAnArray).toBe(false)
       })
@@ -68,7 +69,7 @@ describe('Verify data slides', () => {
       it('should return false', () => {
         const notArray = undefined
         // then
-        expect(slide.verifyTalks(notArray)).toBe(false)
+        expect(wrapper.verifyTalks(notArray)).toBe(false)
       })
     })
   })
@@ -145,32 +146,36 @@ describe('Integration test on create a slide', () => {
     const presentationId = '1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug'
     // given
     const auth = await connect.getAuthentication()
-    const res = await slide.createSlides(auth, talks)
-    expect(res).toStrictEqual({
-      message: 'Created !',
-      link: 'https://docs.google.com/presentation/d/' +
-          presentationId +
-          '/'
-    })
-    const promise = new Promise((resolve, reject) => {
-      const slides = google.slides({ version: 'v1', auth })
-      slides.presentations.get(
-        {
-          presentationId
-        },
-        (err, res) => {
-          if (err) {
-            reject(new Error('ko'))
+    try {
+      const res = await wrapper.createSlides(talks)
+      expect(res).toStrictEqual({
+        message: 'Created !',
+        link: 'https://docs.google.com/presentation/d/' +
+            presentationId +
+            '/'
+      })
+      const promise = new Promise((resolve, reject) => {
+        const slides = google.slides({ version: 'v1', auth })
+        slides.presentations.get(
+          {
+            presentationId
+          },
+          (err, res) => {
+            if (err) {
+              reject(new Error('ko'))
+            }
+            expect(JSON.stringify(res.data.slides[1])
+              .replace(/"objectId":".*?",/g, '"objectId":"id",')
+              .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
+              .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
+            resolve('ok')
           }
-          expect(JSON.stringify(res.data.slides[1])
-            .replace(/"objectId":".*?",/g, '"objectId":"id",')
-            .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
-            .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
-          resolve('ok')
-        }
-      )
-    })
-    return promise
+        )
+      })
+      return promise
+    } catch (e) {
+      console.log(e)
+    }
   })
 })
 

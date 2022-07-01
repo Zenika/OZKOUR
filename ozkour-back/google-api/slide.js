@@ -31,64 +31,40 @@ const greyForegroundColor = {
   }
 }
 
-async function createSlideFromTalks (talks, h) {
-  try {
-    const res = await connect.authMethode(createSlides, talks)
-    return h.response(res).code(200)
-  } catch (e) {
-    return h.response(e).code(500)
+function getSuccessMessage () {
+  return {
+    message: 'Created !',
+    link:
+      'https://docs.google.com/presentation/d/' +
+      presentationId +
+      '/'
   }
 }
 
-async function createSlides (auth, talks) {
+// async function createSlideFromTalks (talks, h) {
+//   try {
+//     const res = await connect.authMethode(createSlides, talks)
+//     return h.response(res).code(200)
+//   } catch (e) {
+//     return h.response(e).code(500)
+//   }
+// }
+
+async function getIdSlideTemplate () {
+  const auth = await connect.getAuthentication()
   const slides = google.slides({ version: 'v1', auth })
-  const promiseCreateSlide = new Promise((resolve, reject) => {
+  const promiseIdSlide = new Promise((resolve, reject) => {
     slides.presentations.get(
       {
         presentationId
       },
-      async (err, res) => {
+      (err, res) => {
         if (err) reject(err.message)
-        if (!verifyTalks(talks)) {
-          reject(new Error('error : wrong format'))
-        } else {
-          const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
-          dataOrganizedBySlide.forEach((dataOrganized) =>
-            copySlide(auth, res.data.slides[0].objectId, dataOrganized)
-              .then((result) => {
-                resolve({
-                  message: result,
-                  link:
-                    'https://docs.google.com/presentation/d/' +
-                    presentationId +
-                    '/'
-                })
-              })
-              .catch((e) => {
-                console.log(e)
-                reject(e)
-              })
-          )
-        }
+        resolve(res.data.slides[0].objectId)
       }
     )
   })
-  return promiseCreateSlide
-}
-// ---- TESTED ----
-function verifyTalks (talks) {
-  if (!Array.isArray(talks) || talks.length <= 0) {
-    return false
-  }
-
-  return talks.some(
-    ({ date, eventType, eventName, talkTitle, speakers }) =>
-      Boolean(date) &&
-      Boolean(eventType) &&
-      Boolean(eventName) &&
-      Boolean(talkTitle) &&
-      Boolean(speakers)
-  )
+  return promiseIdSlide
 }
 
 /** ---- TESTED ----
@@ -436,7 +412,8 @@ function createImage (pageId, eventType, yNextElmt) {
  * @return {Array} return an array of the requests
  */
 
-function addTableData (auth, idPage, dataOrganized) {
+async function addTableData (idPage, dataOrganized) {
+  const auth = await connect.getAuthentication()
   const slides = google.slides({ version: 'v1', auth })
 
   const requests = []
@@ -524,7 +501,8 @@ function addTableData (auth, idPage, dataOrganized) {
  * @param {string} the id of the page where the elements need to be deleted
  * @param {string} the id of the google slide presentation
  */
-function deleteTemplateInfo (auth, idPage) {
+async function deleteTemplateInfo (idPage) {
+  const auth = await connect.getAuthentication()
   const slides = google.slides({ version: 'v1', auth })
   const promiseDeleteTemplateInfo = new Promise((resolve, reject) => {
     slides.presentations.get(
@@ -588,7 +566,8 @@ function deleteTemplateInfo (auth, idPage) {
   return promiseDeleteTemplateInfo
 }
 
-function copySlide (auth, idPage, talkSelected) {
+async function copySlide (idPage) {
+  const auth = await connect.getAuthentication()
   const slides = google.slides({ version: 'v1', auth })
   const newIdPage = uuidv4()
   const requests = [
@@ -609,14 +588,13 @@ function copySlide (auth, idPage, talkSelected) {
           requests
         }
       },
-      async (err, res) => {
+      async (err) => {
         try {
           if (err) {
             reject(err.message)
+          } else {
+            resolve(newIdPage)
           }
-          await deleteTemplateInfo(auth, newIdPage)
-          await addTableData(auth, newIdPage, talkSelected)
-          resolve('Created !')
         } catch (e) {
           reject(e)
         }
@@ -627,13 +605,15 @@ function copySlide (auth, idPage, talkSelected) {
 }
 
 module.exports = {
-  createSlideFromTalks,
-  verifyTalks,
   addDateTextWithStyle,
   createTableWithStyleForAllEventsInDate,
   addEventNameWithStyleToTable,
   addTalkTitleWithStyleToTable,
   addSpeakersWithStyleToTable,
   createImage,
-  createSlides
+  deleteTemplateInfo,
+  addTableData,
+  copySlide,
+  getIdSlideTemplate,
+  getSuccessMessage
 }
