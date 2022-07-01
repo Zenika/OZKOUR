@@ -1,13 +1,40 @@
 const { v4: uuidv4 } = require('uuid')
-const { google } = require('googleapis')
 const dateUtils = require('../Utils/dateUtils')
-const connect = require('./connect.js')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 const slideDataOrganizer = require('./slideDataOrganizer.js')
+const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 
-const presentationId = '1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug'
+const pictogram = new Map()
+// Problem de droit avec les images
+// pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+// pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+// pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+// pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+// pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+
+// image temporaire en attendant
+pictogram.set(
+  'Conférence',
+  'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg'
+)
+pictogram.set(
+  'Matinale',
+  'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg'
+)
+pictogram.set(
+  'Meetup',
+  'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg'
+)
+pictogram.set(
+  'NightClazz',
+  'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg'
+)
+pictogram.set(
+  'Webinar',
+  'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg'
+)
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -41,33 +68,7 @@ function getSuccessMessage () {
   }
 }
 
-// async function createSlideFromTalks (talks, h) {
-//   try {
-//     const res = await connect.authMethode(createSlides, talks)
-//     return h.response(res).code(200)
-//   } catch (e) {
-//     return h.response(e).code(500)
-//   }
-// }
-
-async function getIdSlideTemplate () {
-  const auth = await connect.getAuthentication()
-  const slides = google.slides({ version: 'v1', auth })
-  const promiseIdSlide = new Promise((resolve, reject) => {
-    slides.presentations.get(
-      {
-        presentationId
-      },
-      (err, res) => {
-        if (err) reject(err.message)
-        resolve(res.data.slides[0].objectId)
-      }
-    )
-  })
-  return promiseIdSlide
-}
-
-/** ---- TESTED ----
+/**
  * generate the requests to add a date text to a slide
  * @param {string} the id of the page where the elements need to be deleted
  * @param {string} the date we need to add to the slide
@@ -143,7 +144,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
     }
   ]
 }
-// ---- TESTED ----
+
 function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
   const objectId = dateId + '-table'
   // calculate size of Table
@@ -219,7 +220,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
     }
   ]
 }
-// ---- TESTED ----
+
 function addEventNameWithStyleToTable (
   dateId,
   eventName,
@@ -262,7 +263,7 @@ function addEventNameWithStyleToTable (
     }
   ]
 }
-// ---- TESTED ----
+
 function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
   const objectId = date + '-table'
   return [
@@ -298,7 +299,7 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
     }
   ]
 }
-// ---- TESTED ----
+
 function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
   const objectId = date + '-table'
   return [
@@ -338,44 +339,11 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
   ]
 }
 
-/** ---- TESTED ----
+/**
  * Adds an image to a presentation.
- * @param {string} presentationId The presentation ID.
- * @param {string} pageId The presentation page ID.
  */
 function createImage (pageId, eventType, yNextElmt) {
-  const pictogram = new Map()
-  // Problem de droit avec les images
-  // pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-  // pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-  // pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-  // pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-  // pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
-
-  // image temporaire en attendant
-  pictogram.set(
-    'Conférence',
-    'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg'
-  )
-  pictogram.set(
-    'Matinale',
-    'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg'
-  )
-  pictogram.set(
-    'Meetup',
-    'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg'
-  )
-  pictogram.set(
-    'NightClazz',
-    'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg'
-  )
-  pictogram.set(
-    'Webinar',
-    'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg'
-  )
-
   const imageUrl = pictogram.get(eventType)
-
   const imgSize = {
     magnitude: 110,
     unit
@@ -405,17 +373,17 @@ function createImage (pageId, eventType, yNextElmt) {
 }
 
 /**
- * generate the requests to add a date text to a slide
- * @param {string} the id of the page where the elements need to be deleted
- * @param {string} the date we need to add to the slide
- * @param {int} the place (only axis y) where we need put the date
- * @return {Array} return an array of the requests
+ * get the id of the template (supposed to be the first slide)
  */
+async function getIdSlideTemplate () {
+  const res = await getSlides()
+  return res[0].objectId
+}
 
-async function addTableData (idPage, dataOrganized) {
-  const auth = await connect.getAuthentication()
-  const slides = google.slides({ version: 'v1', auth })
-
+/**
+ * add a table to the slides files with data
+ */
+function fillSlideWithData (idPage, dataOrganized) {
   const requests = []
   const mapIter = dataOrganized.keys()
 
@@ -425,7 +393,6 @@ async function addTableData (idPage, dataOrganized) {
 
   while (date) {
     const dateId = uuidv4()
-    IndexRowInTableToInsert = 0
     const dateFormated =
     dateUtils.displayFullDateWithWords(date)
     requests.push(
@@ -440,7 +407,7 @@ async function addTableData (idPage, dataOrganized) {
         dataOrganized.get(date)
       )
     )
-
+    IndexRowInTableToInsert = 0
     const nbEvent = dataOrganized.get(date).length
     for (let i = 0; i < nbEvent; i++) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
@@ -469,106 +436,53 @@ async function addTableData (idPage, dataOrganized) {
     }
     date = mapIter.next().value
   }
-
-  const promiseAddTableData = new Promise((resolve, reject) => {
-    // Execute the request.
-    slides.presentations.batchUpdate(
-      {
-        presentationId,
-        resource: {
-          requests
-        }
-      },
-      (err, res) => {
-        try {
-          if (err) {
-            reject(err.message)
-          } else {
-            resolve('Table Added')
-          }
-        } catch (e) {
-          reject(new Error('error catch copy'))
-        }
-      }
-    )
-  })
-  return promiseAddTableData
+  return sendRequest(requests)
 }
 
 /**
  * delete the elements copied from the model used for the style of the data
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- * @param {string} the id of the page where the elements need to be deleted
- * @param {string} the id of the google slide presentation
  */
 async function deleteTemplateInfo (idPage) {
-  const auth = await connect.getAuthentication()
-  const slides = google.slides({ version: 'v1', auth })
-  const promiseDeleteTemplateInfo = new Promise((resolve, reject) => {
-    slides.presentations.get(
-      {
-        presentationId
-      },
-      async (err, res) => {
-        if (err) reject(new Error(err))
+  const res = await getSlides()
+  const slide = await res.find(
+    (slide) => slide.objectId === idPage
+  )
+  if (!slide) {
+    throw (new Error('error delete template element'))
+  }
+  // if the page is the one we're looking for
+  const pageElements = slide.pageElements
 
-        const slide = res.data.slides.find(
-          (slide) => slide.objectId === idPage
-        )
-        if (slide) {
-          // if the page is the one we're looking for
-          const pageElements = slide.pageElements
-
-          const requests = []
-          try {
-            requests.push({
-              deleteObject: {
-                // delete icon
-                objectId: pageElements[pageElements.length - 1].objectId
-              }
-            })
-            requests.push({
-              deleteObject: {
-                // delete table event
-                objectId: pageElements[pageElements.length - 2].objectId
-              }
-            })
-            requests.push({
-              deleteObject: {
-                // delete date
-                objectId: pageElements[pageElements.length - 3].objectId
-              }
-            })
-            slides.presentations.batchUpdate(
-              {
-                presentationId,
-                resource: {
-                  requests
-                }
-              },
-              (err, res) => {
-                if (err) {
-                  reject(err)
-                } else {
-                  resolve('style template element deleted')
-                }
-              }
-            )
-          } catch (e) {
-            reject(new Error('missing element on template slide'))
-          }
-        } else {
-          reject(new Error('error delete template element'))
-        }
+  const requests = []
+  try {
+    requests.push({
+      deleteObject: {
+        // delete icon
+        objectId: pageElements[pageElements.length - 1].objectId
       }
-    )
-  })
-  return promiseDeleteTemplateInfo
+    })
+    requests.push({
+      deleteObject: {
+        // delete table event
+        objectId: pageElements[pageElements.length - 2].objectId
+      }
+    })
+    requests.push({
+      deleteObject: {
+        // delete date
+        objectId: pageElements[pageElements.length - 3].objectId
+      }
+    })
+    return sendRequest(requests)
+  } catch (e) {
+    throw (new Error('missing element on template slide'))
+  }
 }
 
+/**
+ * duplicate the first slide
+ */
 async function copySlide (idPage) {
-  const auth = await connect.getAuthentication()
-  const slides = google.slides({ version: 'v1', auth })
   const newIdPage = uuidv4()
   const requests = [
     {
@@ -580,28 +494,8 @@ async function copySlide (idPage) {
       }
     }
   ]
-  const promiseCopySlide = new Promise((resolve, reject) => {
-    slides.presentations.batchUpdate(
-      {
-        presentationId,
-        resource: {
-          requests
-        }
-      },
-      async (err) => {
-        try {
-          if (err) {
-            reject(err.message)
-          } else {
-            resolve(newIdPage)
-          }
-        } catch (e) {
-          reject(e)
-        }
-      }
-    )
-  })
-  return promiseCopySlide
+  await sendRequest(requests)
+  return newIdPage
 }
 
 module.exports = {
@@ -612,7 +506,7 @@ module.exports = {
   addSpeakersWithStyleToTable,
   createImage,
   deleteTemplateInfo,
-  addTableData,
+  fillSlideWithData,
   copySlide,
   getIdSlideTemplate,
   getSuccessMessage

@@ -1,7 +1,6 @@
 const slide = require('../google-api/slide')
-const connect = require('../google-api/connect')
-const { google } = require('googleapis')
-const wrapper = require('../google-api/wrapperSlide')
+const { presentationId, getSlides } = require('../google-api/slideWrapper')
+const wrapper = require('../google-api/slideService')
 
 describe('Verify data slides', () => {
   describe('undefined value', () => {
@@ -142,37 +141,24 @@ describe('Slides creation', () => {
 
 describe('Integration test on create a slide', () => {
   it('should return a promise that tells if a new slide is created in the Google Slide file', async () => {
-    const talks = [_createValidTalk()]
-    const presentationId = '1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug'
     // given
-    const auth = await connect.getAuthentication()
+    const talks = [_createValidTalk()]
     try {
+      // when
       const res = await wrapper.createSlides(talks)
+      const slides = await getSlides()
+      // then
       expect(res).toStrictEqual({
         message: 'Created !',
         link: 'https://docs.google.com/presentation/d/' +
             presentationId +
             '/'
       })
-      const promise = new Promise((resolve, reject) => {
-        const slides = google.slides({ version: 'v1', auth })
-        slides.presentations.get(
-          {
-            presentationId
-          },
-          (err, res) => {
-            if (err) {
-              reject(new Error('ko'))
-            }
-            expect(JSON.stringify(res.data.slides[1])
-              .replace(/"objectId":".*?",/g, '"objectId":"id",')
-              .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
-              .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
-            resolve('ok')
-          }
-        )
-      })
-      return promise
+      expect(JSON.stringify(slides[1])
+        .replace(/"objectId":".*?",/g, '"objectId":"id",')
+        .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
+        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
+      return await slides
     } catch (e) {
       console.log(e)
     }

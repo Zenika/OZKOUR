@@ -12,24 +12,17 @@ async function createSlideFromTalks (talks, h) {
 
 // Fonction pour créer les slides
 async function createSlides (talks) {
-  const promiseSlideCreated = new Promise((resolve, reject) => {
-    if (verifyTalks(talks)) {
-      const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
-      dataOrganizedBySlide.forEach(async (dataOrganized) => {
-        try {
-          const newIdPage = await copySlide(await slide.getIdSlideTemplate())
-          await deleteTemplateInfo(newIdPage)
-          await addTableData(newIdPage, dataOrganized)
-          resolve(slide.getSuccessMessage())
-        } catch (e) {
-          reject(e)
-        }
-      })
-    } else {
-      reject(new Error('error : wrong format'))
-    }
-  })
-  return promiseSlideCreated
+  if (!verifyTalks(talks)) {
+    throw (new Error('error : wrong format'))
+  }
+  const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
+  const idTemplate = await slide.getIdSlideTemplate()
+  for (const dataOrganized of dataOrganizedBySlide) {
+    const newIdPage = await copySlide(idTemplate)
+    await deleteTemplateInfo(newIdPage)
+    await addTableData(newIdPage, dataOrganized)
+  }
+  return slide.getSuccessMessage()
 }
 
 // Fonction pour vérifier les talks
@@ -59,7 +52,7 @@ async function deleteTemplateInfo (idPage) {
 
 // Fonction pour ajouter des données
 async function addTableData (idPage, data) {
-  return await slide.addTableData(idPage, data)
+  return await slide.fillSlideWithData(idPage, data)
 }
 
 // une fonction pour récupérer les données des slides (à voir)
