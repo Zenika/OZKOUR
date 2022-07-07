@@ -1,5 +1,5 @@
 const slide = require('../google-api/slide')
-// const { presentationId, getSlides } = require('../google-api/slideWrapper')
+const { presentationId, getSlides } = require('../google-api/slideWrapper')
 const wrapper = require('../google-api/slideService')
 
 describe('Verify data slides', () => {
@@ -136,6 +136,33 @@ describe('Slides creation', () => {
     const registerSpeakers = slide.createImage(pageId, eventType, yNextElmt)
     // then
     expect(registerSpeakers).toMatchSnapshot()
+  })
+})
+
+// test d'integration a revoir
+describe('Integration test on create a slide', () => {
+  it('should generate expected Google Slide file', async () => {
+    // given
+    const talks = [_createValidTalk()]
+    try {
+      // when
+      const res = await wrapper.createSlides(talks)
+      const slides = await getSlides()
+      // then
+      expect(res).toStrictEqual({
+        message: 'Created !',
+        link: 'https://docs.google.com/presentation/d/' +
+            presentationId +
+            '/'
+      })
+      expect(JSON.stringify(slides[1])
+        .replace(/"objectId":".*?",/g, '"objectId":"id",')
+        .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
+        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
+    } catch (e) {
+      console.error(e)
+      throw e
+    }
   })
 })
 
