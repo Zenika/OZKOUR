@@ -2,6 +2,9 @@ const fs = require('fs').promises
 const readline = require('readline')
 const { google } = require('googleapis')
 require('dotenv').config()
+const credentials = require('../config/auth/credentials')
+
+console.log({ credentials })
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations']
@@ -14,13 +17,8 @@ const TOKEN_PATH = 'config/auth/token.json'
  * Execute all the functions used to authenticate
  */
 function auth () {
-  // Load client secrets from a local file.
-  fs.readFile('config/auth/credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err)
-    // Authorize a client with credentials, then call the Google Sheets API.
-
-    authorize(JSON.parse(content))
-  })
+  // Authorize a client with credentials, then call the Google Sheets API.
+  authorize(credentials)
 }
 
 /**
@@ -85,17 +83,9 @@ function getNewToken (oAuth2Client) {
  * @param {Object} params the parameters used in the callback
  */
 async function authMethode (callback, params) {
-  const content = await fs.readFile(
-    'config/auth/credentials.json',
-    (err, content) => {
-      if (err) return console.log('Error loading client secret file:', err)
-      // Authorize a client with credentials, then call the Google Sheets API.
-    }
-  )
-
-  const clientId = JSON.parse(content).web.client_id
-  const clientSecret = JSON.parse(content).web.client_secret
-  const redirectUris = JSON.parse(content).web.redirect_uris
+  const clientId = credentials.web.client_id
+  const clientSecret = credentials.web.client_secret
+  const redirectUris = credentials.web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
@@ -111,19 +101,9 @@ async function authMethode (callback, params) {
 }
 
 async function getAuthentication () {
-  let content
-  try {
-    content = await fs.readFile(
-      'config/auth/credentials.json'
-    )
-  } catch (err) {
-    console.log('Error loading client secret file:', err)
-    throw err
-  }
-
-  const clientId = JSON.parse(content).web.client_id
-  const clientSecret = JSON.parse(content).web.client_secret
-  const redirectUris = JSON.parse(content).web.redirect_uris
+  const clientId = credentials.web.client_id
+  const clientSecret = credentials.web.client_secret
+  const redirectUris = credentials.web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
