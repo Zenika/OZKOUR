@@ -3,15 +3,10 @@ const readline = require('readline')
 const { google } = require('googleapis')
 require('dotenv').config()
 const credentials = require('../config/auth/credentials')
-
-console.log({ credentials })
+const { token: googleToken } = require('../config/auth/token')
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations']
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const TOKEN_PATH = 'config/auth/token.json'
 
 /**
  * Execute all the functions used to authenticate
@@ -37,10 +32,11 @@ function authorize (credentials) {
   )
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client)
-    oAuth2Client.setCredentials(JSON.parse(token))
-  })
+  if (!googleToken.access_token) {
+    return getNewToken(oAuth2Client)
+    // the access token should be generated and should be move to env variables
+  }
+  oAuth2Client.setCredentials(googleToken)
 }
 
 /**
@@ -49,6 +45,10 @@ function authorize (credentials) {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
 function getNewToken (oAuth2Client) {
+// The file token.json stores the user's access and refresh tokens, and is
+// created automatically when the authorization flow completes for the first
+// time.
+  const TOKEN_PATH = 'config/auth/token.json'
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES
@@ -91,11 +91,8 @@ async function authMethode (callback, params) {
     clientSecret,
     redirectUris[0]
   )
-  const token = await fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client)
-  })
 
-  oAuth2Client.setCredentials(JSON.parse(token))
+  oAuth2Client.setCredentials(googleToken)
   const res = await callback(oAuth2Client, params)
   return res
 }
@@ -109,9 +106,8 @@ async function getAuthentication () {
     clientSecret,
     redirectUris[0]
   )
-  const token = await fs.readFile(TOKEN_PATH)
 
-  oAuth2Client.setCredentials(JSON.parse(token))
+  oAuth2Client.setCredentials(googleToken)
   return oAuth2Client
 }
 
