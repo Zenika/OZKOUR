@@ -1,7 +1,7 @@
 const { google } = require('googleapis')
 const connect = require('./connect.js')
 const dayjs = require('dayjs')
-const utilitary = require('../utilitary')
+const utilitary = require('../Utils/dateUtils')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
@@ -43,7 +43,7 @@ async function getData (auth, params) {
   const sheets = google.sheets({ version: 'v4', auth })
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: '1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE', // TO DO use a variable instead of a link
-    range: `${utilitary.convDateToMonth(params.start)} ${dayjs(params.start, 'DD/MM/YYYY').format('YYYY')}!A2:H`
+    range: `${utilitary.convDateToMonthInLetter(params.start)} ${dayjs(params.start, 'DD/MM/YYYY').format('YYYY')}!A2:H`
   })
   return dateFilter(res.data.values, params.start, params.end)
 }

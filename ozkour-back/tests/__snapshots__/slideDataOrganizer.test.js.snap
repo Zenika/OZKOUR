@@ -1,0 +1,614 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DataOrganizer data concistency displays the talks clustered by date when they are on the same date 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer data concistency displays the talks clustered by event when they are on the same date and event  1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer data concistency displays the talks not clustered when they are on different date and event 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "20/01/2021" => Array [
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "21/01/2021" => Array [
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Guy Tarenbois",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer data concistency displays the talks not clustered when they are on different date but the same event 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "20/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer write on a slide when it fits on only one displays talks slide 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "21/01/2021" => Array [
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Guy Tarenbois",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer write on another slide when it overflows displays additional date on another slide  1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "21/01/2021" => Array [
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Guy Tarenbois",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "25/01/2021" => Array [
+      Object {
+        "eventName": "RemoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Sophie Stiqué",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+    "26/01/2021" => Array [
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer write on another slide when it overflows displays additional date on another slides  1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "GraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "NightCdlass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Nantes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Guy Tarenbois",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "RemoteCdlazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Sophie Stiqué",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Webdinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anna Logue ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Webinar",
+        "eventType": "Webinar",
+        "talks": Array [
+          Object {
+            "speakers": "Thibault Lognaise ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Thibault Lognaise ",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "GdraalVM Night",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "NightdClass",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Yves Rogne",
+            "talkTitle": "Migration JS vers TS sur du react",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "Nandtes JS #55",
+        "eventType": "Meetup",
+        "talks": Array [
+          Object {
+            "speakers": "Guy Tarenbois",
+            "talkTitle": "Nuxt 2021",
+            "universe": "",
+          },
+        ],
+      },
+      Object {
+        "eventName": "RemdoteClazz Nodejs",
+        "eventType": "NightClazz",
+        "talks": Array [
+          Object {
+            "speakers": "Sophie Stiqué",
+            "talkTitle": "Techniques minimalistes pour Node.js",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;
+
+exports[`DataOrganizer write on another slide when it overflows displays additional events on another slide 1`] = `
+Array [
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+]
+`;

@@ -1,7 +1,7 @@
 
 const { getTalkFromDate } = require('../../google-api/sheets')
 
-const { createSlideFromTalks } = require('../../google-api/slide')
+const { createSlides } = require('../../google-api/wrapperSlide')
 
 module.exports = [
   {
@@ -15,8 +15,14 @@ module.exports = [
   {
     method: 'POST',
     path: '/selected-talks',
-    handler: function (request, h) {
-      return createSlideFromTalks(request.payload, h)
+    handler: async function (request, h) {
+      try {
+        const talks = request.payload
+        const res = await createSlides(talks)
+        return h.response(res).code(200)
+      } catch (e) {
+        return h.response(e).code(500)
+      }
     }
   }
 ]

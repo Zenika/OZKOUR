@@ -1,0 +1,307 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Slides creation should return a JSON request to add a date field in a slide 1`] = `
+Array [
+  Object {
+    "createShape": Object {
+      "elementProperties": Object {
+        "pageObjectId": "pageId",
+        "size": Object {
+          "height": Object {
+            "magnitude": 30,
+            "unit": "PT",
+          },
+          "width": Object {
+            "magnitude": 350,
+            "unit": "PT",
+          },
+        },
+        "transform": Object {
+          "scaleX": 1,
+          "scaleY": 1,
+          "translateX": 70,
+          "translateY": 100,
+          "unit": "PT",
+        },
+      },
+      "objectId": "objectId",
+      "shapeType": "TEXT_BOX",
+    },
+  },
+  Object {
+    "insertText": Object {
+      "insertionIndex": 0,
+      "objectId": "objectId",
+      "text": "11/03/2021",
+    },
+  },
+  Object {
+    "updateTextStyle": Object {
+      "fields": "underline,foregroundColor,fontFamily,fontSize",
+      "objectId": "objectId",
+      "style": Object {
+        "fontFamily": "Nunito",
+        "fontSize": Object {
+          "magnitude": 17,
+          "unit": "PT",
+        },
+        "foregroundColor": Object {
+          "opaqueColor": Object {
+            "rgbColor": Object {
+              "blue": 1,
+              "green": 1,
+              "red": 1,
+            },
+          },
+        },
+        "underline": true,
+      },
+    },
+  },
+  Object {
+    "updateParagraphStyle": Object {
+      "fields": "alignment",
+      "objectId": "objectId",
+      "style": Object {
+        "alignment": "CENTER",
+      },
+    },
+  },
+]
+`;
+
+exports[`Slides creation should return a JSON request to add a table with style for the date 1`] = `
+Array [
+  Object {
+    "createTable": Object {
+      "columns": 2,
+      "elementProperties": Object {
+        "pageObjectId": "pageId",
+        "transform": Object {
+          "scaleX": 1,
+          "scaleY": 1,
+          "translateY": "objectId",
+          "unit": "PT",
+        },
+      },
+      "objectId": "11/03/2021-table",
+      "rows": undefined,
+    },
+  },
+  Object {
+    "updateTableBorderProperties": Object {
+      "borderPosition": "ALL",
+      "fields": "tableBorderFill",
+      "objectId": "11/03/2021-table",
+      "tableBorderProperties": Object {
+        "tableBorderFill": Object {
+          "solidFill": Object {
+            "alpha": 0,
+            "color": Object {
+              "rgbColor": Object {
+                "blue": 0,
+                "green": 0,
+                "red": 0,
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Object {
+    "updateTableColumnProperties": Object {
+      "columnIndices": Array [
+        0,
+      ],
+      "fields": "columnWidth",
+      "objectId": "11/03/2021-table",
+      "tableColumnProperties": Object {
+        "columnWidth": Object {
+          "magnitude": 320,
+          "unit": "PT",
+        },
+      },
+    },
+  },
+  Object {
+    "updateTableColumnProperties": Object {
+      "columnIndices": Array [
+        1,
+      ],
+      "fields": "columnWidth",
+      "objectId": "11/03/2021-table",
+      "tableColumnProperties": Object {
+        "columnWidth": Object {
+          "magnitude": 130,
+          "unit": "PT",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`Slides creation should return a JSON request to add a talk to a table with style 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "cellLocation": Object {
+        "columnIndex": 0,
+        "rowIndex": 1,
+      },
+      "objectId": "dateId-table",
+      "text": undefined,
+    },
+  },
+  Object {
+    "updateTextStyle": Object {
+      "cellLocation": Object {
+        "columnIndex": 0,
+        "rowIndex": 1,
+      },
+      "fields": "bold,foregroundColor,fontFamily,fontSize",
+      "objectId": "dateId-table",
+      "style": Object {
+        "bold": true,
+        "fontFamily": "Nunito",
+        "fontSize": Object {
+          "magnitude": 14,
+          "unit": "PT",
+        },
+        "foregroundColor": Object {
+          "opaqueColor": Object {
+            "rgbColor": Object {
+              "blue": 1,
+              "green": 1,
+              "red": 1,
+            },
+          },
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`Slides creation should return a JSON request to add an event to a table with style 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "cellLocation": Object {
+        "columnIndex": 0,
+        "rowIndex": 1,
+      },
+      "insertionIndex": 0,
+      "objectId": "dateId-table",
+      "text": "Dev Event",
+    },
+  },
+  Object {
+    "updateTextStyle": Object {
+      "cellLocation": Object {
+        "columnIndex": 0,
+        "rowIndex": 1,
+      },
+      "fields": "bold,foregroundColor,fontFamily,fontSize",
+      "objectId": "dateId-table",
+      "style": Object {
+        "bold": true,
+        "fontFamily": "Nunito",
+        "fontSize": Object {
+          "magnitude": 20,
+          "unit": "PT",
+        },
+        "foregroundColor": Object {
+          "opaqueColor": Object {
+            "rgbColor": Object {
+              "blue": 1,
+              "green": 1,
+              "red": 1,
+            },
+          },
+        },
+      },
+      "textRange": Object {
+        "type": "ALL",
+      },
+    },
+  },
+]
+`;
+
+exports[`Slides creation should return a JSON request to add an image to a slide 1`] = `
+Array [
+  Object {
+    "createImage": Object {
+      "elementProperties": Object {
+        "pageObjectId": "pageId",
+        "size": Object {
+          "height": Object {
+            "magnitude": 110,
+            "unit": "PT",
+          },
+          "width": Object {
+            "magnitude": 110,
+            "unit": "PT",
+          },
+        },
+        "transform": Object {
+          "scaleX": 1,
+          "scaleY": 1,
+          "translateX": 455,
+          "translateY": 100,
+          "unit": "PT",
+        },
+      },
+      "url": "https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg",
+    },
+  },
+]
+`;
+
+exports[`Slides creation should return a JSON request to add speakers to a table with style 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "cellLocation": Object {
+        "columnIndex": 1,
+        "rowIndex": 1,
+      },
+      "insertionIndex": 0,
+      "objectId": "dateId-table",
+      "text": undefined,
+    },
+  },
+  Object {
+    "updateTextStyle": Object {
+      "cellLocation": Object {
+        "columnIndex": 1,
+        "rowIndex": 1,
+      },
+      "fields": "bold,foregroundColor,fontFamily,fontSize",
+      "objectId": "dateId-table",
+      "style": Object {
+        "bold": true,
+        "fontFamily": "Nunito",
+        "fontSize": Object {
+          "magnitude": 14,
+          "unit": "PT",
+        },
+        "foregroundColor": Object {
+          "opaqueColor": Object {
+            "rgbColor": Object {
+              "blue": 0.7,
+              "green": 0.7,
+              "red": 0.7,
+            },
+          },
+        },
+      },
+      "textRange": Object {
+        "type": "ALL",
+      },
+    },
+  },
+]
+`;

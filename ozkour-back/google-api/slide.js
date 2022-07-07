@@ -1,10 +1,40 @@
-const { google } = require('googleapis')
-const connect = require('./connect.js')
+const { v4: uuidv4 } = require('uuid')
+const dateUtils = require('../Utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
+const slideDataOrganizer = require('./slideDataOrganizer.js')
+const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 
-const presentationId = '1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug'
+const pictogram = new Map()
+// Problem de droit avec les images
+// pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+// pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+// pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+// pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+// pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+
+// image temporaire en attendant
+pictogram.set(
+  'Conférence',
+  'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg'
+)
+pictogram.set(
+  'Matinale',
+  'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg'
+)
+pictogram.set(
+  'Meetup',
+  'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg'
+)
+pictogram.set(
+  'NightClazz',
+  'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg'
+)
+pictogram.set(
+  'Webinar',
+  'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg'
+)
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -28,126 +58,14 @@ const greyForegroundColor = {
   }
 }
 
-const slideSpacing = {
-  EVENT: 80,
-  TALK: 45,
-  DATE: 40
-}
-
-const DEFAULT_START_Y_INDEX = 100
-
-async function createSlideFromTalks (talks, h) {
-  try {
-    const res = await connect.authMethode(createSlides, talks)
-    return h.response(res).code(200)
-  } catch (e) {
-    return h.response(e).code(500)
+function getSuccessMessage () {
+  return {
+    message: 'Created !',
+    link:
+      'https://docs.google.com/presentation/d/' +
+      presentationId +
+      '/'
   }
-}
-
-/**
- * cluster all the talks by date
- * @param {Array} The talks that need to be clustered
- * @return {dataOrganized} dataOrganized where the keys are the date and the values are the talks
- */
-function clusterByDate (data) {
-  const dataOrganized = new Map()
-  for (let i = 0; i < data.length; i++) {
-    if (!dataOrganized.has(data[i].date)) {
-      dataOrganized.set(data[i].date, [
-        {
-          universe: data[i].universe,
-          eventType: data[i].eventType,
-          eventName: data[i].eventName,
-          talkTitle: data[i].talkTitle,
-          speakers: data[i].speakers
-        }
-      ])
-    } else {
-      const newValue = dataOrganized.get(data[i].date)
-      newValue.push({
-        universe: data[i].universe,
-        eventType: data[i].eventType,
-        eventName: data[i].eventName,
-        talkTitle: data[i].talkTitle,
-        speakers: data[i].speakers
-      })
-    }
-  }
-  return clusterByEventName(dataOrganized)
-}
-
-/**
- * cluster all the talks by name of events
- * @param {dataOrganized} The talks already clustured by dates
- * @return {dataOrganized} dataOrganized where the keys are the date and the values are an object
- * with 2 attributes: one for the event name and one for the left data
- */
-function clusterByEventName (dataOrganized) {
-  const mapIter = dataOrganized.keys()
-  let date = mapIter.next().value
-
-  while (date !== undefined) {
-    const EventNameAdded = []
-    const EventArray = []
-    for (let i = 0; i < dataOrganized.get(date).length; i++) {
-      // pour chaque date
-      const talk = dataOrganized.get(date)[i]
-
-      if (EventNameAdded.includes(talk.eventName)) {
-        EventArray[EventNameAdded.indexOf(talk.eventName)].talks.push({
-          universe: talk.universe,
-          eventType: talk.eventType,
-          talkTitle: talk.talkTitle,
-          speakers: talk.speakers
-        })
-      } else {
-        EventArray.push({
-          eventName: talk.eventName,
-          talks: [
-            {
-              universe: talk.universe,
-              eventType: talk.eventType,
-              talkTitle: talk.talkTitle,
-              speakers: talk.speakers
-            }
-          ]
-        })
-        EventNameAdded.push(talk.eventName)
-      }
-    }
-    dataOrganized.set(date, EventArray)
-    date = mapIter.next().value
-  }
-  return dataOrganized
-}
-
-async function createSlides (auth, talks) {
-  const slides = google.slides({ version: 'v1', auth })
-  const promiseCreateSlide = new Promise((resolve, reject) => {
-    slides.presentations.get(
-      {
-        presentationId
-      },
-      async (err, res) => {
-        if (err) reject(err.message)
-        copySlide(auth, res.data.slides[0].objectId, talks)
-          .then((result) => {
-            resolve({
-              message: result,
-              link:
-                  'https://docs.google.com/presentation/d/' +
-                  presentationId +
-                  '/'
-            })
-          })
-          .catch((e) => {
-            reject(e)
-          })
-      }
-    )
-  })
-  return promiseCreateSlide
 }
 
 /**
@@ -157,7 +75,7 @@ async function createSlides (auth, talks) {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addDateTextWithStyle (idPage, objectId, Y) {
+function addDateTextWithStyle (idPage, date, objectId, Y) {
   const pt350 = {
     magnitude: 350,
     unit
@@ -195,7 +113,7 @@ function addDateTextWithStyle (idPage, objectId, Y) {
         // add date to the text
         objectId,
         insertionIndex: 0,
-        text: objectId.replaceAll('-', '/')
+        text: date
       }
     },
     {
@@ -227,16 +145,13 @@ function addDateTextWithStyle (idPage, objectId, Y) {
   ]
 }
 
-function CreateTableWithStyleForAllEventsInDate (
-  idPage,
-  date,
-  Y,
-  dataOrganized
-) {
-  const objectId = date.replaceAll('/', '-') + '-table'
+function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
+  const objectId = dateId + '-table'
   // calculate size of Table
-  let nbTalkForDate = dataOrganized.get(date).length
-  for (let i = 0; i < dataOrganized.get(date).length; i++) { nbTalkForDate += dataOrganized.get(date)[i].talks.length }
+  let nbTalkForDate = data.length
+  for (let i = 0; i < data.length; i++) {
+    nbTalkForDate += data[i].talks.length
+  }
   return [
     {
       createTable: {
@@ -307,11 +222,11 @@ function CreateTableWithStyleForAllEventsInDate (
 }
 
 function addEventNameWithStyleToTable (
-  date,
+  dateId,
   eventName,
   IndexRowInTableToInsert
 ) {
-  const objectId = date + '-table'
+  const objectId = dateId + '-table'
   return [
     {
       insertText: {
@@ -426,91 +341,73 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
 
 /**
  * Adds an image to a presentation.
- * @param {string} presentationId The presentation ID.
- * @param {string} pageId The presentation page ID.
  */
 function createImage (pageId, eventType, yNextElmt) {
-  const pictogram = new Map()
-  // Problem de droit avec les images
-  // pictogram.set('Conference', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-  // pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-  // pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-  // pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-  // pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
-
-  // image temporaire en attendant
-  pictogram.set('Conference', 'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg')
-  pictogram.set('Matinale', 'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg')
-  pictogram.set('Meetup', 'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg')
-  pictogram.set('NightClazz', 'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg')
-  pictogram.set('Webinar', 'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg')
-
   const imageUrl = pictogram.get(eventType)
-  // Create a new image, using the supplied object ID, with content downloaded from imageUrl.
-  const imageId = function () {
-    return Date.now().toString(36) + Math.random().toString(36).replace('.', '-')
-  }
-
   const imgSize = {
     magnitude: 110,
     unit
   }
 
-  return [{
-    createImage: {
-      objectId: imageId,
-      url: imageUrl,
-      elementProperties: {
-        pageObjectId: pageId,
-        size: {
-          height: imgSize,
-          width: imgSize
-        },
-        transform: {
-          scaleX: 1,
-          scaleY: 1,
-          translateX: 455,
-          translateY: yNextElmt,
-          unit
+  return [
+    {
+      createImage: {
+        url: imageUrl,
+        elementProperties: {
+          pageObjectId: pageId,
+          size: {
+            height: imgSize,
+            width: imgSize
+          },
+          transform: {
+            scaleX: 1,
+            scaleY: 1,
+            translateX: 455,
+            translateY: yNextElmt,
+            unit
+          }
         }
       }
     }
-  }]
+  ]
 }
 
 /**
- * generate the requests to add a date text to a slide
- * @param {string} the id of the page where the elements need to be deleted
- * @param {string} the date we need to add to the slide
- * @param {int} the place (only axis y) where we need put the date
- * @return {Array} return an array of the requests
+ * get the id of the template (supposed to be the first slide)
  */
+async function getIdSlideTemplate () {
+  const res = await getSlides()
+  return res[0].objectId
+}
 
-function addTableData (auth, idPage, data) {
-  const slides = google.slides({ version: 'v1', auth })
-  const dataOrganized = clusterByDate(data)
-
+/**
+ * add a table to the slides files with data
+ */
+function fillSlideWithData (idPage, dataOrganized) {
   const requests = []
   const mapIter = dataOrganized.keys()
 
   let date = mapIter.next().value
   let IndexRowInTableToInsert = 0
-  let yNextElmt = DEFAULT_START_Y_INDEX
+  let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX
 
-  while (date !== undefined) {
-    const dateId = date.replaceAll('/', '-')
-    IndexRowInTableToInsert = 0
-    requests.push(addDateTextWithStyle(idPage, dateId, yNextElmt))
-    yNextElmt += slideSpacing.DATE
+  while (date) {
+    const dateId = uuidv4()
+    const dateFormated =
+    dateUtils.displayFullDateWithWords(date)
     requests.push(
-      CreateTableWithStyleForAllEventsInDate(
+      addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
+    )
+    yNextElmt += slideDataOrganizer.slideSpacing.DATE
+    requests.push(
+      createTableWithStyleForAllEventsInDate(
         idPage,
-        date,
+        dateId,
         yNextElmt,
-        dataOrganized
+        dataOrganized.get(date)
       )
     )
-
+    IndexRowInTableToInsert = 0
     const nbEvent = dataOrganized.get(date).length
     for (let i = 0; i < nbEvent; i++) {
       const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
@@ -520,11 +417,11 @@ function addTableData (auth, idPage, data) {
           arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
         ),
-        createImage(idPage, arrayOfTalksForAnEvent.talks[0].eventType, yNextElmt)
+        createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
       )
       IndexRowInTableToInsert++
 
-      yNextElmt += slideSpacing.EVENT
+      yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
       // add all talk for the event
       for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
@@ -533,108 +430,60 @@ function addTableData (auth, idPage, data) {
           addTalkTitleWithStyleToTable(dateId, talk, IndexRowInTableToInsert),
           addSpeakersWithStyleToTable(dateId, talk, IndexRowInTableToInsert)
         )
+        yNextElmt += slideDataOrganizer.slideSpacing.TALK
         IndexRowInTableToInsert++
       }
     }
     date = mapIter.next().value
   }
-
-  const promiseAddTableData = new Promise((resolve, reject) => {
-    // Execute the request.
-    slides.presentations.batchUpdate(
-      {
-        presentationId,
-        resource: {
-          requests
-        }
-      },
-      (err, res) => {
-        try {
-          if (err) {
-            reject(err.message)
-          } else {
-            resolve('Table Added')
-          }
-        } catch (e) {
-          reject(new Error('error catch copy'))
-        }
-      }
-    )
-  })
-  return promiseAddTableData
+  return sendRequest(requests)
 }
 
 /**
  * delete the elements copied from the model used for the style of the data
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- * @param {string} the id of the page where the elements need to be deleted
- * @param {string} the id of the google slide presentation
  */
-function deleteTemplateInfo (auth, idPage) {
-  const slides = google.slides({ version: 'v1', auth })
-  const promiseDeleteTemplateInfo = new Promise((resolve, reject) => {
-    slides.presentations.get(
-      {
-        presentationId
-      },
-      async (err, res) => {
-        if (err) reject(new Error(err))
+async function deleteTemplateInfo (idPage) {
+  const res = await getSlides()
+  const slide = await res.find(
+    (slide) => slide.objectId === idPage
+  )
+  if (!slide) {
+    throw (new Error('error delete template element'))
+  }
+  // if the page is the one we're looking for
+  const pageElements = slide.pageElements
 
-        const slide = res.data.slides.find(slide => slide.objectId === idPage)
-        if (slide !== undefined) {
-          // if the page is the one we're looking for
-          const pageElements = slide.pageElements
-
-          const requests = []
-          try {
-            requests.push({
-              deleteObject: {
-                // delete icon
-                objectId: pageElements[pageElements.length - 1].objectId
-              }
-            })
-            requests.push({
-              deleteObject: {
-                // delete table event
-                objectId: pageElements[pageElements.length - 2].objectId
-              }
-            })
-            requests.push({
-              deleteObject: {
-                // delete date
-                objectId: pageElements[pageElements.length - 3].objectId
-              }
-            })
-            slides.presentations.batchUpdate(
-              {
-                presentationId,
-                resource: {
-                  requests
-                }
-              },
-              (err, res) => {
-                if (err) {
-                  reject(err)
-                } else {
-                  resolve('style template element deleted')
-                }
-              }
-            )
-          } catch (e) {
-            reject(new Error('missing element on template slide'))
-          }
-        } else {
-          reject(new Error('error delete template element'))
-        }
+  const requests = []
+  try {
+    requests.push({
+      deleteObject: {
+        // delete icon
+        objectId: pageElements[pageElements.length - 1].objectId
       }
-    )
-  })
-  return promiseDeleteTemplateInfo
+    })
+    requests.push({
+      deleteObject: {
+        // delete table event
+        objectId: pageElements[pageElements.length - 2].objectId
+      }
+    })
+    requests.push({
+      deleteObject: {
+        // delete date
+        objectId: pageElements[pageElements.length - 3].objectId
+      }
+    })
+    return sendRequest(requests)
+  } catch (e) {
+    throw (new Error('missing element on template slide'))
+  }
 }
 
-function copySlide (auth, idPage, talkSelected) {
-  const slides = google.slides({ version: 'v1', auth })
-  const newIdPage = Date.now().toString() // New id is supposed to be unique
+/**
+ * duplicate the first slide
+ */
+async function copySlide (idPage) {
+  const newIdPage = uuidv4()
   const requests = [
     {
       duplicateObject: {
@@ -645,33 +494,20 @@ function copySlide (auth, idPage, talkSelected) {
       }
     }
   ]
-  const promiseCopySlide = new Promise((resolve, reject) => {
-    slides.presentations.batchUpdate(
-      {
-        presentationId,
-        resource: {
-          requests
-        }
-      },
-      async (err, res) => {
-        try {
-          if (err) {
-            reject(err.message)
-          }
-          await deleteTemplateInfo(auth, newIdPage)
-          await addTableData(auth, newIdPage, talkSelected)
-          resolve('Created !')
-        } catch (e) {
-          reject(e)
-        }
-      }
-    )
-  })
-  return promiseCopySlide
+  await sendRequest(requests)
+  return newIdPage
 }
 
 module.exports = {
-  createSlideFromTalks,
-  clusterByDate,
-  clusterByEventName
+  addDateTextWithStyle,
+  createTableWithStyleForAllEventsInDate,
+  addEventNameWithStyleToTable,
+  addTalkTitleWithStyleToTable,
+  addSpeakersWithStyleToTable,
+  createImage,
+  deleteTemplateInfo,
+  fillSlideWithData,
+  copySlide,
+  getIdSlideTemplate,
+  getSuccessMessage
 }

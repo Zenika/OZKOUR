@@ -13,7 +13,7 @@ const talks = [
     'GraalVM Night',
     '',
     '19/01/2021',
-    'Adrien Nortain',
+    'Anne Imal',
     'GraalVM for Sustainable Software Development?',
     'https://www.meetup.com/singajug/events/275681145/'
   ],
@@ -23,7 +23,7 @@ const talks = [
     'NightClass',
     '',
     '19/01/2021',
-    'Jules Hablot',
+    'Yves Rogne',
     'Migration JS vers TS sur du react'
   ],
   [
@@ -32,7 +32,7 @@ const talks = [
     'Nantes JS #55',
     '',
     '21/01/2021',
-    'Yann Bertrand',
+    'Guy Tarenbois',
     'Nuxt 2021',
     'https://twitter.com/NantesJS/status/1351104198436392964'
   ],
@@ -52,7 +52,7 @@ const talks = [
     'RemoteClazz Nodejs',
     '',
     '25/01/2021',
-    'Hugo Wood',
+    'Sophie Stiqué',
     'Techniques minimalistes pour Node.js',
     'https://www.meetup.com/NightClazz-by-Zenika-Nantes/events/275720340/'
   ],
