@@ -1,5 +1,5 @@
 
-const { getTalkFromDate } = require('../../google-api/sheets')
+const { getTalk } = require('../../domain/talks')
 
 const { createSlides } = require('../../google-api/slideService')
 
@@ -8,7 +8,7 @@ module.exports = [
     method: 'GET',
     path: '/talk',
     handler: function (request, h) {
-      return getTalkFromDate(request.query.start, request.query.end)
+      return getTalk(request.query.start, request.query.end)
     }
   },
 

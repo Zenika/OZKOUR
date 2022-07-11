@@ -2,7 +2,7 @@ const { google } = require('googleapis')
 const connect = require('./connect.js')
 const util = require('util')
 
-const presentationId = process.env.GOOGLE_SLIDE_LINK
+const presentationId = '1Mwzl0-13stcTZRn_0iyIJLZveuY80SW2cmv9p2Wgpug'
 
 async function getSlides () {
   const auth = await connect.getAuthentication()
