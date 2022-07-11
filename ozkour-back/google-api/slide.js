@@ -3,7 +3,7 @@ const dateUtils = require('../Utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 const slideDataOrganizer = require('./slideDataOrganizer.js')
-const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
+const { presentationId, getSlides, sendRequest } = require('../infrastructure/googleslide/slideWrapper')
 dayjs.extend(customParseFormat)
 
 const pictogram = new Map()
