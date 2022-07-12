@@ -4,6 +4,7 @@ const slideDataOrganizer = require('./slideDataOrganizer')
 // Fonction pour créer les slides
 async function createSlides (talks) {
   if (!verifyTalks(talks)) {
+    console.log('error')
     throw (new Error('error : wrong format'))
   }
   const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)

@@ -1,5 +1,5 @@
 const { google } = require('googleapis')
-const connect = require('../googleslide/connect.js')
+const connect = require('../connect.js')
 const dayjs = require('dayjs')
 const utilitary = require('../../Utils/dateUtils')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -42,7 +42,25 @@ function dateFilter (talks, start, end) {
     const dateTalk = dayjs(talk[4], 'DD-MM-YYYY')
     return formatedDateStart.isBefore(dateTalk.add(1, 'day'), 'day') && formatedDateEnd.isAfter(dateTalk.add(-1, 'day'), 'day')
   })
-  return talks
+  return convertArrayToObject(talks)
+}
+
+function convertArrayToObject (arrayOfTalksArray) {
+  const arrayOfTalksObject = []
+  arrayOfTalksArray.forEach(([, eventType, eventName, universe, date, speakers, talkTitle]) => {
+    const value = {
+      date,
+      universe,
+      eventType,
+      eventName,
+      talkTitle,
+      speakers,
+      checked: true
+    }
+
+    arrayOfTalksObject.push(value)
+  })
+  return arrayOfTalksObject
 }
 
 module.exports = {

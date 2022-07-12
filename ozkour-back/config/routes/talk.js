@@ -1,7 +1,7 @@
 
 const { getTalk } = require('../../domain/talks')
 
-const { createSlides } = require('../../google-api/wrapperSlide')
+const { createSlides } = require('../../google-api/slideService')
 
 module.exports = [
   {
@@ -21,6 +21,7 @@ module.exports = [
         const res = await createSlides(talks)
         return h.response(res).code(200)
       } catch (e) {
+        console.log(e)
         return h.response(e).code(500)
       }
     }

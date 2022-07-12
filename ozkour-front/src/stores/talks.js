@@ -55,23 +55,9 @@ export const useTalkStore = defineStore({
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
         
-      let res = [];
+      
 
-      data.forEach(([, eventType, eventName, universe, date, speakers, talkTitle]) => {
-        const value = {
-          date,
-          universe,
-          eventType,
-          eventName,
-          talkTitle,
-          speakers,
-          checked : true
-        };
-
-        res.push(value);
-      });
-
-      this.updateTalks(res);
+      this.updateTalks(data);
         
         
       this.selectedDate(dateStart, dateEnd);
