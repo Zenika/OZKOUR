@@ -3,7 +3,7 @@ test('convert date in month written', () => {
   // sheet.dateFilter(talks, '19/01/2021', '21/01/2021')
   const result = sheet.dateFilter(talks, '19-01-2021', '25-01-2021')
   talks.pop()
-  expect(result).toEqual(talks)
+  expect(result).toMatchSnapshot()
 })
 
 const talks = [
