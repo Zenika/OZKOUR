@@ -1,7 +1,6 @@
-const { google } = require('googleapis')
-const connect = require('../connect.js')
 const dayjs = require('dayjs')
-const utilitary = require('../../Utils/dateUtils')
+const wrapper = require('./sheetWrapper')
+const utils = require('../../Utils/dateUtils')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 
@@ -10,23 +9,12 @@ dayjs.extend(customParseFormat)
  * @param {String} start the start of the date range
  * @param {String} end the end of the date range
  */
-async function getTalkFromDate (param) {
-  const res = await connect.authMethode(getData, param)
-  return res
-}
-
-/**
- * Prints the names and majors of students in a sample spreadsheet:
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- * @param {Object} params the parameters passed by the connect
- */
-async function getData (auth, params) {
-  const sheets = google.sheets({ version: 'v4', auth })
-  const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: '1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE', // TO DO use a variable instead of a link
-    range: `${utilitary.convDateToMonthInLetter(params.start)} ${dayjs(params.start, 'DD/MM/YYYY').format('YYYY')}!A2:H`
-  })
-  return dateFilter(res.data.values, params.start, params.end)
+async function getTalkFromDate (params) {
+  // const res = await connect.authMethode(getData, param)
+  const month = utils.convDateToMonthInLetter(params.start)
+  const year = dayjs(params.start, 'DD/MM/YYYY').format('YYYY')
+  const res = await wrapper.getData(month, year)
+  return convertArrayToObject(dateFilter(res, params.start, params.end))
 }
 
 /**
@@ -42,7 +30,7 @@ function dateFilter (talks, start, end) {
     const dateTalk = dayjs(talk[4], 'DD-MM-YYYY')
     return formatedDateStart.isBefore(dateTalk.add(1, 'day'), 'day') && formatedDateEnd.isAfter(dateTalk.add(-1, 'day'), 'day')
   })
-  return convertArrayToObject(talks)
+  return talks
 }
 
 function convertArrayToObject (arrayOfTalksArray) {
@@ -65,5 +53,6 @@ function convertArrayToObject (arrayOfTalksArray) {
 
 module.exports = {
   getTalkFromDate,
-  dateFilter
+  dateFilter,
+  convertArrayToObject
 }
