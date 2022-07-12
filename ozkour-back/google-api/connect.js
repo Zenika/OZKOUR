@@ -5,6 +5,12 @@ require('dotenv').config()
 const credentials = require('../config/auth/credentials')
 const { token: googleToken } = require('../config/auth/token')
 
+const {
+  client_id: clientId,
+  client_secret: clientSecret,
+  redirect_uris: redirectUris
+} = credentials.web
+
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations']
 
@@ -20,11 +26,7 @@ function auth () {
  * Create an OAuth2 client with the given credentials
  * @param {Object} credentials The authorization client credentials.
  */
-function authorize (credentials) {
-  const clientId = credentials.web.client_id
-  const clientSecret = credentials.web.client_secret
-  const redirectUris = credentials.web.redirect_uris
-
+function authorize () {
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
@@ -83,9 +85,6 @@ function getNewToken (oAuth2Client) {
  * @param {Object} params the parameters used in the callback
  */
 async function authMethode (callback, params) {
-  const clientId = credentials.web.client_id
-  const clientSecret = credentials.web.client_secret
-  const redirectUris = credentials.web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
@@ -98,9 +97,6 @@ async function authMethode (callback, params) {
 }
 
 async function getAuthentication () {
-  const clientId = credentials.web.client_id
-  const clientSecret = credentials.web.client_secret
-  const redirectUris = credentials.web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
