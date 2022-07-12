@@ -1,9 +1,18 @@
 const sheet = require('../infrastructure/googlesheets/sheets')
-test('convert date in month written', () => {
-  // sheet.dateFilter(talks, '19/01/2021', '21/01/2021')
-  const result = sheet.dateFilter(talks, '19-01-2021', '25-01-2021')
-  talks.pop()
-  expect(result).toMatchSnapshot()
+
+describe('sheets', () => {
+  it('should return only talk between 19-01-2021 and 25-01-2021', () => {
+    // sheet.dateFilter(talks, '19/01/2021', '21/01/2021')
+    const result = sheet.dateFilter(talks, '19-01-2021', '25-01-2021')
+    expect(result).toMatchSnapshot()
+  })
+
+  it('should return an array of objects talk', () => {
+    // sheet.dateFilter(talks, '19/01/2021', '21/01/2021')
+    const result = sheet.convertArrayToObject(sheet.dateFilter(talks, '19-01-2021', '25-01-2021'))
+
+    expect(result).toMatchSnapshot()
+  })
 })
 
 const talks = [

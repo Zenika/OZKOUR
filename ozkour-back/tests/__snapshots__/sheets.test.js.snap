@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`convert date in month written 1`] = `
+exports[`sheets should return an array of objects talk 1`] = `
 Array [
   Object {
     "checked": true,
@@ -47,5 +47,60 @@ Array [
     "talkTitle": "Techniques minimalistes pour Node.js",
     "universe": "",
   },
+]
+`;
+
+exports[`sheets should return only talk between 19-01-2021 and 25-01-2021 1`] = `
+Array [
+  Array [
+    "Singapour",
+    "Meetup",
+    "GraalVM Night",
+    "",
+    "19/01/2021",
+    "Anne Imal",
+    "GraalVM for Sustainable Software Development?",
+    "https://www.meetup.com/singajug/events/275681145/",
+  ],
+  Array [
+    "Grenoble",
+    "NightClazz",
+    "NightClass",
+    "",
+    "19/01/2021",
+    "Yves Rogne",
+    "Migration JS vers TS sur du react",
+  ],
+  Array [
+    "Nantes",
+    "Meetup",
+    "Nantes JS #55",
+    "",
+    "21/01/2021",
+    "Guy Tarenbois",
+    "Nuxt 2021",
+    "https://twitter.com/NantesJS/status/1351104198436392964",
+  ],
+  Array [
+    "Mix",
+    "Autre",
+    "Webinar Strigo",
+    "",
+    "21/01/2021",
+    "Yoan Rousseau / Oliver Huber",
+    "Simplify Remote Hands-On Training and Improve Engagement",
+    "https://zoom.us/webinar/register/9516106320701/WN_xAAafGs2SOGbWFub-8dGJg
+https://trainingindustry.com/webinar/remote-learning/product-demo-simplify-remote-hands-on-training-and-improve-engagement/",
+  ],
+  Array [
+    "Nantes",
+    "NightClazz",
+    "RemoteClazz Nodejs",
+    "",
+    "25/01/2021",
+    "Sophie Stiqué",
+    "Techniques minimalistes pour Node.js",
+    "https://www.meetup.com/NightClazz-by-Zenika-Nantes/events/275720340/",
+  ],
 ]
 `;
