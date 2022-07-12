@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`convert date in month written 1`] = `
+Array [
+  Object {
+    "checked": true,
+    "date": "19/01/2021",
+    "eventName": "GraalVM Night",
+    "eventType": "Meetup",
+    "speakers": "Anne Imal",
+    "talkTitle": "GraalVM for Sustainable Software Development?",
+    "universe": "",
+  },
+  Object {
+    "checked": true,
+    "date": "19/01/2021",
+    "eventName": "NightClass",
+    "eventType": "NightClazz",
+    "speakers": "Yves Rogne",
+    "talkTitle": "Migration JS vers TS sur du react",
+    "universe": "",
+  },
+  Object {
+    "checked": true,
+    "date": "21/01/2021",
+    "eventName": "Nantes JS #55",
+    "eventType": "Meetup",
+    "speakers": "Guy Tarenbois",
+    "talkTitle": "Nuxt 2021",
+    "universe": "",
+  },
+  Object {
+    "checked": true,
+    "date": "21/01/2021",
+    "eventName": "Webinar Strigo",
+    "eventType": "Autre",
+    "speakers": "Yoan Rousseau / Oliver Huber",
+    "talkTitle": "Simplify Remote Hands-On Training and Improve Engagement",
+    "universe": "",
+  },
+  Object {
+    "checked": true,
+    "date": "25/01/2021",
+    "eventName": "RemoteClazz Nodejs",
+    "eventType": "NightClazz",
+    "speakers": "Sophie Stiqué",
+    "talkTitle": "Techniques minimalistes pour Node.js",
+    "universe": "",
+  },
+]
+`;
