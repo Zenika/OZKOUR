@@ -385,32 +385,35 @@ async function getIdSlideTemplate () {
  */
 function fillSlideWithData (idPage, dataOrganized) {
   const requests = []
-  const mapIter = dataOrganized.keys()
-
-  let date = mapIter.next().value
   let IndexRowInTableToInsert = 0
   let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX
 
-  while (date) {
+  dataOrganized.forEach((events, date) => {
+    // add date
     const dateId = uuidv4()
     const dateFormated =
     dateUtils.displayFullDateWithWords(date)
     requests.push(
       addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
     )
+
+    // create table
     yNextElmt += slideDataOrganizer.slideSpacing.DATE
     requests.push(
       createTableWithStyleForAllEventsInDate(
         idPage,
         dateId,
         yNextElmt,
-        dataOrganized.get(date)
+        events
       )
     )
+
+    // fill table
     IndexRowInTableToInsert = 0
-    const nbEvent = dataOrganized.get(date).length
+    const nbEvent = events.length
     for (let i = 0; i < nbEvent; i++) {
-      const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
+      // add event
+      const arrayOfTalksForAnEvent = events[i]
       requests.push(
         addEventNameWithStyleToTable(
           dateId,
@@ -420,7 +423,6 @@ function fillSlideWithData (idPage, dataOrganized) {
         createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
       )
       IndexRowInTableToInsert++
-
       yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
       // add all talk for the event
@@ -434,8 +436,7 @@ function fillSlideWithData (idPage, dataOrganized) {
         IndexRowInTableToInsert++
       }
     }
-    date = mapIter.next().value
-  }
+  })
   return sendRequest(requests)
 }
 
