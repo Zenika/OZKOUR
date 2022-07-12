@@ -4,6 +4,8 @@ import dateFormat from "dateformat";
 import { defineStore } from "pinia";
 import { api } from "@/api/apiConfig";
 
+
+
 export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
@@ -19,6 +21,8 @@ export const useTalkStore = defineStore({
   },
   actions: {
     updateTalks(newTalks) {
+      console.log('feqsqsf');
+      console.log(newTalks);
       this.retrieved = newTalks;
     },
     checkTalk(selected) {
@@ -54,12 +58,8 @@ export const useTalkStore = defineStore({
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
-        
       
-
-      this.updateTalks(data);
-        
-        
+      this.updateTalks(data);       
       this.selectedDate(dateStart, dateEnd);
     }
   },
