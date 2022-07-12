@@ -2,36 +2,31 @@ const fs = require('fs').promises
 const readline = require('readline')
 const { google } = require('googleapis')
 require('dotenv').config()
+const credentials = require('../config/auth/credentials')
+const { token: googleToken } = require('../config/auth/token')
+
+const {
+  client_id: clientId,
+  client_secret: clientSecret,
+  redirect_uris: redirectUris
+} = credentials.web
 
 // If modifying these scopes, delete token.json.
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations']
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const TOKEN_PATH = 'config/auth/token.json'
 
 /**
  * Execute all the functions used to authenticate
  */
 function auth () {
-  // Load client secrets from a local file.
-  fs.readFile('config/auth/credentials.json', (err, content) => {
-    if (err) return console.log('Error loading client secret file:', err)
-    // Authorize a client with credentials, then call the Google Sheets API.
-
-    authorize(JSON.parse(content))
-  })
+  // Authorize a client with credentials, then call the Google Sheets API.
+  authorize(credentials)
 }
 
 /**
  * Create an OAuth2 client with the given credentials
  * @param {Object} credentials The authorization client credentials.
  */
-function authorize (credentials) {
-  const clientId = credentials.web.client_id
-  const clientSecret = credentials.web.client_secret
-  const redirectUris = credentials.web.redirect_uris
-
+function authorize () {
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
@@ -39,10 +34,11 @@ function authorize (credentials) {
   )
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client)
-    oAuth2Client.setCredentials(JSON.parse(token))
-  })
+  if (!googleToken.access_token) {
+    return getNewToken(oAuth2Client)
+    // the access token should be generated and should be move to env variables
+  }
+  oAuth2Client.setCredentials(googleToken)
 }
 
 /**
@@ -51,6 +47,10 @@ function authorize (credentials) {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
 function getNewToken (oAuth2Client) {
+// The file token.json stores the user's access and refresh tokens, and is
+// created automatically when the authorization flow completes for the first
+// time.
+  const TOKEN_PATH = 'config/auth/token.json'
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES
@@ -85,53 +85,25 @@ function getNewToken (oAuth2Client) {
  * @param {Object} params the parameters used in the callback
  */
 async function authMethode (callback, params) {
-  const content = await fs.readFile(
-    'config/auth/credentials.json',
-    (err, content) => {
-      if (err) return console.log('Error loading client secret file:', err)
-      // Authorize a client with credentials, then call the Google Sheets API.
-    }
-  )
-
-  const clientId = JSON.parse(content).web.client_id
-  const clientSecret = JSON.parse(content).web.client_secret
-  const redirectUris = JSON.parse(content).web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
     redirectUris[0]
   )
-  const token = await fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client)
-  })
 
-  oAuth2Client.setCredentials(JSON.parse(token))
+  oAuth2Client.setCredentials(googleToken)
   const res = await callback(oAuth2Client, params)
   return res
 }
 
 async function getAuthentication () {
-  let content
-  try {
-    content = await fs.readFile(
-      'config/auth/credentials.json'
-    )
-  } catch (err) {
-    console.log('Error loading client secret file:', err)
-    throw err
-  }
-
-  const clientId = JSON.parse(content).web.client_id
-  const clientSecret = JSON.parse(content).web.client_secret
-  const redirectUris = JSON.parse(content).web.redirect_uris
   const oAuth2Client = new google.auth.OAuth2(
     clientId,
     clientSecret,
     redirectUris[0]
   )
-  const token = await fs.readFile(TOKEN_PATH)
 
-  oAuth2Client.setCredentials(JSON.parse(token))
+  oAuth2Client.setCredentials(googleToken)
   return oAuth2Client
 }
 
