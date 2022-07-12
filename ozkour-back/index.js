@@ -7,14 +7,13 @@ const routes = require('./config/routes')
 const Qs = require('qs')
 
 const init = async () => {
-  const port = process.env.PORT
-
+  const port = '3000'
   const server = Hapi.server({
     port,
-    host: 'localhost',
+    host: '0.0.0.0',
     routes: {
       cors: {
-        origin: [process.env.ALLOWED_DOMAIN],
+        origin: ['*'],
         additionalHeaders: ['cache-control', 'x-requested-with']
       }
     },
@@ -27,8 +26,8 @@ const init = async () => {
   server.route(routes)
 
   await server.start()
-  // console.log(connect.auth());
-  // console.log('Server running on %s', server.info.uri);
+  console.log(connect.auth())
+  console.log('Server running on %s', server.info.uri)
 }
 
 process.on('unhandledRejection', (err) => {

@@ -1,0 +1,14 @@
+  FROM node:alpine
+  WORKDIR /app
+  COPY config config/.
+  COPY google-api google-api/.
+  COPY Utils Utils/.
+  COPY .env .
+  COPY index.js .
+  COPY package-lock.json .
+  COPY package.json .
+  RUN npm install --production
+  RUN ls
+  EXPOSE 3000
+  EXPOSE 8080
+  CMD [ "node", "index.js" ]

@@ -1,7 +1,7 @@
 
 const { getTalkFromDate } = require('../../google-api/sheets')
 
-const { createSlides } = require('../../google-api/wrapperSlide')
+const { createSlides } = require('../../google-api/slideService')
 
 module.exports = [
   {
@@ -23,6 +23,14 @@ module.exports = [
       } catch (e) {
         return h.response(e).code(500)
       }
+    }
+  },
+
+  {
+    method: 'GET',
+    path: '/ping',
+    handler: function (request, h) {
+      return h.response('ok').code(200)
     }
   }
 ]
