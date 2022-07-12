@@ -1,12 +1,17 @@
 const dayjs = require('dayjs')
 const { getTalkFromDate } = require('../infrastructure/googlesheets/sheets.js')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 
 const getTalk = async (start, end = dayjs()) => {
   const formatedDateStart = dayjs(start)
   const formatedDateEnd = dayjs(end)
+  console.log(start)
   if (formatedDateStart.format('MM/YYYY') === formatedDateEnd.format('MM/YYYY')) {
+    console.log('same')
     const param = { start: formatedDateStart.format('DD/MM/YYYY'), end: formatedDateEnd.format('DD/MM/YYYY') }
     const res = await getTalkFromDate(param)
+    console.log(res)
     return res
   } else {
     let res = []
@@ -20,7 +25,7 @@ const getTalk = async (start, end = dayjs()) => {
     }
     const param = { start: tempDateStart.format('DD/MM/YYYY'), end: formatedDateEnd.format('DD/MM/YYYY') }
     res = res.concat(await getTalkFromDate(param))
-
+    console.log(res)
     return res
   }
 }
