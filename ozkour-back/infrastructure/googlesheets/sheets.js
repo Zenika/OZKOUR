@@ -13,13 +13,13 @@ async function getTalkFromDate (params) {
   // const res = await connect.authMethode(getData, param)
   const month = utils.convDateToMonthInLetter(params.start)
   const year = dayjs(params.start, 'DD/MM/YYYY').format('YYYY')
-  const res = await wrapper.getData(month, year)
+  const res = await wrapper.getTalks(month, year)
   return convertArrayToObject(dateFilter(res, params.start, params.end))
 }
 
 /**
  * Filter the talks between 2 dates
- * @param {String} talks the talks that need to be filtered
+ * @param {Array} talks the talks that need to be filtered
  * @param {String} start the start of the date range (format='DD-MM-YYYY')
  * @param {String} end the end of the date range (format='DD-MM-YYYY')
  */
