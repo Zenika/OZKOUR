@@ -10,3 +10,8 @@ services:
           limits:
             cpus: 1
             memory: 256M
+    # sysctls:
+    #   - net.ipv4.tcp_keepalive_intvl=45
+    #   - net.ipv4.tcp_keepalive_probes=15
+    #   - net.ipv4.tcp_keepalive_time=295
+    # privileged: true
