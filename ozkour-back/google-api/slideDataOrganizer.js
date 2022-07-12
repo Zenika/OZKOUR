@@ -47,21 +47,20 @@ function clusterByDate (data) {
    * with 2 attributes: one for the event name and one for the left data
    */
 function clusterByEventName (dataOrganized) {
-  const mapIter = dataOrganized.keys()
-  let date = mapIter.next().value
+  dataOrganized.forEach((talks, date) => {
+    const EventNameForADate = []
+    const EventArrayWithTalks = []
 
-  while (date !== undefined) {
-    const EventNameAdded = []
-    const EventArray = []
-    dataOrganized.get(date).forEach(talk => {
-      if (EventNameAdded.includes(talk.eventName)) {
-        EventArray[EventNameAdded.indexOf(talk.eventName)].talks.push({
+    talks.forEach(talk => {
+      if (EventNameForADate.includes(talk.eventName)) {
+        const event = EventArrayWithTalks[EventNameForADate.indexOf(talk.eventName)]
+        event.talks.push({
           universe: talk.universe,
           talkTitle: talk.talkTitle,
           speakers: talk.speakers
         })
       } else {
-        EventArray.push({
+        EventArrayWithTalks.push({
           eventName: talk.eventName,
           eventType: talk.eventType,
           talks: [
@@ -72,12 +71,11 @@ function clusterByEventName (dataOrganized) {
             }
           ]
         })
-        EventNameAdded.push(talk.eventName)
+        EventNameForADate.push(talk.eventName)
       }
     })
-    dataOrganized.set(date, EventArray)
-    date = mapIter.next().value
-  }
+    dataOrganized.set(date, EventArrayWithTalks)
+  })
   return dataOrganized
 }
 
