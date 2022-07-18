@@ -1,5 +1,6 @@
 <script>
 import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
+import {ref} from 'vue'
 
 export default {
   components:{
@@ -19,7 +20,18 @@ export default {
       required : true
     }
   },
-  emits:['close', 'submit']
+  emits:['close', 'submit'],
+  setup(){
+
+    const loading = ref(false)
+    function load(){
+      loading.value = !loading.value
+    }
+    return {
+      loading,
+      load
+    }
+  }
 };
 </script>
 
@@ -83,9 +95,12 @@ export default {
         </ul>
       </div>
     </div>
-
+    
     <div class="validate">
-      <PrimaryBtn @click="$emit('submit')">
+      <PrimaryBtn
+        :disabled="loading"
+        @click="load(), $emit('submit')"
+      >
         Valider
       </PrimaryBtn>
     </div>
