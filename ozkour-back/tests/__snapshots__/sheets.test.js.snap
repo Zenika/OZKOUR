@@ -1,106 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`sheets should return an array of objects talk 1`] = `
+exports[`sheets should return only talk between 19-01-2021 and 25-01-2021 1`] = `
 Array [
   Object {
-    "checked": true,
     "date": "19/01/2021",
     "eventName": "GraalVM Night",
     "eventType": "Meetup",
+    "link": "https://www.meetup.com/singajug/events/275681145/",
+    "location": "Singapour",
     "speakers": "Anne Imal",
     "talkTitle": "GraalVM for Sustainable Software Development?",
     "universe": "",
   },
   Object {
-    "checked": true,
     "date": "19/01/2021",
     "eventName": "NightClass",
     "eventType": "NightClazz",
+    "location": "Grenoble",
     "speakers": "Yves Rogne",
     "talkTitle": "Migration JS vers TS sur du react",
     "universe": "",
   },
   Object {
-    "checked": true,
     "date": "21/01/2021",
     "eventName": "Nantes JS #55",
     "eventType": "Meetup",
+    "link": "https://twitter.com/NantesJS/status/1351104198436392964",
+    "location": "Nantes",
     "speakers": "Guy Tarenbois",
     "talkTitle": "Nuxt 2021",
     "universe": "",
   },
   Object {
-    "checked": true,
     "date": "21/01/2021",
     "eventName": "Webinar Strigo",
     "eventType": "Autre",
+    "link": "https://zoom.us/webinar/register/9516106320701/WN_xAAafGs2SOGbWFub-8dGJg
+https://trainingindustry.com/webinar/remote-learning/product-demo-simplify-remote-hands-on-training-and-improve-engagement/",
+    "location": "Mix",
     "speakers": "Yoan Rousseau / Oliver Huber",
     "talkTitle": "Simplify Remote Hands-On Training and Improve Engagement",
     "universe": "",
   },
   Object {
-    "checked": true,
     "date": "25/01/2021",
     "eventName": "RemoteClazz Nodejs",
     "eventType": "NightClazz",
+    "link": "https://www.meetup.com/NightClazz-by-Zenika-Nantes/events/275720340/",
+    "location": "Nantes",
     "speakers": "Sophie Stiqué",
     "talkTitle": "Techniques minimalistes pour Node.js",
     "universe": "",
   },
-]
-`;
-
-exports[`sheets should return only talk between 19-01-2021 and 25-01-2021 1`] = `
-Array [
-  Array [
-    "Singapour",
-    "Meetup",
-    "GraalVM Night",
-    "",
-    "19/01/2021",
-    "Anne Imal",
-    "GraalVM for Sustainable Software Development?",
-    "https://www.meetup.com/singajug/events/275681145/",
-  ],
-  Array [
-    "Grenoble",
-    "NightClazz",
-    "NightClass",
-    "",
-    "19/01/2021",
-    "Yves Rogne",
-    "Migration JS vers TS sur du react",
-  ],
-  Array [
-    "Nantes",
-    "Meetup",
-    "Nantes JS #55",
-    "",
-    "21/01/2021",
-    "Guy Tarenbois",
-    "Nuxt 2021",
-    "https://twitter.com/NantesJS/status/1351104198436392964",
-  ],
-  Array [
-    "Mix",
-    "Autre",
-    "Webinar Strigo",
-    "",
-    "21/01/2021",
-    "Yoan Rousseau / Oliver Huber",
-    "Simplify Remote Hands-On Training and Improve Engagement",
-    "https://zoom.us/webinar/register/9516106320701/WN_xAAafGs2SOGbWFub-8dGJg
-https://trainingindustry.com/webinar/remote-learning/product-demo-simplify-remote-hands-on-training-and-improve-engagement/",
-  ],
-  Array [
-    "Nantes",
-    "NightClazz",
-    "RemoteClazz Nodejs",
-    "",
-    "25/01/2021",
-    "Sophie Stiqué",
-    "Techniques minimalistes pour Node.js",
-    "https://www.meetup.com/NightClazz-by-Zenika-Nantes/events/275720340/",
-  ],
 ]
 `;
