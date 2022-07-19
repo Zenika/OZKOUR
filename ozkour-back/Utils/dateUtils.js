@@ -1,9 +1,10 @@
 const dayjs = require('dayjs')
 require('dayjs/locale/fr')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
 const isBetween = require('dayjs/plugin/isBetween')
 dayjs.extend(isBetween)
-dayjs.extend(customParseFormat)
+dayjs.locale('fr')
 
 function convDateToMonthInLetter (date) {
   // the format used in the the google sheets is invalid with dayjs
@@ -12,7 +13,7 @@ function convDateToMonthInLetter (date) {
   const formatedDate = dayjs(date, 'DD-MM-YYYY', 'fr').format('MMMM')
 
   // the month is in uppercase in the googlesheet
-  return formatedDate
+  return capitalizeFirstLetter(formatedDate)
 }
 
 function isYearBetweenDates (year, start, end) {
@@ -20,8 +21,11 @@ function isYearBetweenDates (year, start, end) {
 }
 
 function displayFullDateWithWords (date) {
-  dayjs.extend(customParseFormat)
   return dayjs(date, 'DD-MM-YYYY', 'fr').format('DD MMMM YYYY')
+}
+
+function capitalizeFirstLetter (string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
 module.exports = {
