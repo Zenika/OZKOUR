@@ -1,5 +1,5 @@
 
-const { getTalk } = require('../../domain/talks')
+const { getTalk } = require('../../domain/talks-sheet')
 
 const { createSlides } = require('../../google-api/slideService')
 
