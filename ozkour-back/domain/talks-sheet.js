@@ -55,5 +55,6 @@ function dateFilter (talks, start, end) {
 }
 
 module.exports = {
-  getTalk
+  getTalk,
+  dateFilter
 }
