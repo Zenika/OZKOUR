@@ -1,5 +1,6 @@
 const { google } = require('googleapis')
 const connect = require('../connect')
+const { Talk } = require('../../domain/model/talk')
 
 const spreadsheetId = '1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE'
 
@@ -11,7 +12,12 @@ async function getTalks (month, year) {
       spreadsheetId, // TO DO use a variable instead of a link
       range: `${month} ${year}!A2:H`
     })
-    return res.data.values
+    const talkArray = []
+    res.data.values.forEach(([_, eventType, eventName, universe, date, speakers, talkTitle]) => {
+      talkArray.push(new Talk(date, universe, eventType, eventName, talkTitle, speakers))
+    })
+
+    return talkArray
   } catch (e) {
     console.log(e)
   }
