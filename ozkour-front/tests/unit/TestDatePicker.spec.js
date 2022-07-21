@@ -1,8 +1,6 @@
 import { mount } from "@vue/test-utils";
 import ChoosingDate from "@/components/ChoosingDate.vue";
 import { createTestingPinia } from "@pinia/testing";
-import { useTalkStore } from "../../src/stores/talks";
-import { isNull } from "test/utils";
 
 describe("ChoosingDate Component", () => {
   it("Select Start Date from input", async () => {
