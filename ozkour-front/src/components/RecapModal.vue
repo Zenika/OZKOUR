@@ -31,7 +31,8 @@ export default {
       loading,
       load
     }
-  }
+  },
+  expose: ['reset']
 };
 </script>
 
