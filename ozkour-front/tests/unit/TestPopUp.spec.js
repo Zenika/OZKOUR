@@ -91,14 +91,7 @@ describe("RecapModal Component", () => {
     expect(wrapper.emitted('submit')).toHaveLength(1)
   })
 
-  it("should call load function when the validate button is triggered", async () => {
-    // const load = jest.fn(() => undefined)
-    
-    // const load = jest.spyOn(RecapModal.methods, 'load')
-
-    
-    //const load = jest.fn().mockName('load');
-    
+  it("should call load function when the validate button is triggered", async () => {    
     const wrapper = mount(RecapModal, {
       props : {
         talks,
