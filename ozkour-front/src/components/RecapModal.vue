@@ -1,5 +1,6 @@
 <script>
 import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
+import {ref} from 'vue'
 
 export default {
   components:{
@@ -19,7 +20,19 @@ export default {
       required : true
     }
   },
-  emits:['close', 'submit']
+  emits:['close', 'submit'],
+  setup(){
+
+    const loading = ref(false)
+    function load(){
+      loading.value = !loading.value
+    }
+    return {
+      loading,
+      load
+    }
+  },
+  expose: ['reset']
 };
 </script>
 
@@ -84,8 +97,23 @@ export default {
       </div>
     </div>
 
+    <div
+      v-if="loading"
+      class="loading-container"
+    >
+      <div class="loading">
+        <div class="spinner">
+          <div class="head" />
+        </div> 
+      </div>
+    </div>
+    
+    
     <div class="validate">
-      <PrimaryBtn @click="$emit('submit')">
+      <PrimaryBtn
+        :disabled="loading"
+        @click="load(), $emit('submit')"
+      >
         Valider
       </PrimaryBtn>
     </div>
@@ -164,5 +192,47 @@ export default {
   display: flex;
   justify-content: center;
   padding: 30px 0px;
+}
+
+.loading-container {
+  display:grid;
+  justify-content:center;
+  position:fixed;
+  left:48.5%;
+  top:50%;
+}
+
+.loading {
+  border-radius:50%;
+  width:2.5em;
+  height:2.5em;
+  transform-origin:center;
+  animation: rotate 1s linear infinite;
+}
+
+.spinner {
+  width: 7em;
+  height: 7em;
+  left: -2.8em;
+  top: -2.8em;
+  border-top: 1em solid #C21E65;
+  position:relative;
+  border-right: 1em solid transparent;
+  border-radius: 50%;
+}
+
+.head {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  margin-left: 5.9em;
+  margin-top: -0.05em;
+  background: linear-gradient(-25deg, #EE2238 0%, #C21E65 100%);
+}
+
+@keyframes rotate{
+  to{
+    transform:rotate(360deg);
+  }
 }
 </style>

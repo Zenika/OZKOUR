@@ -1,5 +1,6 @@
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, mount } from "@vue/test-utils";
 import RecapModal from "@/components/RecapModal.vue"
+import '@testing-library/jest-dom/extend-expect';
 
 describe("RecapModal Component", () => {
   //--- Afficher le visuel choisi par l'utilisateur
@@ -67,10 +68,74 @@ describe("RecapModal Component", () => {
         }
       }
     });
-
+    
     await wrapper.find('.close-btn').trigger('click')
-
+    
     expect(wrapper.emitted('close')).toHaveLength(1)
+  })
+  
+  it("should emit a submit event when the validate button is triggered", async () => {
+    const wrapper = mount (RecapModal, {
+      props : {
+        talks,
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      }
+    });
+
+    await wrapper.find('.primary-btn').trigger('click')
+
+    expect(wrapper.emitted('submit')).toHaveLength(1)
+  })
+
+  it("should call load function when the validate button is triggered", async () => {    
+    const wrapper = mount(RecapModal, {
+      props : {
+        talks,
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      },
+    });    
+    const load = jest.spyOn(wrapper.vm, 'load')
+
+    await wrapper.find('.primary-btn').trigger('click')
+    expect(load).toBeCalled()
+  })
+
+  it("should disable the validate button when it has been triggered", async () => {
+    const wrapper = mount(RecapModal, {
+      props : {
+        talks,
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      }
+    });
+    await wrapper.vm.load()
+    expect(wrapper.find('.primary-btn__disabled').isDisabled).toBeTruthy()
+  })
+
+  it("should display the loader when the validate button is triggered", async () => {
+    const wrapper = mount(RecapModal, {
+      props : {
+        talks,
+        template : 'E-mailing',
+        dates : { 
+          start : '11/01/2021', 
+          end : '12/02/2021'
+        }
+      }
+    });
+    await wrapper.vm.load()
+    expect(wrapper.find('.loading-container').exists()).toBeTruthy()
   })
 })
 
