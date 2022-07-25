@@ -19,8 +19,7 @@ export default {
       isModalVisible: false,
       isSlidesGenerationFailed : false,
       isGetTalksFailed : false,
-      talks : useTalkStore(),
-      isErrorMessageVisible: true
+      talks : useTalkStore()
     };
   },
   methods: {
@@ -163,7 +162,7 @@ export default {
   font-weight: bold;
   padding: 10px;
   border-radius: 20px;
-  box-shadow: 10px 5px 5px black;
+  box-shadow: 5px 5px 5px 5px black;
   z-index: 10;
 }
 
