@@ -2,7 +2,6 @@ import { mount } from "@vue/test-utils";
 import ChoosingDate from "@/components/ChoosingDate.vue";
 import { createTestingPinia } from "@pinia/testing";
 
-
 describe("ChoosingDate Component", () => {
   it("Select Start Date from input", async () => {
     // Create an instance of our component
