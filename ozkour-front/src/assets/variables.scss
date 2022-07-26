@@ -1,0 +1,197 @@
+// Colors 
+$white:                     #FFFFFF;
+$black:                     #000000;
+$flush:                     #BF1D67;
+$disco:                     rgba(192, 29, 103, 0.25);
+$crimson:                   #EE2238;
+$venus:                     rgba(242, 242, 242, 0.4);
+$codgray:                   #1E1E1E;
+$darkshadow:                rgba(0, 0, 0, 0.25);
+
+// Globals
+@mixin body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    color: $white;
+}
+
+// Title 
+@mixin title-1 {
+    font-family: "Nunito", sans-serif;
+    font-weight: 700;
+    color: $white;
+    text-align: center;
+}
+
+// Pages
+@mixin form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+
+@mixin section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+@mixin talks-list {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: $venus;
+    border-radius: 20px;
+}
+
+@mixin buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 30px;
+}
+
+//Input & Label
+@mixin input {
+    width: 80%;
+    background: $venus;
+    color: $white;
+    letter-spacing: 0.1rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    font-weight: 400;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    padding-bottom: 10px;
+    cursor: text;
+}
+
+@mixin label {
+    padding-bottom: 10px;
+    font-weight: 400;
+}
+
+// Calendar
+$calendar-color:            $flush;
+$calendar-bg-range:         $disco;
+$calendar-border:           1px solid $flush;
+
+// List
+$list-bg-color:             $venus;
+$checkbox-color:            $flush;
+$legend-bg-color:           $white;
+$legend-text-color:         $codgray;
+
+$btn-border:                none;
+
+@mixin legend-template-choices {
+    background-color: $legend-bg-color;
+    border-radius: 10px;
+    color: $legend-text-color;
+    font-size: 18px;
+    font-weight: 800;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+}
+
+@mixin template-chosen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    letter-spacing: .0.5rem;
+    padding-left: 5px;
+}
+
+@mixin checkbox {
+    accent-color: $flush;
+    cursor: pointer;
+}
+
+// Primary Button
+@mixin primary-button {
+    background: linear-gradient(90deg, $crimson 0%, $flush 100%);
+    box-shadow: 0px 4px 4px $darkshadow;
+    color: $white;
+    font-size: 18px;
+    font-weight: 800;
+    border: none;
+    border-radius: 30px;
+    padding: 10px 30px;
+    cursor: pointer;
+}
+
+@mixin primary-button-hover {
+    background: $black;
+    color: $white;
+}
+
+// Modal 
+@mixin popup-bg {
+    width: 35%;
+    top: 30%;
+    bottom: auto;
+    background: $white;
+    position: absolute;
+    z-index: 20;
+    transform: "translate(-50%, -50%)";
+    border-radius: 20px;
+    box-shadow: 0px 4px 4px $darkshadow;
+}
+
+@mixin popup-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, $crimson 0%, $flush 100%);
+    border-radius: 20px 20px 0px 0px;
+}
+
+@mixin popup-close-button {
+    position: absolute;
+    left: 5%;
+    align-self: flex-start;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    padding-top: 10px;
+    background: transparent;
+}
+
+@mixin popup-icon-bg {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: linear-gradient(90deg, $crimson 0%, $flush 100%);
+    padding: 2px;
+}
+
+@mixin popup-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+// Element
+@mixin arrow {
+    width: 12px;
+    height: 15px;
+    color: $white;
+}

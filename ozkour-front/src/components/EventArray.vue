@@ -4,7 +4,7 @@
   </h2>
   <div v-else>
     <h2>Liste des événements sélectionnés</h2>
-    <div class="eventDetails">
+    <div class="event-details-container">
       <table>
         <tr>
           <th scope="col" />
@@ -85,7 +85,7 @@ export default {
     function compare(a, b) {
       if (a[sort.value] < b[sort.value]) return -1;
       if (a[sort.value] > b[sort.value]) return 1;
-      // a doit être égal à b
+      // a must be equal to b
       return 0;
     }
 
@@ -101,8 +101,6 @@ export default {
         sort.value = column;
       }
     }
-
-    //console.log(talks)
 
     function check(talkSelected, event) {
       const value = {
@@ -134,66 +132,50 @@ export default {
       columnsValues,
     };
   },
-};
-
-//setInterval(function(){
-// console.log(talks.talks)
-//},1000);
+}
 </script>
 
-<style scoped>
-.red-input {
-  accent-color: #bf1d67;
-  height: 1.3em; /* not needed */
-  width: 1.3em; /* not needed */
-}
-h2 {
-  text-align: center;
-}
+<style lang="scss" scoped>
 
-.eventDetails {
-  width: 100%;
-  display: flex;
-  overflow-y: auto;
-  max-height: 250px;
-  justify-content: space-around;
-}
+  .red-input {
+    @include checkbox;
+  }
 
-table {
-  border-spacing: 10px;
-  margin-left: 2rem;
-  margin-right: 2rem;
-}
+  h2 {
+    text-align: center;
+  }
 
-td {
-  text-align: center;
-}
+  .event-details-container {
+    width: 100%;
+    display: flex;
+    overflow-y: auto;
+    max-height: 250px;
+    justify-content: space-around;
+  }
 
-.details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  table {
+    border-spacing: 10px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
 
-.columnSelected {
-  text-decoration: underline;
-}
+  td {
+    text-align: center;
+  }
 
-.selectable {
-  cursor: pointer;
-}
+  .columnSelected {
+    text-decoration: underline;
+  }
 
-.arrow_down {
-  transform: rotate(180deg);
-}
+  .selectable {
+    cursor: pointer;
+  }
 
-.arrow {
-  width: 12px;
-  height: 15px;
-  fill : white;
-}
+  .arrow_down {
+    transform: rotate(180deg);
+  }
 
-.detail {
-  font-weight: 600;
-}
+  .arrow {
+    @include arrow;
+  }
 </style>

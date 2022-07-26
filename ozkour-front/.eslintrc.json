@@ -18,5 +18,4 @@
     "indent": ["error", 2]
   },
   "plugins": ["jest"]
-
 }

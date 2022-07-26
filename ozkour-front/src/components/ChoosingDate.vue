@@ -146,8 +146,6 @@ export default {
         @change="updateDateEndCalendar"
       >
     </div>
-
-    <!-- <button type="button" class="next-week-btn">Semaine prochaine</button> -->
   </div>
   <Datepicker
     v-model="date"
@@ -170,7 +168,8 @@ export default {
   </Datepicker>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -183,39 +182,19 @@ export default {
   align-items: flex-start;
 }
 
-label,
-#start,
-#end {
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
-  padding-bottom: 10px;
-  font-weight: 400;
+label {
+  @include body;
+  @include label;
 }
 
 #start,
 #end {
-  width: 80%;
-  background: rgba(242, 242, 242, 0.4);
-  color: #ffffff;
-  letter-spacing: 0.1rem;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  cursor: text;
+  @include body;
+  @include input;
 }
+</style>
 
-/* .next-week-btn {
-  background: #f2f2f2;
-  font-weight: 400;
-  font-size: 16px;
-  border: 3px solid #ffffff;
-  border-radius: 10px;
-  padding: 10px;
-  cursor: pointer;
-} */
+<style lang="scss">
 
 /* supprimer l'icon calendrier de l'input date */
 input[type="date"]::-webkit-inner-spin-button,
@@ -223,20 +202,18 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
   -webkit-appearance: none;
 }
-</style>
 
-// Style du Calendrier "Datepicker"
-<style lang="scss">
+// Calendar style
 .dp__range_end,
 .dp__range_start {
-  background: #c01d67;
+  background: $calendar-color
 }
 .dp__today {
-  border: 1px solid #c01d67;
+  border: $calendar-border;
 }
 .dp__range_between {
-  background: rgba(192, 29, 103, 0.25);
-  color: #c01d67;
+  background: $calendar-bg-range;
+  color: $calendar-color;
 }
 .dp__input_icons {
   width: 0px;
@@ -246,7 +223,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .dp__input_icon_pad {
   padding-left: 12px;
   width: 260px;
-  // revoir la width
 }
 .dp__button_bottom {
   visibility: hidden;

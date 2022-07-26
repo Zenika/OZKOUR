@@ -14,14 +14,12 @@ export default {
 }
 </script>
 
-<style>
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background: #1E1E1E;
-  color: #FFFFFF;
-  font-family: 'Open Sans', sans-serif;
-}
-
+<style lang="scss">
+  body {
+    @include body;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background: #1E1E1E;
+  }
 </style>
