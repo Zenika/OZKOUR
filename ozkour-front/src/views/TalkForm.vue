@@ -47,6 +47,9 @@ export default {
     closeModal() {
       this.isModalVisible = false;
     },
+    closeErrorMessage() {
+      this.isSlidesGenerationFailed = false 
+    }
   },
 };
 </script>
@@ -76,7 +79,22 @@ export default {
       Générer un visuel
     </PrimaryBtn>
 
-    <span v-if="isSlidesGenerationFailed">Sorry, c'est pas OK</span>
+    <div
+      v-if="isSlidesGenerationFailed"
+      class="errorMsg"
+    >
+      <img
+        src="../assets/images/danger.png"
+        alt="error"
+        class="error-img"
+      >
+      <p>Désolée, une erreur est survenue ! <br> Le visuel n'a pas pu être généré :(</p>
+      <PrimaryBtn
+        @click="closeErrorMessage"
+      >
+        X
+      </PrimaryBtn>
+    </div>
 
     <RecapModal
       v-if="isModalVisible"
@@ -133,5 +151,22 @@ export default {
     font-weight: 700;
     text-align: center;
   }
+}
+.errorMsg{
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(242, 242, 242, 1);
+  color: black;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 5px 5px 5px 5px black;
+  z-index: 10;
+}
+
+.error-img{
+  width: 30%;
 }
 </style>
