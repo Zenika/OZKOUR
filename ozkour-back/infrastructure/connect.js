@@ -12,7 +12,7 @@ const {
 } = credentials.web
 
 // If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations']
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations', 'https://www.googleapis.com/auth/drive']
 
 /**
  * Execute all the functions used to authenticate
@@ -47,9 +47,9 @@ function authorize () {
  * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
  */
 function getNewToken (oAuth2Client) {
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
+  // The file token.json stores the user's access and refresh tokens, and is
+  // created automatically when the authorization flow completes for the first
+  // time.
   const TOKEN_PATH = 'config/auth/token.json'
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
