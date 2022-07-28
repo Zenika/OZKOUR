@@ -1,5 +1,5 @@
 
-const driveWrapper = require('./driveWrapper')
+const driveWrapper = require('../infrastructure/googledrive/driveWrapper')
 const dateUtils = require('../Utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
@@ -8,6 +8,15 @@ async function getListFileTalksBetween2Dates (start, end) {
   const files = await driveWrapper.listFileInFolder(folderTalksId)
   const res = filterFilesBetween2Dates(start, end, files)
   return res
+}
+
+async function getIdOfTalkFileByYear (year) {
+  const Filename = year + ' - Les Evénements et talks Zenika  (Zenika talks and events)'
+  const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTalksId, Filename)
+  if (res === undefined) {
+    throw (new Error('no file named :"' + Filename + '" found'))
+  }
+  return res.id
 }
 
 function filterFilesBetween2Dates (start, end, files) {
@@ -29,5 +38,6 @@ function filterFilesBetween2Dates (start, end, files) {
 
 module.exports = {
   getListFileTalksBetween2Dates,
-  filterFilesBetween2Dates
+  filterFilesBetween2Dates,
+  getIdOfTalkFileByYear
 }
