@@ -1,6 +1,7 @@
 # OZKOUR
 
-A web application to create templates for the talks given by the Z (Quoi de 9 ?, E-mailing, Slack, Meet Up).
+A web application to create documents or slides for the talks given by the Z (Quoi de 9 ?, E-mailing, Slack, Meet Up).
+The application retrieve the data from multiple google sheets documents, create a document based on a template and put those data in it.
 
 ## Installation
 
@@ -11,10 +12,11 @@ At the root of the ozkour-back folder, create a ```.env``` file.
 First, put the ports and the domain link :
 ```
 PORT=3000
-PORT_TEST=3001
 ALLOWED_DOMAIN=http://localhost:8080
 ```
 
+To get your google Credentials, follow the link https://console.cloud.google.com/apis/credentials create your project and create an IdClient OAuth2.
+Download the json file and fill it with you data
 #### Google Credentials
 ```
 client_id=
@@ -26,6 +28,12 @@ client_secret=
 redirect_uris=http://localhost:3000
 ```
 
+Run ozkour-back, then click on the link displayed in the console. Log in using your google credentials.
+the page will redirect to another page (which is empty, it has not been created yet).
+The Url should be looking like : http://localhost:3000/?code=aVeryLongCode-thatYouHaveToCopy&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fpresentations+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fspreadsheets.readonly
+Copy the part between 'code =' and '&scope', then paste it in the console.
+
+You will then have a file called token.json in the same folder as credentials.json
 #### Google token
 ```
 access_token=
