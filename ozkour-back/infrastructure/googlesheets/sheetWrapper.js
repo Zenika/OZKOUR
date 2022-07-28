@@ -2,9 +2,7 @@ const { google } = require('googleapis')
 const connect = require('../connect')
 const { Talk } = require('../../domain/model/talk')
 
-const spreadsheetId = '1e50uVl_wAseWD8PDyAeNS9dRNhiq0k_WVyJr2fL9SeE'
-
-async function getTalks (month, year) {
+async function getTalks (month, year, spreadsheetId) {
   const auth = await connect.getAuthentication()
   const sheets = google.sheets({ version: 'v4', auth })
   try {
@@ -13,10 +11,9 @@ async function getTalks (month, year) {
       range: `${month} ${year}!A2:H`
     })
     const talkArray = []
-    res.data.values.forEach(([_, eventType, eventName, universe, date, speakers, talkTitle]) => {
+    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle]) => {
       talkArray.push(new Talk(date, universe, eventType, eventName, talkTitle, speakers))
     })
-
     return talkArray
   } catch (e) {
     console.log(e)

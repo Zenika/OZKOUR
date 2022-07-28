@@ -1,7 +1,8 @@
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
-const wrapper = require('../infrastructure/googlesheets/sheetWrapper')
+const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
+const { getIdOfTalkFileByYear } = require('../google-api/drive')
 const utils = require('../Utils/dateUtils')
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
@@ -15,16 +16,21 @@ dayjs.extend(isSameOrBefore)
  * @param {String} end the end of the date range
  */
 async function getTalkFromDate (params) {
-  // const res = await connect.authMethode(getData, param)
   let tempDateStart = params.start
   const tempDateEnd = params.end
   const nbMonths = tempDateEnd.diff(tempDateStart, 'month')
   let res = []
+  let yearSheetId = dayjs(tempDateStart, 'DD/MM/YYYY').format('YYYY')
+  let spreadsheetId = await getIdOfTalkFileByYear(yearSheetId)
   for (let i = 0; i <= nbMonths; i++) {
     const month = utils.convDateToMonthInLetter(tempDateStart)
     const year = dayjs(tempDateStart, 'DD/MM/YYYY').format('YYYY')
-    const test = await wrapper.getTalks(month, year)
-    res = res.concat(test)
+    if (year !== yearSheetId) { // update the id of the file if we changed the year
+      yearSheetId = year
+      spreadsheetId = await getIdOfTalkFileByYear(yearSheetId)
+    }
+    const talkFromMonth = await sheetsWrapper.getTalks(month, year, spreadsheetId)
+    res = res.concat(talkFromMonth)
     tempDateStart = tempDateStart.add(1, 'month')
   }
   return res
