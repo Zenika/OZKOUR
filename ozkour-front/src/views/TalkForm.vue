@@ -109,35 +109,20 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+
 .container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 30px;
+  @include form-container;
 
   &--blured > :not(#talk-recap-modal) {
     filter: blur(5px);
   }
 
   &__section {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
+    @include section;
   }
 
   &__eventList {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: rgba(242, 242, 242, 0.4);
-    border-radius: 20px;
+    @include talks-list;
   }
 
   &__lastSection {
@@ -146,10 +131,8 @@ export default {
   }
 
   &__title {
-    font-family: "Nunito", sans-serif;
+    @include title-1;
     font-size: 48px;
-    font-weight: 700;
-    text-align: center;
   }
 }
 .errorMsg{

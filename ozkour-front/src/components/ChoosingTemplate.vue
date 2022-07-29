@@ -47,7 +47,7 @@ watch(selected, async (newSelect) => {
 
 <template>
   <div action="#">
-    <fieldset>
+    <fieldset class="template-container">
       <legend>Choisir un visuel</legend>
       <div class="templateChoice">
         <div
@@ -70,41 +70,21 @@ watch(selected, async (newSelect) => {
   </div>
 </template>
 
-<style scoped>
-  fieldset {
+<style lang="scss" scoped>
+
+  .template-container {
     border: none;
   }
   legend {
-    background-color: #FFFFFF;
-    border-radius: 10px;
-    color: #1E1E1E;
-    font-size: 18px;
-    font-weight: 800;
-    padding: 10px 20px;
-    margin-bottom: 10px;
+    @include legend-template-choices;
   }
   .templateChoice {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 16px;
-    letter-spacing: .0.5rem;
-    padding-left: 5px;
-  }
-  .templateType {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    @include body;
+    @include template-chosen;
   }
   .radio-btn {
-    cursor: pointer;
-    accent-color: #BF1D67;
+    @include checkbox;
   }
-  /* label {
-    padding-left: 10px;
-  } */
   .blurClass {
     -webkit-filter: blur(5px);
     filter: blur(5px);
