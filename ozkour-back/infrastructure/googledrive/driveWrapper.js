@@ -2,10 +2,6 @@ const { google } = require('googleapis')
 const connect = require('../connect')
 const util = require('util')
 
-/**
- * Lists the names and IDs of up to 10 files.
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
 async function listFileInFolder (folderId) {
   const auth = await connect.getAuthentication()
   const drive = google.drive({ version: 'v3', auth })

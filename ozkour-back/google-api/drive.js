@@ -29,7 +29,7 @@ function filterFilesBetween2Dates (start, end, files) {
       return false
     }
   })
-  if (typeof res !== 'undefined' && res.length > 0) {
+  if (res?.length > 0) {
     return res
   } else {
     throw (new Error('no talk file for those dates in the folder'))
