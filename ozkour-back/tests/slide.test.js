@@ -1,5 +1,5 @@
 const slide = require('../google-api/slide')
-const { presentationId, getSlides } = require('../google-api/slideWrapper')
+const { presentationId, getSlides } = require('../infrastructure/googleslide/slideWrapper')
 const wrapper = require('../google-api/slideService')
 
 describe('Verify data slides', () => {

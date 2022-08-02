@@ -2,7 +2,7 @@
 
 require('dotenv').config()
 const Hapi = require('@hapi/hapi')
-const connect = require('./google-api/connect')
+const connect = require('./infrastructure/connect')
 const routes = require('./config/routes')
 const Qs = require('qs')
 
