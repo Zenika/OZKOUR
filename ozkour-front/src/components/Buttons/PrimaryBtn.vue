@@ -17,8 +17,7 @@ defineProps({
 
 <style lang="scss" scoped>
   .primary-btn{
-    @include primary-button-hover;
-    
+    @include primary-button;
 
     &__disabled{
       @extend .primary-btn;
@@ -28,6 +27,7 @@ defineProps({
 
     &:not(.primary-btn__disabled):hover {
       cursor: pointer;
+      @include primary-button-hover;
     }   
   }
 </style>
