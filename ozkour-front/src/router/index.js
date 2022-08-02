@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { authGuard } from '@auth0/auth0-vue'
+
 import HomeView from '../views/HomeView.vue'
 import TalkForm from '../views/TalkForm.vue'
 
@@ -12,7 +14,8 @@ const routes = [
   { 
     path: '/talkform', 
     name: 'talk-form',
-    component: TalkForm
+    component: TalkForm,
+    beforeEnter: authGuard
   },
 ]
 
