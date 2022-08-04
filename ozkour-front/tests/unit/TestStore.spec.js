@@ -69,7 +69,7 @@ describe("Talk Store", () => {
       eventType: "Meetup",
       eventName: "GraalVM Night",
       talkTitle: "GraalVM for Sustainable Software Development?",
-      speakers: "Adrien Nortain",
+      speakers: "John Doe",
       checked: true
     };
 
@@ -103,7 +103,7 @@ const talksRetrieved = [
     eventType: "Meetup",
     eventName: "GraalVM Night",
     talkTitle: "GraalVM for Sustainable Software Development?",
-    speakers: "Adrien Nortain",
+    speakers: "John Doe",
     checked: true
   },
   {
@@ -112,7 +112,7 @@ const talksRetrieved = [
     eventType: "NightClazz",
     eventName: "NightClass",
     talkTitle: "Migration JS vers TS sur du react",
-    speakers: "Jules Hablot",
+    speakers: "John Doe",
     checked: true
   },
   {
@@ -121,7 +121,7 @@ const talksRetrieved = [
     eventType: "Meetup",
     eventName: "Nantes JS #55",
     talkTitle: "Nuxt 2021",
-    speakers: "Yann Bertrand",
+    speakers: "John Doe",
     checked: true
   },
   {
@@ -130,7 +130,7 @@ const talksRetrieved = [
     eventType: "Autre",
     eventName: "Webinar Strigo",
     talkTitle: "Simplify Remote Hands-On Training and Improve Engagement",
-    speakers: "Yoan Rousseau / Oliver Huber",
+    speakers: "John Doe",
     checked: true
   },
   {
@@ -139,7 +139,7 @@ const talksRetrieved = [
     eventType: "NightClazz",
     eventName: "RemoteClazz Nodejs",
     talkTitle: "Techniques minimalistes pour Node.js",
-    speakers: "Hugo Wood",
+    speakers: "John Doe",
     checked: true
   },
 ];
