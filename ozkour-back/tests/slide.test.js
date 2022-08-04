@@ -139,7 +139,6 @@ describe('Slides creation', () => {
   })
 })
 
-// test d'integration a revoir
 describe('Integration test on create a slide', () => {
   it('should generate expected Google Slide file', async () => {
     // given

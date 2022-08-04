@@ -9,11 +9,12 @@ async function createSlides (talks) {
   }
   const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
   const idTemplate = await slide.getIdSlideTemplate()
+  const unorderedPromises = []
   for (const dataOrganized of dataOrganizedBySlide) {
     const newIdPage = await copySlide(idTemplate)
-    await deleteTemplateInfo(newIdPage)
-    await addTableData(newIdPage, dataOrganized)
+    unorderedPromises.push(deleteTemplateInfo(newIdPage).then(() => addTableData(newIdPage, dataOrganized)).catch(e => console.log(e)))
   }
+  await Promise.all(unorderedPromises)
   return slide.getSuccessMessage()
 }
 
