@@ -94,12 +94,12 @@ workflows:
             - build:
                 filters:
                     branches:
-                        only: dev
+                        only: main
                 requires:
                     - test-front
             - deploy:
                 filters:
                     branches:
-                        only: dev
+                        only: main
                 requires:
                     - build
