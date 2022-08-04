@@ -10,10 +10,10 @@ const port = process.env.PORT
 
 const server = Hapi.server({
   port,
-  host: 'localhost',
+  host: process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost',
   routes: {
     cors: {
-      origin: [process.env.ALLOWED_DOMAIN],
+      origin: ['*'],
       additionalHeaders: ['cache-control', 'x-requested-with']
     }
   },
