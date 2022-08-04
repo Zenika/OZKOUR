@@ -84,7 +84,7 @@ jobs:
                     git commit -m "deploy!"
                     sudo npm install --global clever-tools
                     clever login --secret=$CLEVER_SECRET --token=$CLEVER_TOKEN
-                    clever link app_4a7e7de8-8ebe-4280-9f8d-73086428bc37
+                    clever link $CLEVER_CLOUD_LINK
                     clever deploy --force
 workflows:
     testing:
@@ -92,8 +92,14 @@ workflows:
             - test-back
             - test-front 
             - build:
+                filters:
+                    branches:
+                        only: dev
                 requires:
                     - test-front
             - deploy:
+                filters:
+                    branches:
+                        only: dev
                 requires:
                     - build
