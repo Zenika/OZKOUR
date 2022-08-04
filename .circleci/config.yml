@@ -1,21 +1,105 @@
-# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
-
-# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/2.0/orb-intro/
-orbs:
-  node: circleci/node@4.7
-
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+executors:
+  node-img:
+    docker:
+      - image: 'cimg/node:16.14.0'
+jobs:
+    test-front:
+        executor: node-img
+        working_directory: ~/OZKOUR/ozkour-front
+        steps:
+        - checkout:
+            path: ~/OZKOUR
+        - run:
+            command: npm install
+            name: Install dependencies
+        - run:
+            command: npm run lint
+            name: Run linter
+        - run:
+            command: npm run test:unit
+            name: Run tests
+        - run:
+            command: ls -ail ~/OZKOUR/ozkour-front/test-results
+        - store_test_results:
+            path: ~/OZKOUR/ozkour-front/test-results
+        - store_artifacts:
+            path: ~/OZKOUR/ozkour-front/test-results
+    test-back:
+        executor: node-img
+        working_directory: ~/OZKOUR/ozkour-back
+        steps:
+        - checkout:
+            path: ~/OZKOUR
+        - run:
+            command: npm install
+            name: Install dependencies
+        - run:
+            command: npm run lint
+            name: Run linter
+        - run:
+            command: npm run test:unit
+            name: Run tests
+        - run:
+            command: ls -ail ~/OZKOUR/ozkour-back/test-results
+        - store_test_results:
+            path: ~/OZKOUR/ozkour-back/test-results
+        - store_artifacts:
+            path: ~/OZKOUR/ozkour-back/test-results
+    build:
+        docker:
+            - image: cimg/node:16.14.0
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - v2-packaging-dependencies-{{ checksum "ozkour-front/package-lock.json" }}
+            - run:
+                name: Create .env file
+                working_directory: ozkour-front
+                command: echo -e "VUE_APP_SERVER=https://app-80ba5e64-ee5b-4aa3-a695-9b0519558242.cleverapps.io" .env
+            - run:
+                name: Build frontend
+                working_directory: ozkour-front
+                command: npm install && npm run build
+            - persist_to_workspace:
+                root: ozkour-front/dist
+                paths:
+                    - ./*
+    deploy:
+        docker:
+            - image: cimg/node:16.14.0
+        steps:
+            - checkout
+            - attach_workspace:
+                at: ozkour-front/dist
+            - run:
+                name: Deploy frontend
+                working_directory: ozkour-front/dist
+                command: |
+                    git config --global user.email "rebecca.kaci@zenika.com"
+                    git config --global user.name "RebeccaKACI"
+                    git init
+                    git add .
+                    git commit -m "deploy!"
+                    sudo npm install --global clever-tools
+                    clever login --secret=$CLEVER_SECRET --token=$CLEVER_TOKEN
+                    clever link $CLEVER_CLOUD_LINK
+                    clever deploy --force
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
-    jobs:
-      - node/test:
-          # This is the node version to use for the `cimg/node` tag
-          # Relevant tags can be found on the CircleCI Developer Hub
-          # https://circleci.com/developer/images/image/cimg/node
-          version: '16.10'
-          # If you are using yarn, change the line below from "npm" to "yarn"
-          pkg-manager: npm
+    testing:
+        jobs:
+            - test-back
+            - test-front 
+            - build:
+                filters:
+                    branches:
+                        only: main
+                requires:
+                    - test-front
+            - deploy:
+                filters:
+                    branches:
+                        only: main
+                requires:
+                    - build

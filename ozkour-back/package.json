@@ -1,11 +1,32 @@
 {
   "name": "ozkour-back",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:unit && npm run lint",
+    "test:unit": "jest",
+    "dev": "node .",
+    "lint": "eslint --ext .js .",
+    "lint:fix": "npm run lint -- --fix"
   },
   "author": "ZENIKA",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.1",
+    "dayjs": "^1.11.0",
+    "dotenv": "^16.0.0",
+    "googleapis": "^39.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "jest": "^28.1.0",
+    "jest-junit": "^13.2.0"
+  }
 }
