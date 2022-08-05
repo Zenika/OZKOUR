@@ -4,50 +4,102 @@ executors:
     docker:
       - image: 'cimg/node:16.14.0'
 jobs:
-  test-front:
-    executor: node-img
-    working_directory: ~/OZKOUR/ozkour-front
-    steps:
-      - checkout:
-          path: ~/OZKOUR
-      - run:
-          command: npm install
-          name: Install dependencies
-      - run:
-          command: npm run lint
-          name: Run linter
-      - run:
-          command: npm run test:unit
-          name: Run tests
-      - run:
-          command: ls -ail ~/OZKOUR/ozkour-front/test-results
-      - store_test_results:
-          path: ~/OZKOUR/ozkour-front/test-results
-      - store_artifacts:
-          path: ~/OZKOUR/ozkour-front/test-results
-  test-back:
-    executor: node-img
-    working_directory: ~/OZKOUR/ozkour-back
-    steps:
-      - checkout:
-          path: ~/OZKOUR
-      - run:
-          command: npm install
-          name: Install dependencies
-      - run:
-          command: npm run lint
-          name: Run linter
-      - run:
-          command: npm run test:unit
-          name: Run tests
-      - run:
-          command: ls -ail ~/OZKOUR/ozkour-back/test-results
-      - store_test_results:
-          path: ~/OZKOUR/ozkour-back/test-results
-      - store_artifacts:
-          path: ~/OZKOUR/ozkour-back/test-results
+    test-front:
+        executor: node-img
+        working_directory: ~/OZKOUR/ozkour-front
+        steps:
+        - checkout:
+            path: ~/OZKOUR
+        - run:
+            command: npm install
+            name: Install dependencies
+        - run:
+            command: npm run lint
+            name: Run linter
+        - run:
+            command: npm run test:unit
+            name: Run tests
+        - run:
+            command: ls -ail ~/OZKOUR/ozkour-front/test-results
+        - store_test_results:
+            path: ~/OZKOUR/ozkour-front/test-results
+        - store_artifacts:
+            path: ~/OZKOUR/ozkour-front/test-results
+    test-back:
+        executor: node-img
+        working_directory: ~/OZKOUR/ozkour-back
+        steps:
+        - checkout:
+            path: ~/OZKOUR
+        - run:
+            command: npm install
+            name: Install dependencies
+        - run:
+            command: npm run lint
+            name: Run linter
+        - run:
+            command: npm run test:unit
+            name: Run tests
+        - run:
+            command: ls -ail ~/OZKOUR/ozkour-back/test-results
+        - store_test_results:
+            path: ~/OZKOUR/ozkour-back/test-results
+        - store_artifacts:
+            path: ~/OZKOUR/ozkour-back/test-results
+    build:
+        docker:
+            - image: cimg/node:16.14.0
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                    - v2-packaging-dependencies-{{ checksum "ozkour-front/package-lock.json" }}
+            - run:
+                name: Create .env file
+                working_directory: ozkour-front
+                command: echo -e "VUE_APP_SERVER=https://app-80ba5e64-ee5b-4aa3-a695-9b0519558242.cleverapps.io" .env
+            - run:
+                name: Build frontend
+                working_directory: ozkour-front
+                command: npm install && npm run build
+            - persist_to_workspace:
+                root: ozkour-front/dist
+                paths:
+                    - ./*
+    deploy:
+        docker:
+            - image: cimg/node:16.14.0
+        steps:
+            - checkout
+            - attach_workspace:
+                at: ozkour-front/dist
+            - run:
+                name: Deploy frontend
+                working_directory: ozkour-front/dist
+                command: |
+                    git config --global user.email "rebecca.kaci@zenika.com"
+                    git config --global user.name "RebeccaKACI"
+                    git init
+                    git add .
+                    git commit -m "deploy!"
+                    sudo npm install --global clever-tools
+                    clever login --secret=$CLEVER_SECRET --token=$CLEVER_TOKEN
+                    clever link $CLEVER_CLOUD_LINK
+                    clever deploy --force
 workflows:
-  testing:
-    jobs:
-      - test-front
-      - test-back
+    testing:
+        jobs:
+            - test-back
+            - test-front 
+            - build:
+                filters:
+                    branches:
+                        only: main
+                requires:
+                    - test-front
+            - deploy:
+                filters:
+                    branches:
+                        only: main
+                requires:
+                    - build
