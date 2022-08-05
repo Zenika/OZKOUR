@@ -3,7 +3,6 @@ import RecapModal from "@/components/RecapModal.vue"
 import '@testing-library/jest-dom/extend-expect';
 
 describe("RecapModal Component", () => {
-  //--- Afficher le visuel choisi par l'utilisateur
   it("Display the template chosen", async () => {
     const wrapper = shallowMount(RecapModal, {
       props : {
@@ -18,7 +17,6 @@ describe("RecapModal Component", () => {
     expect(template).toBe('Visuel : E-mailing')
   })
 
-  //--- Afficher la plage de dates choisi par l'utilisateur
   it("Display the date range chosen", async () => {
     const wrapper = shallowMount(RecapModal, {
       props : {
@@ -34,11 +32,8 @@ describe("RecapModal Component", () => {
     const dateText = wrapper.find('[data-test="date-detail"]').text()
 
     expect(dateText).toBe('Dates : 11/01/2021 au 12/02/2021')
+  })
 
-    // console.log(dateText.html()); => affiche la partie HTML du code
-  }),
-
-  //--- Afficher la liste des titres des talks choisi par l'utilisateur 
   it("Display a list of the chosen talks, only their titles", async () => {
     const wrapper = shallowMount(RecapModal, {
       props : {
@@ -56,7 +51,6 @@ describe("RecapModal Component", () => {
     expect(talkTitle).toMatchSnapshot()
   })
 
-  //--- Bouton fermer la pop up
   it("should emit a close event when the close button is triggered", async () => {
     const wrapper = shallowMount (RecapModal, {
       props : {

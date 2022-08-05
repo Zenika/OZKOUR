@@ -16,7 +16,6 @@ function isDescending(arr) {
 
 describe("ListEvent Component", () => {
   it("Display title when no talk", () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [createTestingPinia()],
@@ -25,9 +24,9 @@ describe("ListEvent Component", () => {
 
     const todo = wrapper.get("h2");
     expect(todo.text()).toBe("Pas de talks entre les dates recherchées");
-  }),
+  })
+
   it("Display Title when talks", () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
@@ -42,9 +41,9 @@ describe("ListEvent Component", () => {
 
     const todo = wrapper.get("h2");
     expect(todo.text()).toBe("Liste des événements sélectionnés");
-  });
+  })
+
   it("Right amount of columns when talks", () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
@@ -58,9 +57,9 @@ describe("ListEvent Component", () => {
     });
 
     expect(wrapper.findAll("th")).toHaveLength(7);
-  });
+  })
+
   it("Same number of talks", () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
@@ -73,9 +72,9 @@ describe("ListEvent Component", () => {
       },
     });
     expect(wrapper.findAll('[data-test="talks"]')).toHaveLength(5);
-  }),
+  })
+  
   it("uncheck is working", async () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
@@ -94,9 +93,9 @@ describe("ListEvent Component", () => {
 
     expect(inputCheckbox.element.checked).toBe(false);
     expect(talk.uncheckTalk).toHaveBeenCalledTimes(1);
-  }),
+  })
+
   it("check talk is working", async () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
@@ -117,9 +116,9 @@ describe("ListEvent Component", () => {
 
     expect(inputCheckbox.element.checked).toBe(true);
     expect(talk.checkTalk).toHaveBeenCalledTimes(1);
-  }),
+  })
+  
   it("check order(ascending/discending) when clicking on column", async () => {
-    // Create an instance of our component
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
@@ -157,7 +156,7 @@ describe("ListEvent Component", () => {
 
     expect(isDescending(listSpeakersOrderedAsTheyAppear)).toBe(true);
 
-  });
+  })
 });
 
 const talksRetrieved = [

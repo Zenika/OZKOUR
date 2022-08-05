@@ -27,6 +27,7 @@ describe("Authentication", () => {
               
       expect(userName).toBe("John Doe")
     })
+
     it("should display login button when the user isn't authenticated", () => {
         
       mockedUseAuth0.mockReturnValue({
@@ -40,6 +41,7 @@ describe("Authentication", () => {
       expect(login.exists()).toBe(true)
       expect(logout.exists()).toBe(false)
     })
+
     it("should display logout button when the user is authenticated", () => {
       mockedUseAuth0.mockReturnValue({
         isAuthenticated: ref(true),
@@ -53,6 +55,7 @@ describe("Authentication", () => {
       expect(logout.exists()).toBe(true)
       expect(login.exists()).toBe(false)
     })
+
     it("should run the auth0 login function", async () => {
       mockedUseAuth0.mockReturnValue({
         isAuthenticated: ref(false),
@@ -64,6 +67,7 @@ describe("Authentication", () => {
 
       expect(useAuth0().loginWithRedirect).toHaveBeenCalled();
     })
+    
     it("should run the auth0 logout function", async () => {
       mockedUseAuth0.mockReturnValue({
         isAuthenticated: ref(true),
