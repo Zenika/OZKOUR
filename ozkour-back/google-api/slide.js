@@ -319,14 +319,14 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
 /**
  * Adds an image to a presentation.
  */
-function createImage (pageId, eventType, yNextElmt) {
+async function createImage (pageId, eventType, yNextElmt) {
   const imageUrl = pictogram.get(eventType)
   const imgSize = {
     magnitude: 110,
     unit
   }
 
-  return [
+  const requests = [
     {
       createImage: {
         url: imageUrl,
@@ -347,6 +347,12 @@ function createImage (pageId, eventType, yNextElmt) {
       }
     }
   ]
+
+  try {
+    await sendRequest(requests)
+  } catch (error) {
+    console.log('error on loading image for event : ' + eventType)
+  }
 }
 
 /**
@@ -396,9 +402,9 @@ function fillSlideWithData (idPage, dataOrganized) {
           dateId,
           arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
-        ),
-        createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
+        )
       )
+      createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
       IndexRowInTableToInsert++
       yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
