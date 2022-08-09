@@ -4,7 +4,6 @@
       <div id="header-logo">
         <a
           href="/"
-          tabindex="1"
         >
           <img
             id="logoZenika"
@@ -13,20 +12,14 @@
           >
         </a>      
       </div>  
-      <div id="header-user">
-        <span>NOM Prénom</span>
-        <img
-          id="imgLogout"
-          alt="image logout"
-          src="../assets/images/logout.png"
-          tabindex="2"
-          @keyup.enter="test"
-          @click="test"
-        >
-      </div>
+      <AuthenticationDefault />
     </div>
   </header>
 </template>
+
+<script setup>
+import AuthenticationDefault from "@/components/AuthenticationDefault.vue";
+</script>
 
 <style lang="scss" scoped>
 
@@ -40,8 +33,8 @@
       cursor: pointer;
   }
   #header{
-      width:100%;
       display:flex;
+      align-items:center;
       justify-content: space-between;
   }   
   #header-user{
@@ -56,10 +49,6 @@
   }
   div#header-logo{
       width: 15%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      margin-left: 2%;
   }
   img{
       display: inline;

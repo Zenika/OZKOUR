@@ -1,20 +1,25 @@
 <script setup>
-import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
+import PrimaryLink from '@/components/Links/PrimaryLink'
 </script>
 
 <template>
   <h1>Generateur de Visuel</h1>
   <div id="btn-container">
-    <a
-      href="./talkform"
-    ><PrimaryBtn class="navigation-btn">Talk</PrimaryBtn></a>
-    <a
-      href="./"
-    ><PrimaryBtn class="navigation-btn">Training</PrimaryBtn></a>
+    <PrimaryLink
+      link="/talkform"
+    >
+      Talk
+    </PrimaryLink>
+    <PrimaryLink
+      link="/"
+    >
+      Training
+    </PrimaryLink>
   </div>
 </template>
 
-<styl lang="scss" scoped>
+
+<style lang="scss" scoped>
 
   h1{
       @include title-1;
@@ -23,7 +28,4 @@ import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
   #btn-container{
       @include buttons-container
   }
-  .navigation-btn{
-    text-transform: uppercase;
-  }
-</styl>
+</style>
