@@ -18,7 +18,7 @@ export default {
   body {
     @include body;
     margin: 0;
-    padding: 0;
+    padding: 25px 50px;
     box-sizing: border-box;
     background: #1E1E1E;
   }
