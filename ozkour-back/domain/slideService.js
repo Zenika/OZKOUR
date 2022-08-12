@@ -1,59 +1,53 @@
-// @ts-check
-/** @type {import ("./type/slide").Slide} */
-const slide = require('../infrastructure/googleslide/slide')
 const slideDataOrganizer = require('./slideDataOrganizer')
 
-async function createSlides (talks) {
-  if (!verifyTalks(talks)) {
-    console.log('error')
-    throw (new Error('error : wrong format'))
+class SlideService {
+  constructor (slideServiceRepository) {
+    this.slideServiceRepository = slideServiceRepository
   }
-  const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
-  const idTemplate = await slide.getIdSlideTemplate()
-  const unorderedPromises = []
-  for (const dataOrganized of dataOrganizedBySlide) {
-    const newIdPage = await copySlide(idTemplate)
-    unorderedPromises.push(deleteTemplateInfo(newIdPage).then(() => addTableData(newIdPage, dataOrganized)).catch(e => console.log(e)))
+
+  async createSlides (talks) {
+    if (!this.verifyTalks(talks)) {
+      console.log('error')
+      throw (new Error('error : wrong format'))
+    }
+    const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
+    const idTemplate = await this.slideServiceRepository.getIdSlideTemplate()
+    const unorderedPromises = []
+    for (const dataOrganized of dataOrganizedBySlide) {
+      const newIdPage = await this.copySlide(idTemplate)
+      unorderedPromises.push(this.deleteTemplateInfo(newIdPage).then(() => this.addTableData(newIdPage, dataOrganized)).catch(e => console.log(e)))
+    }
+    await Promise.all(unorderedPromises)
+    return this.slideServiceRepository.getSuccessMessage()
   }
-  await Promise.all(unorderedPromises)
-  return slide.getSuccessMessage()
-}
 
-function verifyTalks (talks) {
-  if (!Array.isArray(talks) || talks.length <= 0) {
-    return false
+  verifyTalks (talks) {
+    if (!Array.isArray(talks) || talks.length <= 0) {
+      return false
+    }
+    return talks.some(
+      ({ date, eventType, eventName, talkTitle, speakers }) =>
+        Boolean(date) &&
+          Boolean(eventType) &&
+          Boolean(eventName) &&
+          Boolean(talkTitle) &&
+          Boolean(speakers)
+    )
   }
-  return talks.some(
-    ({ date, eventType, eventName, talkTitle, speakers }) =>
-      Boolean(date) &&
-        Boolean(eventType) &&
-        Boolean(eventName) &&
-        Boolean(talkTitle) &&
-        Boolean(speakers)
-  )
-}
 
-// Fonction pour copier un slide
-async function copySlide (idPage) {
-  return await slide.copySlide(idPage)
-}
+  async copySlide (idPage) {
+    return await this.slideServiceRepository.copySlide(idPage)
+  }
 
-// Fonction pour supprimer des éléments du template
-async function deleteTemplateInfo (idPage) {
-  return await slide.deleteTemplateInfo(idPage)
-}
+  async deleteTemplateInfo (idPage) {
+    return await this.slideServiceRepository.deleteTemplateInfo(idPage)
+  }
 
-// Fonction pour ajouter des données
-async function addTableData (idPage, data) {
-  return await slide.fillSlideWithData(idPage, data)
+  async addTableData (idPage, data) {
+    return await this.slideServiceRepository.fillSlideWithData(idPage, data)
+  }
 }
-
-// une fonction pour récupérer les données des slides (à voir)
 
 module.exports = {
-  deleteTemplateInfo,
-  addTableData,
-  copySlide,
-  verifyTalks,
-  createSlides
+  SlideService
 }

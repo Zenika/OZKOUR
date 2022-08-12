@@ -1,7 +1,9 @@
+// @ts-check
 
 const { getTalk } = require('../../domain/talks-sheet')
 
-const { createSlides } = require('../../domain/slideService')
+const { SlideService } = require('../../domain/slideService')
+const googleSlideRepository = require('../../infrastructure/googleslide/googleSlideRepository')
 
 module.exports = [
   {
@@ -18,7 +20,10 @@ module.exports = [
     handler: async function (request, h) {
       try {
         const talks = request.payload
-        const res = await createSlides(talks)
+        /** @type {import ("../../domain/type/slide").Slide} */
+        const slideServiceRepository = googleSlideRepository
+        const slideService = new SlideService(slideServiceRepository)
+        const res = await slideService.createSlides(talks)
         return h.response(res).code(200)
       } catch (e) {
         console.log(e)
