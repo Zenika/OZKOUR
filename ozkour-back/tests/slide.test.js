@@ -1,6 +1,9 @@
-const slide = require('../infrastructure/googleslide/slide')
+const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
 const { presentationId, getSlides } = require('../infrastructure/googleslide/slideWrapper')
-const slideService = require('../domain/slideService')
+const { SlideService } = require('../domain/slideService')
+
+const slideServiceRepository = googleSlideRepository
+const slideService = new SlideService(slideServiceRepository)
 
 describe('Verify data slides', () => {
   describe('undefined value', () => {
@@ -82,7 +85,7 @@ describe('Slides creation', () => {
     const objectId = 'objectId'
     const Y = 100
     // when
-    const registerFieldDate = slide.addDateTextWithStyle(pageId, date, objectId, Y)
+    const registerFieldDate = googleSlideRepository.addDateTextWithStyle(pageId, date, objectId, Y)
     // then
     expect(registerFieldDate).toMatchSnapshot()
   })
@@ -93,7 +96,7 @@ describe('Slides creation', () => {
     const objectId = 'objectId'
     const Y = 100
     // when
-    const registerTable = slide.createTableWithStyleForAllEventsInDate(pageId, date, objectId, Y)
+    const registerTable = googleSlideRepository.createTableWithStyleForAllEventsInDate(pageId, date, objectId, Y)
     // then
     expect(registerTable).toMatchSnapshot()
   })
@@ -103,7 +106,7 @@ describe('Slides creation', () => {
     const eventName = 'Dev Event'
     const IndexRowInTableToInsert = 1
     // when
-    const registerEvent = slide.addEventNameWithStyleToTable(dateId, eventName, IndexRowInTableToInsert)
+    const registerEvent = googleSlideRepository.addEventNameWithStyleToTable(dateId, eventName, IndexRowInTableToInsert)
     // then
     expect(registerEvent).toMatchSnapshot()
   })
@@ -113,7 +116,7 @@ describe('Slides creation', () => {
     const talkTitle = 'Talk about something'
     const IndexRowInTableToInsert = 1
     // when
-    const registerTalkTitle = slide.addTalkTitleWithStyleToTable(dateId, talkTitle, IndexRowInTableToInsert)
+    const registerTalkTitle = googleSlideRepository.addTalkTitleWithStyleToTable(dateId, talkTitle, IndexRowInTableToInsert)
     // then
     expect(registerTalkTitle).toMatchSnapshot()
   })
@@ -123,7 +126,7 @@ describe('Slides creation', () => {
     const speakers = 'John Doe'
     const IndexRowInTableToInsert = 1
     // when
-    const registerSpeakers = slide.addSpeakersWithStyleToTable(dateId, speakers, IndexRowInTableToInsert)
+    const registerSpeakers = googleSlideRepository.addSpeakersWithStyleToTable(dateId, speakers, IndexRowInTableToInsert)
     // then
     expect(registerSpeakers).toMatchSnapshot()
   })
@@ -133,7 +136,7 @@ describe('Slides creation', () => {
     const eventType = 'Conférence'
     const yNextElmt = 100
     // when
-    const registerSpeakers = slide.createImage(pageId, eventType, yNextElmt)
+    const registerSpeakers = googleSlideRepository.createImage(pageId, eventType, yNextElmt)
     // then
     expect(registerSpeakers).toMatchSnapshot()
   })
