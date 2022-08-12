@@ -319,6 +319,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
 /**
  * Adds an image to a presentation.
  */
+
 async function createImage (pageId, eventType, yNextElmt) {
   const imageUrl = pictogram.get(eventType)
   const imgSize = {
@@ -347,7 +348,6 @@ async function createImage (pageId, eventType, yNextElmt) {
       }
     }
   ]
-
   try {
     await sendRequest(requests)
   } catch (error) {
