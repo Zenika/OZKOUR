@@ -1,4 +1,4 @@
-const slide = require('./slide')
+const slide = require('../infrastructure/googleslide/slide')
 const slideDataOrganizer = require('./slideDataOrganizer')
 
 // Fonction pour créer les slides
@@ -18,7 +18,6 @@ async function createSlides (talks) {
   return slide.getSuccessMessage()
 }
 
-// Fonction pour vérifier les talks
 function verifyTalks (talks) {
   if (!Array.isArray(talks) || talks.length <= 0) {
     return false

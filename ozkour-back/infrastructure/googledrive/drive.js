@@ -1,6 +1,6 @@
 
-const driveWrapper = require('../infrastructure/googledrive/driveWrapper')
-const dateUtils = require('../Utils/dateUtils')
+const driveWrapper = require('./driveWrapper')
+const dateUtils = require('../../Utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
 
