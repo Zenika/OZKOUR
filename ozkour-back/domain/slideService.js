@@ -1,7 +1,8 @@
+// @ts-check
+/** @type {import ("./type/slide").Slide} */
 const slide = require('../infrastructure/googleslide/slide')
 const slideDataOrganizer = require('./slideDataOrganizer')
 
-// Fonction pour créer les slides
 async function createSlides (talks) {
   if (!verifyTalks(talks)) {
     console.log('error')
