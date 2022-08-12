@@ -1,9 +1,9 @@
 const { v4: uuidv4 } = require('uuid')
-const dateUtils = require('../Utils/dateUtils')
+const dateUtils = require('../../Utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
-const slideDataOrganizer = require('./slideDataOrganizer.js')
-const { presentationId, getSlides, sendRequest } = require('../infrastructure/googleslide/slideWrapper')
+const slideDataOrganizer = require('../../domain/slideDataOrganizer.js')
+const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 
 const pictogram = new Map()
