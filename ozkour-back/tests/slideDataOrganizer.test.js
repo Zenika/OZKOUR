@@ -1,4 +1,4 @@
-const slide = require('../google-api/slideDataOrganizer')
+const slide = require('../domain/slideDataOrganizer')
 const simpleTalk = require('./dataset/slideDataOrganizer/talk.json')
 const talkClusterDate = require('./dataset/slideDataOrganizer/talkClusterDate.json')
 const talkClusterEvent = require('./dataset/slideDataOrganizer/talkClusterEvent.json')
