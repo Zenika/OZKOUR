@@ -1,10 +1,7 @@
-// @ts-check
 import qs from 'qs';
 import dateFormat from "dateformat";
 import { defineStore } from "pinia";
 import { api } from "@/api/apiConfig";
-
-
 
 export const useTalkStore = defineStore({
   id: "talk",
@@ -21,8 +18,6 @@ export const useTalkStore = defineStore({
   },
   actions: {
     updateTalks(newTalks) {
-      console.log('feqsqsf');
-      console.log(newTalks);
       this.retrieved = newTalks;
     },
     checkTalk(selected) {
@@ -33,11 +28,9 @@ export const useTalkStore = defineStore({
       this.retrieved.find(talk => 
         talk.talkTitle === selected.talkTitle).checked = false;
     },
-    // Visuel choisi
     pickedTemplate(chosenTemplate,freq) {
       this.template = {template : chosenTemplate, frequency : freq };
     },
-    //--- Plage de date choisie
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
       end = dateFormat(Date.parse(end.value), "dd/mm/yyyy");

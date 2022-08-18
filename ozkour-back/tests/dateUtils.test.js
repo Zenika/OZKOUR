@@ -13,6 +13,9 @@ describe('dateUtils', () => {
       // upper bound
       expect(dateUtils.isYearBetweenDates('2023', '2021-03-21', '2022-03-21')).toBeFalsy()
     })
+    it('should return the year of a date', () => {
+      expect(dateUtils.getYear('11/03/2022')).toBe('2022')
+    })
   })
   describe('Display date as words', () => {
     it('should return a month as words, given a month in number format', () => {

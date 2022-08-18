@@ -24,6 +24,10 @@ function displayFullDateWithWords (date) {
   return dayjs(date, 'DD-MM-YYYY', 'fr').format('DD MMMM YYYY')
 }
 
+function getYear (date) {
+  return dayjs(date, 'DD/MM/YYYY').format('YYYY')
+}
+
 function capitalizeFirstLetter (string) {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
@@ -31,5 +35,6 @@ function capitalizeFirstLetter (string) {
 module.exports = {
   displayFullDateWithWords,
   convDateToMonthInLetter,
+  getYear,
   isYearBetweenDates
 }

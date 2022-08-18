@@ -20,11 +20,11 @@ async function getTalkFromDate (params) {
   const tempDateEnd = params.end
   const nbMonths = tempDateEnd.diff(tempDateStart, 'month')
   let res = []
-  let yearSheetId = dayjs(tempDateStart, 'DD/MM/YYYY').format('YYYY')
+  let yearSheetId = utils.getYear(tempDateStart)
   let spreadsheetId = await getIdOfTalkFileByYear(yearSheetId)
   for (let i = 0; i <= nbMonths; i++) {
     const month = utils.convDateToMonthInLetter(tempDateStart)
-    const year = dayjs(tempDateStart, 'DD/MM/YYYY').format('YYYY')
+    const year = utils.getYear(tempDateStart)
     if (year !== yearSheetId) { // update the id of the file if we changed the year
       yearSheetId = year
       spreadsheetId = await getIdOfTalkFileByYear(yearSheetId)

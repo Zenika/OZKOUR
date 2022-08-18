@@ -50,10 +50,12 @@ function clusterByEventName (dataOrganized) {
   dataOrganized.forEach((talks, date) => {
     const EventNameForADate = []
     const EventArrayWithTalks = []
-
     talks.forEach(talk => {
-      if (EventNameForADate.includes(talk.eventName)) {
-        const event = EventArrayWithTalks[EventNameForADate.indexOf(talk.eventName)]
+      const isCurrentEventInsideArray = (element) => element === talk.eventName
+      const eventIndex = EventNameForADate.findIndex(isCurrentEventInsideArray)
+      if (eventIndex !== -1) {
+        const event = EventArrayWithTalks[eventIndex]
+
         event.talks.push({
           universe: talk.universe,
           talkTitle: talk.talkTitle,

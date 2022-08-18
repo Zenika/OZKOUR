@@ -2,7 +2,6 @@ const sheet = require('../domain/talks-sheet')
 
 describe('sheets', () => {
   it('should return only talk between 19-01-2021 and 25-01-2021', () => {
-    // sheet.dateFilter(talks, '19/01/2021', '21/01/2021')
     const result = sheet.dateFilter(talks, '19-01-2021', '25-01-2021')
     expect(result).toMatchSnapshot()
   })
@@ -44,7 +43,7 @@ const talks = [
     eventName: 'Webinar Strigo',
     universe: '',
     date: '21/01/2021',
-    speakers: 'Yoan Rousseau / Oliver Huber',
+    speakers: 'Sarah Pelle',
     talkTitle: 'Simplify Remote Hands-On Training and Improve Engagement',
     link: 'https://zoom.us/webinar/register/9516106320701/WN_xAAafGs2SOGbWFub-8dGJg\nhttps://trainingindustry.com/webinar/remote-learning/product-demo-simplify-remote-hands-on-training-and-improve-engagement/'
   },
@@ -64,7 +63,7 @@ const talks = [
     eventName: 'DejTech Green IT',
     universe: '',
     date: '26/01/2021',
-    speakers: 'Serge Hardy',
+    speakers: 'Alin Verse',
     talkTitle: 'Introduction au numérique responsable',
     link: 'https://www.meetup.com/fr-FR/dejtech/events/275866319'
   }

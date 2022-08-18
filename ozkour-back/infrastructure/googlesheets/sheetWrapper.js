@@ -7,7 +7,7 @@ async function getTalks (month, year, spreadsheetId) {
   const sheets = google.sheets({ version: 'v4', auth })
   try {
     const res = await sheets.spreadsheets.values.get({
-      spreadsheetId, // TO DO use a variable instead of a link
+      spreadsheetId,
       range: `${month} ${year}!A2:H`
     })
     const talkArray = []
