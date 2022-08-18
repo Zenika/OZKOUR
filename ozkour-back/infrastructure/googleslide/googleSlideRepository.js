@@ -23,6 +23,8 @@ const defaultForegroundColor = {
   }
 }
 
+const ImagePromiseList = []
+
 const unit = 'PT'
 
 const greyForegroundColor = {
@@ -58,7 +60,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
     unit
   }
   const pt30 = {
-    magnitude: 30,
+    magnitude: slideDataOrganizer.slideSpacing.DATE,
     unit
   }
 
@@ -77,7 +79,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
           transform: {
             scaleX: 1,
             scaleY: 1,
-            translateX: 70,
+            translateX: 140,
             translateY: Y,
             unit
           }
@@ -101,7 +103,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
           underline: true,
           fontFamily: 'Nunito',
           fontSize: {
-            magnitude: 17,
+            magnitude: 24,
             unit
           },
           foregroundColor: defaultForegroundColor
@@ -139,6 +141,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
             scaleX: 1,
             scaleY: 1,
             translateY: Y,
+            translateX: 20,
             unit
           }
         },
@@ -174,7 +177,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
         columnIndices: [0],
         tableColumnProperties: {
           columnWidth: {
-            magnitude: 320,
+            magnitude: 410,
             unit
           }
         },
@@ -188,7 +191,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
         columnIndices: [1],
         tableColumnProperties: {
           columnWidth: {
-            magnitude: 130,
+            magnitude: 180,
             unit
           }
         },
@@ -227,7 +230,7 @@ function addEventNameWithStyleToTable (
           fontFamily: 'Nunito',
           bold: true,
           fontSize: {
-            magnitude: 20,
+            magnitude: 28,
             unit
           },
           foregroundColor: defaultForegroundColor
@@ -266,12 +269,21 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
           fontFamily: 'Nunito',
           bold: true,
           fontSize: {
-            magnitude: 14,
+            magnitude: 20,
             unit
           },
           foregroundColor: defaultForegroundColor
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize'
+      }
+    },
+    {
+      createParagraphBullets: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0
+        }
       }
     }
   ]
@@ -302,7 +314,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
           fontFamily: 'Nunito',
           bold: true,
           fontSize: {
-            magnitude: 14,
+            magnitude: 18,
             unit
           },
           foregroundColor: greyForegroundColor
@@ -320,19 +332,18 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
  * Adds an image to a presentation.
  */
 
-async function createImage (pageId, eventType, yNextElmt) {
+function createImage (idPage, eventType, yNextElmt) {
   const imageUrl = pictogram.get(eventType)
   const imgSize = {
     magnitude: 110,
     unit
   }
-
   const requests = [
     {
       createImage: {
         url: imageUrl,
         elementProperties: {
-          pageObjectId: pageId,
+          pageObjectId: idPage,
           size: {
             height: imgSize,
             width: imgSize
@@ -340,7 +351,7 @@ async function createImage (pageId, eventType, yNextElmt) {
           transform: {
             scaleX: 1,
             scaleY: 1,
-            translateX: 455,
+            translateX: 658,
             translateY: yNextElmt,
             unit
           }
@@ -349,7 +360,7 @@ async function createImage (pageId, eventType, yNextElmt) {
     }
   ]
   try {
-    await sendRequest(requests)
+    return sendRequest(requests)
   } catch (error) {
     console.log('error on loading image for event : ' + eventType)
   }
@@ -404,7 +415,7 @@ function fillSlideWithData (idPage, dataOrganized) {
           IndexRowInTableToInsert
         )
       )
-      createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
+      ImagePromiseList.push(createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt))
       IndexRowInTableToInsert++
       yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
@@ -420,7 +431,9 @@ function fillSlideWithData (idPage, dataOrganized) {
       }
     }
   })
-  return sendRequest(requests)
+  const imagesPromises = Promise.allSettled(ImagePromiseList)
+  const allPromises = Promise.all([imagesPromises, sendRequest(requests)])
+  return allPromises
 }
 
 /**

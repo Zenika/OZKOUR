@@ -130,16 +130,6 @@ describe('Slides creation', () => {
     // then
     expect(registerSpeakers).toMatchSnapshot()
   })
-  it('should return a JSON request to add an image to a slide', () => {
-    // given
-    const pageId = 'pageId'
-    const eventType = 'Conférence'
-    const yNextElmt = 100
-    // when
-    const registerSpeakers = googleSlideRepository.createImage(pageId, eventType, yNextElmt)
-    // then
-    expect(registerSpeakers).toMatchSnapshot()
-  })
 })
 
 describe('Integration test on create a slide', () => {
@@ -160,7 +150,9 @@ describe('Integration test on create a slide', () => {
       expect(JSON.stringify(slides[1])
         .replace(/"objectId":".*?",/g, '"objectId":"id",')
         .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
-        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
+        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')
+        .replace(/"listId":".*?"/g, '"listId":"listId"')
+        .replace(/"lists":{".*?"/g, '"lists":"lists"')).toMatchSnapshot()
     } catch (e) {
       console.error(e)
       throw e

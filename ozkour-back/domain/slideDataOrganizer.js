@@ -1,12 +1,12 @@
 const slideSpacing = {
   EVENT: 50,
-  TALK: 45,
+  TALK: 60,
   DATE: 40
 }
 
-const DEFAULT_START_Y_INDEX = 100
+const DEFAULT_START_Y_INDEX = 150
 
-const END_OF_SLIDE = 520
+const END_OF_SLIDE = 750
 
 /**
  * cluster all the talks by date
