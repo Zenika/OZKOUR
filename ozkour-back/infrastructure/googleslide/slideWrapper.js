@@ -1,5 +1,5 @@
 const { google } = require('googleapis')
-const connect = require('./connect.js')
+const connect = require('../connect.js')
 const util = require('util')
 
 const presentationId = process.env.GOOGLE_SLIDE_LINK

@@ -1,12 +1,12 @@
 const slideSpacing = {
   EVENT: 50,
-  TALK: 45,
+  TALK: 60,
   DATE: 40
 }
 
-const DEFAULT_START_Y_INDEX = 100
+const DEFAULT_START_Y_INDEX = 150
 
-const END_OF_SLIDE = 520
+const END_OF_SLIDE = 750
 
 /**
  * cluster all the talks by date
@@ -47,21 +47,22 @@ function clusterByDate (data) {
    * with 2 attributes: one for the event name and one for the left data
    */
 function clusterByEventName (dataOrganized) {
-  const mapIter = dataOrganized.keys()
-  let date = mapIter.next().value
+  dataOrganized.forEach((talks, date) => {
+    const EventNameForADate = []
+    const EventArrayWithTalks = []
+    talks.forEach(talk => {
+      const isCurrentEventInsideArray = (element) => element === talk.eventName
+      const eventIndex = EventNameForADate.findIndex(isCurrentEventInsideArray)
+      if (eventIndex !== -1) {
+        const event = EventArrayWithTalks[eventIndex]
 
-  while (date !== undefined) {
-    const EventNameAdded = []
-    const EventArray = []
-    dataOrganized.get(date).forEach(talk => {
-      if (EventNameAdded.includes(talk.eventName)) {
-        EventArray[EventNameAdded.indexOf(talk.eventName)].talks.push({
+        event.talks.push({
           universe: talk.universe,
           talkTitle: talk.talkTitle,
           speakers: talk.speakers
         })
       } else {
-        EventArray.push({
+        EventArrayWithTalks.push({
           eventName: talk.eventName,
           eventType: talk.eventType,
           talks: [
@@ -72,12 +73,11 @@ function clusterByEventName (dataOrganized) {
             }
           ]
         })
-        EventNameAdded.push(talk.eventName)
+        EventNameForADate.push(talk.eventName)
       }
     })
-    dataOrganized.set(date, EventArray)
-    date = mapIter.next().value
-  }
+    dataOrganized.set(date, EventArrayWithTalks)
+  })
   return dataOrganized
 }
 

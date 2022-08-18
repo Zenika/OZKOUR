@@ -1,40 +1,17 @@
 const { v4: uuidv4 } = require('uuid')
-const dateUtils = require('../Utils/dateUtils')
+const dateUtils = require('../../Utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
-const slideDataOrganizer = require('./slideDataOrganizer.js')
+const slideDataOrganizer = require('../../domain/slideDataOrganizer.js')
 const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 
 const pictogram = new Map()
-// Problem de droit avec les images
-// pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-// pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-// pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-// pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-// pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
-
-// image temporaire en attendant
-pictogram.set(
-  'Conférence',
-  'https://www.referenseo.com/wp-content/uploads/2019/03/image-attractive-960x540.jpg'
-)
-pictogram.set(
-  'Matinale',
-  'https://img-19.commentcamarche.net/cI8qqj-finfDcmx6jMK6Vr-krEw=/1500x/smart/b829396acc244fd484c5ddcdcb2b08f3/ccmcms-commentcamarche/20494859.jpg'
-)
-pictogram.set(
-  'Meetup',
-  'https://static.fnac-static.com/multimedia/Images/FD/Comete/114332/CCP_IMG_ORIGINAL/1481839.jpg'
-)
-pictogram.set(
-  'NightClazz',
-  'https://cdn.mos.cms.futurecdn.net/HsDtpFEHbDpae6wBuW5wQo-1200-80.jpg'
-)
-pictogram.set(
-  'Webinar',
-  'https://docs.microsoft.com/fr-fr/windows/apps/design/controls/images/image-licorice.jpg'
-)
+pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
+pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
+pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
+pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
+pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -45,6 +22,8 @@ const defaultForegroundColor = {
     }
   }
 }
+
+const ImagePromiseList = []
 
 const unit = 'PT'
 
@@ -81,7 +60,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
     unit
   }
   const pt30 = {
-    magnitude: 30,
+    magnitude: slideDataOrganizer.slideSpacing.DATE,
     unit
   }
 
@@ -100,7 +79,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
           transform: {
             scaleX: 1,
             scaleY: 1,
-            translateX: 70,
+            translateX: 140,
             translateY: Y,
             unit
           }
@@ -124,7 +103,7 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
           underline: true,
           fontFamily: 'Nunito',
           fontSize: {
-            magnitude: 17,
+            magnitude: 24,
             unit
           },
           foregroundColor: defaultForegroundColor
@@ -162,6 +141,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
             scaleX: 1,
             scaleY: 1,
             translateY: Y,
+            translateX: 20,
             unit
           }
         },
@@ -197,7 +177,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
         columnIndices: [0],
         tableColumnProperties: {
           columnWidth: {
-            magnitude: 320,
+            magnitude: 410,
             unit
           }
         },
@@ -211,7 +191,7 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
         columnIndices: [1],
         tableColumnProperties: {
           columnWidth: {
-            magnitude: 130,
+            magnitude: 180,
             unit
           }
         },
@@ -250,7 +230,7 @@ function addEventNameWithStyleToTable (
           fontFamily: 'Nunito',
           bold: true,
           fontSize: {
-            magnitude: 20,
+            magnitude: 28,
             unit
           },
           foregroundColor: defaultForegroundColor
@@ -289,12 +269,21 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
           fontFamily: 'Nunito',
           bold: true,
           fontSize: {
-            magnitude: 14,
+            magnitude: 20,
             unit
           },
           foregroundColor: defaultForegroundColor
         },
         fields: 'bold,foregroundColor,fontFamily,fontSize'
+      }
+    },
+    {
+      createParagraphBullets: {
+        objectId,
+        cellLocation: {
+          rowIndex: IndexRowInTableToInsert,
+          columnIndex: 0
+        }
       }
     }
   ]
@@ -325,7 +314,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
           fontFamily: 'Nunito',
           bold: true,
           fontSize: {
-            magnitude: 14,
+            magnitude: 18,
             unit
           },
           foregroundColor: greyForegroundColor
@@ -342,19 +331,19 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
 /**
  * Adds an image to a presentation.
  */
-function createImage (pageId, eventType, yNextElmt) {
+
+function createImage (idPage, eventType, yNextElmt) {
   const imageUrl = pictogram.get(eventType)
   const imgSize = {
     magnitude: 110,
     unit
   }
-
-  return [
+  const requests = [
     {
       createImage: {
         url: imageUrl,
         elementProperties: {
-          pageObjectId: pageId,
+          pageObjectId: idPage,
           size: {
             height: imgSize,
             width: imgSize
@@ -362,7 +351,7 @@ function createImage (pageId, eventType, yNextElmt) {
           transform: {
             scaleX: 1,
             scaleY: 1,
-            translateX: 455,
+            translateX: 658,
             translateY: yNextElmt,
             unit
           }
@@ -370,6 +359,11 @@ function createImage (pageId, eventType, yNextElmt) {
       }
     }
   ]
+  try {
+    return sendRequest(requests)
+  } catch (error) {
+    console.log('error on loading image for event : ' + eventType)
+  }
 }
 
 /**
@@ -385,42 +379,44 @@ async function getIdSlideTemplate () {
  */
 function fillSlideWithData (idPage, dataOrganized) {
   const requests = []
-  const mapIter = dataOrganized.keys()
-
-  let date = mapIter.next().value
   let IndexRowInTableToInsert = 0
   let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX
 
-  while (date) {
+  dataOrganized.forEach((events, date) => {
+    // add date
     const dateId = uuidv4()
     const dateFormated =
     dateUtils.displayFullDateWithWords(date)
     requests.push(
       addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
     )
+
+    // create table
     yNextElmt += slideDataOrganizer.slideSpacing.DATE
     requests.push(
       createTableWithStyleForAllEventsInDate(
         idPage,
         dateId,
         yNextElmt,
-        dataOrganized.get(date)
+        events
       )
     )
+
+    // fill table
     IndexRowInTableToInsert = 0
-    const nbEvent = dataOrganized.get(date).length
+    const nbEvent = events.length
     for (let i = 0; i < nbEvent; i++) {
-      const arrayOfTalksForAnEvent = dataOrganized.get(date)[i]
+      // add event
+      const arrayOfTalksForAnEvent = events[i]
       requests.push(
         addEventNameWithStyleToTable(
           dateId,
           arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
-        ),
-        createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
+        )
       )
+      ImagePromiseList.push(createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt))
       IndexRowInTableToInsert++
-
       yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
       // add all talk for the event
@@ -434,9 +430,10 @@ function fillSlideWithData (idPage, dataOrganized) {
         IndexRowInTableToInsert++
       }
     }
-    date = mapIter.next().value
-  }
-  return sendRequest(requests)
+  })
+  const imagesPromises = Promise.allSettled(ImagePromiseList)
+  const allPromises = Promise.all([imagesPromises, sendRequest(requests)])
+  return allPromises
 }
 
 /**
