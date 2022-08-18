@@ -1,14 +1,16 @@
+// @ts-check
 
-const { getTalkFromDate } = require('../../google-api/sheets')
+const { getTalk } = require('../../domain/talks-sheet')
 
-const { createSlides } = require('../../google-api/slideService')
+const { SlideService } = require('../../domain/slideService')
+const googleSlideRepository = require('../../infrastructure/googleslide/googleSlideRepository')
 
 module.exports = [
   {
     method: 'GET',
     path: '/talk',
     handler: function (request, h) {
-      return getTalkFromDate(request.query.start, request.query.end)
+      return getTalk(request.query.start, request.query.end)
     }
   },
 
@@ -18,9 +20,13 @@ module.exports = [
     handler: async function (request, h) {
       try {
         const talks = request.payload
-        const res = await createSlides(talks)
+        /** @type {import ("../../domain/type/slide").Slide} */
+        const slideServiceRepository = googleSlideRepository
+        const slideService = new SlideService(slideServiceRepository)
+        const res = await slideService.createSlides(talks)
         return h.response(res).code(200)
       } catch (e) {
+        console.log(e)
         return h.response(e).code(500)
       }
     }

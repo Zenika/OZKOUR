@@ -1,6 +1,9 @@
-const slide = require('../google-api/slide')
-const { presentationId, getSlides } = require('../google-api/slideWrapper')
-const wrapper = require('../google-api/slideService')
+const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
+const { presentationId, getSlides } = require('../infrastructure/googleslide/slideWrapper')
+const { SlideService } = require('../domain/slideService')
+
+const slideServiceRepository = googleSlideRepository
+const slideService = new SlideService(slideServiceRepository)
 
 describe('Verify data slides', () => {
   describe('undefined value', () => {
@@ -18,7 +21,7 @@ describe('Verify data slides', () => {
             [property]: undefined
           }
         ]
-        expect(wrapper.verifyTalks(slideTalks)).toBe(false)
+        expect(slideService.verifyTalks(slideTalks)).toBe(false)
       }
     )
   })
@@ -37,7 +40,7 @@ describe('Verify data slides', () => {
             [property]: ''
           }
         ]
-        expect(wrapper.verifyTalks(slideTalks)).toBe(false)
+        expect(slideService.verifyTalks(slideTalks)).toBe(false)
       }
     )
   })
@@ -45,12 +48,12 @@ describe('Verify data slides', () => {
     it('should return true if parameter is an array with one element', () => {
       const array = [_createValidTalk()]
       // then
-      expect(wrapper.verifyTalks(array)).toBe(true)
+      expect(slideService.verifyTalks(array)).toBe(true)
     })
     it('should return false if parameter is an array with zero element', () => {
       const array = []
       // then
-      expect(wrapper.verifyTalks(array)).toBe(false)
+      expect(slideService.verifyTalks(array)).toBe(false)
     })
   })
   describe('the talks are not in an array', () => {
@@ -59,7 +62,7 @@ describe('Verify data slides', () => {
         // given
         const notArray = 'This is not an array'
         // when
-        const isNotAnArray = wrapper.verifyTalks(notArray)
+        const isNotAnArray = slideService.verifyTalks(notArray)
         // then
         expect(isNotAnArray).toBe(false)
       })
@@ -68,7 +71,7 @@ describe('Verify data slides', () => {
       it('should return false', () => {
         const notArray = undefined
         // then
-        expect(wrapper.verifyTalks(notArray)).toBe(false)
+        expect(slideService.verifyTalks(notArray)).toBe(false)
       })
     })
   })
@@ -82,7 +85,7 @@ describe('Slides creation', () => {
     const objectId = 'objectId'
     const Y = 100
     // when
-    const registerFieldDate = slide.addDateTextWithStyle(pageId, date, objectId, Y)
+    const registerFieldDate = googleSlideRepository.addDateTextWithStyle(pageId, date, objectId, Y)
     // then
     expect(registerFieldDate).toMatchSnapshot()
   })
@@ -93,7 +96,7 @@ describe('Slides creation', () => {
     const objectId = 'objectId'
     const Y = 100
     // when
-    const registerTable = slide.createTableWithStyleForAllEventsInDate(pageId, date, objectId, Y)
+    const registerTable = googleSlideRepository.createTableWithStyleForAllEventsInDate(pageId, date, objectId, Y)
     // then
     expect(registerTable).toMatchSnapshot()
   })
@@ -103,7 +106,7 @@ describe('Slides creation', () => {
     const eventName = 'Dev Event'
     const IndexRowInTableToInsert = 1
     // when
-    const registerEvent = slide.addEventNameWithStyleToTable(dateId, eventName, IndexRowInTableToInsert)
+    const registerEvent = googleSlideRepository.addEventNameWithStyleToTable(dateId, eventName, IndexRowInTableToInsert)
     // then
     expect(registerEvent).toMatchSnapshot()
   })
@@ -113,7 +116,7 @@ describe('Slides creation', () => {
     const talkTitle = 'Talk about something'
     const IndexRowInTableToInsert = 1
     // when
-    const registerTalkTitle = slide.addTalkTitleWithStyleToTable(dateId, talkTitle, IndexRowInTableToInsert)
+    const registerTalkTitle = googleSlideRepository.addTalkTitleWithStyleToTable(dateId, talkTitle, IndexRowInTableToInsert)
     // then
     expect(registerTalkTitle).toMatchSnapshot()
   })
@@ -123,30 +126,19 @@ describe('Slides creation', () => {
     const speakers = 'John Doe'
     const IndexRowInTableToInsert = 1
     // when
-    const registerSpeakers = slide.addSpeakersWithStyleToTable(dateId, speakers, IndexRowInTableToInsert)
-    // then
-    expect(registerSpeakers).toMatchSnapshot()
-  })
-  it('should return a JSON request to add an image to a slide', () => {
-    // given
-    const pageId = 'pageId'
-    const eventType = 'Conférence'
-    const yNextElmt = 100
-    // when
-    const registerSpeakers = slide.createImage(pageId, eventType, yNextElmt)
+    const registerSpeakers = googleSlideRepository.addSpeakersWithStyleToTable(dateId, speakers, IndexRowInTableToInsert)
     // then
     expect(registerSpeakers).toMatchSnapshot()
   })
 })
 
-// test d'integration a revoir
 describe('Integration test on create a slide', () => {
   it('should generate expected Google Slide file', async () => {
     // given
     const talks = [_createValidTalk()]
     try {
       // when
-      const res = await wrapper.createSlides(talks)
+      const res = await slideService.createSlides(talks)
       const slides = await getSlides()
       // then
       expect(res).toStrictEqual({
@@ -158,7 +150,9 @@ describe('Integration test on create a slide', () => {
       expect(JSON.stringify(slides[1])
         .replace(/"objectId":".*?",/g, '"objectId":"id",')
         .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
-        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')).toMatchSnapshot()
+        .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')
+        .replace(/"listId":".*?"/g, '"listId":"listId"')
+        .replace(/"lists":{".*?"/g, '"lists":"lists"')).toMatchSnapshot()
     } catch (e) {
       console.error(e)
       throw e

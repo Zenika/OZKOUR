@@ -219,8 +219,6 @@ Array [
         ],
       },
     ],
-  },
-  Map {
     "25/01/2021" => Array [
       Object {
         "eventName": "RemoteClazz Nodejs",
@@ -234,6 +232,8 @@ Array [
         ],
       },
     ],
+  },
+  Map {
     "26/01/2021" => Array [
       Object {
         "eventName": "Webinar",
@@ -346,10 +346,6 @@ Array [
           },
         ],
       },
-    ],
-  },
-  Map {
-    "19/01/2021" => Array [
       Object {
         "eventName": "NightdClass",
         "eventType": "NightClazz",
@@ -361,6 +357,10 @@ Array [
           },
         ],
       },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
       Object {
         "eventName": "Nandtes JS #55",
         "eventType": "Meetup",
@@ -431,46 +431,6 @@ Array [
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
-        ],
-      },
-    ],
-  },
-  Map {
-    "19/01/2021" => Array [
-      Object {
-        "eventName": "Devoxx",
-        "eventType": "Conférence",
-        "talks": Array [
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
           Object {
             "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
@@ -491,46 +451,6 @@ Array [
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-          Object {
-            "speakers": "Anne Imal",
-            "talkTitle": "GraalVM for Sustainable Software Development?",
-            "universe": "",
-          },
-        ],
-      },
-    ],
-  },
-  Map {
-    "19/01/2021" => Array [
-      Object {
-        "eventName": "Devoxx",
-        "eventType": "Conférence",
-        "talks": Array [
           Object {
             "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
@@ -596,6 +516,86 @@ Array [
             "talkTitle": "GraalVM for Sustainable Software Development?",
             "universe": "",
           },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+          Object {
+            "speakers": "Anne Imal",
+            "talkTitle": "GraalVM for Sustainable Software Development?",
+            "universe": "",
+          },
+        ],
+      },
+    ],
+  },
+  Map {
+    "19/01/2021" => Array [
+      Object {
+        "eventName": "Devoxx",
+        "eventType": "Conférence",
+        "talks": Array [
           Object {
             "speakers": "Anne Imal",
             "talkTitle": "GraalVM for Sustainable Software Development?",
