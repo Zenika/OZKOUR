@@ -312,7 +312,7 @@ function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
         },
         style: {
           fontFamily: 'Nunito',
-          bold: true,
+          bold: false,
           fontSize: {
             magnitude: 18,
             unit
