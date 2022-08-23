@@ -1,6 +1,7 @@
 const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
 const { presentationId, getSlides } = require('../infrastructure/googleslide/slideWrapper')
 const { SlideService } = require('../domain/slideService')
+const connect = require('../infrastructure/connect.js')
 
 const slideServiceRepository = googleSlideRepository
 const slideService = new SlideService(slideServiceRepository)
@@ -138,6 +139,7 @@ describe('Integration test on create a slide', () => {
     const talks = [_createValidTalk()]
     try {
       // when
+      connect.createAuth()
       const res = await slideService.createSlides(talks)
       const slides = await getSlides()
       // then
