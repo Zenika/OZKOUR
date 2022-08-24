@@ -1,2 +1,2 @@
-config/auth/credentials.json
-config/auth/token.json
+config/auth/service_account copy.json
+config/auth/service_account.json
