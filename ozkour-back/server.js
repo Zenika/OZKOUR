@@ -25,7 +25,7 @@ const server = Hapi.server({
 exports.init = async () => {
   await server.initialize()
   server.route(routes)
-  connect.auth()
+  connect.createAuth()
   return server
 }
 
