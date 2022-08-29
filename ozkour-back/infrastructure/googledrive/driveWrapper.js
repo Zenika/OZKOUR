@@ -3,7 +3,7 @@ const connect = require('../connect')
 const util = require('util')
 
 const queryParametersSharedDrive = {
-  driveId: '0AGdSbEOfEoGwUk9PVA',
+  driveId: process.env.DRIVE_ID_SHARED_DRIVE,
   supportsAllDrives: true,
   includeItemsFromAllDrives: true,
   corpora: 'drive'
