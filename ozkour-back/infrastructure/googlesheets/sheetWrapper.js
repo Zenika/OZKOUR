@@ -8,11 +8,11 @@ async function getTalks (month, year, spreadsheetId) {
   try {
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${month} ${year}!A2:H`
+      range: `${month} ${year}!A2:I`
     })
     const talkArray = []
-    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle]) => {
-      talkArray.push(new Talk(date, universe, eventType, eventName, talkTitle, speakers))
+    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, link]) => {
+      talkArray.push(new Talk(date, universe, eventType, eventName, talkTitle, speakers, link))
     })
     return talkArray
   } catch (e) {
