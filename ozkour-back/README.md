@@ -18,7 +18,7 @@ The next step is to create the service account.
  * Go to "APIs & Services"
  * Click on "create credentials"
  * Select service account
- * Fill the form (only the service account ID is mendatory). It will create an email address, <id>@projet-ozkour.iam.gserviceaccount.com. This adress will be usefull later.
+ * Fill the form (only the service account ID is mandatory). It will create an email address, <id>@projet-ozkour.iam.gserviceaccount.com. It will be useful later.
  * Click on the service account you just created
  * Click on 'KEYS' > 'ADD KEY' > 'Create new key' > "JSON" (a private key will be dowloaded)
 
@@ -40,37 +40,41 @@ client_x509_cert_url= *your_certificate_url*
 ```
 
 ### Google API
-In this part you will have to add multiple link to your google documents/folders/drive.
-The links have a form similar to: 
-https://docs.google.com/presentation/d/1kjfeliHJJds3djks5IhflapD94i5ucfn3/edit#slide=id.g13615588f61_0_16
-You **ONLY** have to add a part of the link.
-the part of the link to add in the .env file will be "1kjfeliHJJds3djks5IhflapD94i5ucfn3"
+In this part you will have to add multiple id to your google documents/folders/drive.
+The id have to be extracted from the document URL. 
+For example: 
+https://docs.google.com/presentation/d/**1kjfeliHJJds3djks5IhflapD94i5ucfn3**/edit#slide=id.g13615588f61_0_16
+The id is"1kjfeliHJJds3djks5IhflapD94i5ucfn3"
 
+Add the id of the google slide file "Quoi de 9". This will be where all the visuals created by the application will appear, when the template "Quoi de 9" is selected.
 ```
-GOOGLE_SLIDE_LINK= *link_to_your_google_slide_document*
+GOOGLE_SLIDE_LINK= *id_to_your_google_slide_document*
 ```
 
 All your google sheets files and google docs files must be in a shared drive. 
 Once your shared drive is created, you have to add the email address to the shared drive in editor mode.
-Then you can add the link to the drive.
+Then you can add the id of the drive.
 ```
-DRIVE_ID_SHARED_DRIVE= *link_to_your_google_shared_drive*
+DRIVE_ID_SHARED_DRIVE= *id_to_your_google_shared_drive*
 ```
 
 For this app, all the talks are in google sheet files and all these files are located in one folder.
 ```
-GOOGLE_FOLDER_TALK_ID= *link_to_your_google_folder*
+GOOGLE_FOLDER_TALK_ID= *id_to_your_google_folder*
 ```
 
 For this app, all the google doc visuals are in different folders. In these folder you have one template.
 ```
-GOOGLE_FOLDER_EMAILING_ID= *link_to_your_google_folder_for the_emailings*
-GOOGLE_TEMPLATE_EMAILING_ID= *link_to_your_google_doc_file_for the_emailings*
+GOOGLE_FOLDER_EMAILING_ID= *id_to_your_google_folder_for the_emailings*
+GOOGLE_TEMPLATE_EMAILING_ID= *id_to_your_google_doc_file_for the_emailings*
 ```
 
 ## Manage your google files
 ### Talk files
 Each google sheet talk files must begin by a year followed by " - Les Evénements et talks Zenika  (Zenika talks and events)". (It can be changed in the file ozkour-back>infrastructure>googledrive>drive.js)
+
+Each talk file have a sheet for each month.
+Each sheet is named <month> stating with an uppercase in french followed by the year
 
 ### Shared drive
 Each file created by the application will be create by the service account you created. It implies that the owner of these files will be the service account. If the files were not in a shared drive, it might be possible that you can't access to these files.
@@ -92,7 +96,7 @@ If you want to add routes, it will be in the folder ozkour-back>config>routes:
     * find the file that has the name equal to the prefix
     * add your route to this file.
 
-* if the prefix of the route you want to create exists:
+* if the prefix of the route you want to create doesn't exist:
     * create a file with the prefix as a name (e.g., routes GET 'localhost/user/1' et POST 'localhost/user/1' will be in the file 'user.js').
     * add your route to this file.
 
