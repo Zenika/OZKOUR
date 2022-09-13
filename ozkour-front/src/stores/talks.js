@@ -49,7 +49,6 @@ export const useTalkStore = defineStore({
         return data.link;
       }
       default:
-        console.log(this.template.template, "n'est pas reconnu")
         console.error("template :\"",this.template.template,"\" n'est pas reconnu")    
         return "/"
       }
@@ -63,8 +62,6 @@ export const useTalkStore = defineStore({
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
-      
-      console.log(data)
       this.updateTalks(data);       
       this.selectedDate(dateStart, dateEnd);
     }
