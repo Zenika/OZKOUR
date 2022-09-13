@@ -37,10 +37,22 @@ export const useTalkStore = defineStore({
       this.date = { start, end };
     },
     async generateSlidesForSelectedTalks() {
-      const {data} = await api
-        .post("/selected-talks", this.getSelectedTalks);
-          
-      return data.link;
+      switch (this.template.template) {
+      case "Quoi de 9": {
+        const {data} = await api
+          .post("/selected-talks", this.getSelectedTalks);
+        return data.link;
+      }
+      case "E-mailing": {
+        const {data} = await api
+          .post("/emailing", this.getSelectedTalks);
+        return data.link;
+      }
+      default:
+        console.log(this.template.template, "n'est pas reconnu")
+        console.error("template :\"",this.template.template,"\" n'est pas reconnu")    
+        return "/"
+      }
     },
     async getTalks(dateStart, dateEnd) {
       const {data} = await api
@@ -52,6 +64,7 @@ export const useTalkStore = defineStore({
           paramsSerializer: (params) => qs.stringify(params, { encode: false }),
         })
       
+      console.log(data)
       this.updateTalks(data);       
       this.selectedDate(dateStart, dateEnd);
     }
