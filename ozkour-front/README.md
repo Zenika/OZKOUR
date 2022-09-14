@@ -1,9 +1,9 @@
 # ozkour-front
-The client of Ozkour is to ease the creations of the requests.
+The client of Ozkour is the user interface for the application.
 
 ## Project setup
 
-start by installing the dependancies:
+start by installing the dependencies:
 ```
 npm install
 ```

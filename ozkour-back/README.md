@@ -77,7 +77,7 @@ Each talk file have a sheet for each month.
 Each sheet is named <month> stating with an uppercase in french followed by the year
 
 ### Shared drive
-Each file created by the application will be create by the service account you created. It implies that the owner of these files will be the service account. If the files were not in a shared drive, it might be possible that you can't access to these files.
+Each file created by the application will be owned the service account you provided. It implies that the owner of these files will be the service account. If the files were not in a shared drive, they may not be accessible.
 
 Don't forget to add the service account in the shared drive as an editor.
 
