@@ -29,7 +29,7 @@ module.exports = [
         const res = await slideService.createSlides(talks)
         return h.response(res).code(200)
       } catch (e) {
-        console.log(e)
+        console.error(e)
         return h.response(e).code(500)
       }
     }
@@ -46,10 +46,9 @@ module.exports = [
         const driveServiceRepository = googleDriveRepository
         const docService = new DocService(docServiceRepository, driveServiceRepository)
         const res = await docService.createEmailingDocs(talks)
-        console.log(res)
         return h.response(res).code(200)
       } catch (e) {
-        console.log(e)
+        console.error(e)
         return h.response(e).code(500)
       }
     }

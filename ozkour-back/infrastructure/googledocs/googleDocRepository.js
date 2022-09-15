@@ -53,7 +53,6 @@ function addTitle (title, index) {
 
 function addTalkInEmailing (index, titleTalk, speakers, date, eventName, url) {
   const line = `${titleTalk}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
-  console.log(line)
   const end = index + (line.length)
   const request = [
     {
@@ -116,10 +115,8 @@ async function addTextForEmailing (documentId, mapUniverse) {
         talk.link
       ))
       const line = `${talk.talkTitle}, animé par ${talk.speakers}, le ${talk.date} | ${talk.eventName}` + '\n'
-      console.log(line)
       index += line.length + 1
     })
-    console.log(requests)
     universe = mapIter.next().value
   }
   return wrapper.updateDocument(documentId, requests)

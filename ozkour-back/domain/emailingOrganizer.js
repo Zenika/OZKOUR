@@ -1,4 +1,4 @@
-function triTalksEmailing (talks) {
+function sortTalksEmailing (talks) {
   if (!verifyTalkEmailing(talks)) {
     console.log('error')
     throw (new Error('error : wrong format for Emailing'))
@@ -45,6 +45,6 @@ function verifyTalkEmailing (talks) {
   )
 }
 module.exports = {
-  triTalksEmailing,
+  sortTalksEmailing,
   verifyTalkEmailing
 }
