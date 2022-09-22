@@ -100,7 +100,7 @@ export default {
       v-if="isModalVisible"
       id="talk-recap-modal"
       :talks="talks.getSelectedTalks"
-      :template="talks.template.template"
+      :template="talks.template.name"
       :dates="talks.date"
       @submit="onRecapSubmit"
       @close="closeModal"

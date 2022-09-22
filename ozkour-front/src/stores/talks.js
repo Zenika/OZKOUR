@@ -7,7 +7,7 @@ export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
     retrieved: [],
-    template: {template : "", frequency : ""},
+    template: {name : "", frequency : ""},
     date: {},
   }),
   getters: {
@@ -29,7 +29,7 @@ export const useTalkStore = defineStore({
         talk.talkTitle === selected.talkTitle).checked = false;
     },
     pickedTemplate(chosenTemplate,freq) {
-      this.template = {template : chosenTemplate, frequency : freq };
+      this.template = {name : chosenTemplate, frequency : freq };
     },
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
