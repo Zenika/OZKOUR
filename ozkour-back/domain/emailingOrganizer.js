@@ -5,27 +5,19 @@ function sortTalksEmailing (talks) {
   }
   const mapUniverse = new Map()
   talks.forEach(talk => {
+    const newTalk = {
+      date: talk.date,
+      eventType: talk.eventType,
+      eventName: talk.eventName,
+      talkTitle: talk.talkTitle,
+      speakers: talk.speakers,
+      link: talk.link
+    }
     if (!mapUniverse.has(talk.universe)) {
-      mapUniverse.set(talk.universe, [
-        {
-          date: talk.date,
-          eventType: talk.eventType,
-          eventName: talk.eventName,
-          talkTitle: talk.talkTitle,
-          speakers: talk.speakers,
-          link: talk.link
-        }
-      ])
+      mapUniverse.set(talk.universe, [newTalk])
     } else {
       const newValue = mapUniverse.get(talk.universe)
-      newValue.push({
-        date: talk.date,
-        eventType: talk.eventType,
-        eventName: talk.eventName,
-        talkTitle: talk.talkTitle,
-        speakers: talk.speakers,
-        link: talk.link
-      })
+      newValue.push(newTalk)
     }
   })
   return mapUniverse
@@ -35,7 +27,7 @@ function verifyTalkEmailing (talks) {
   if (!Array.isArray(talks) || talks.length <= 0) {
     return false
   }
-  return talks.some(
+  return talks.every(
     ({ date, universe, eventName, talkTitle, speakers }) =>
       Boolean(date) &&
       Boolean(universe) &&
