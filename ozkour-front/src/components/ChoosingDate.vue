@@ -14,14 +14,15 @@ export default {
     const date = ref(new Date());
     const dateStart = ref(""); 
     const dateEnd = ref("");
-    date.value = [dateStart, dateEnd];
 
     const talks = useTalkStore();
-
+    
     date.value = [dateStart.value, dateEnd.value];
-
-    talks.$subscribe((mutation, state) => {
-      if(mutation.events.key === "template"){
+    
+    let currentTemplateName = ''
+    talks.$subscribe((_mutation, state) => {
+      if(state.template.name !== currentTemplateName){
+        currentTemplateName = state.template.name
         if (state.template.frequency === "week") {
           defaultDateNextWeek();
         } else if(state.template.frequency === "month"){
