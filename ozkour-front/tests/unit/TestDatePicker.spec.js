@@ -4,7 +4,7 @@ import { createTestingPinia } from "@pinia/testing";
 
 describe("ChoosingDate Component", () => {
   describe("week day estimation", () => {
-    it("should return 1 when seekNextMonday is called and we are sunday", async () => {
+    it("should return 1 when howManyDaysUntilNextMonday is called and we are sunday", async () => {
       const wrapper = shallowMount(ChoosingDate, {
         global: {
           plugins: [createTestingPinia()],
@@ -13,7 +13,7 @@ describe("ChoosingDate Component", () => {
       const res = wrapper.vm.howManyDaysUntilNextMonday(new Date('2020-02-23'))
       expect(res).toBe(1)
     })
-    it("should return 7 when seekNextMonday is called and we are monday", async () => {
+    it("should return 7 when howManyDaysUntilNextMonday is called and we are monday", async () => {
       const wrapper = shallowMount(ChoosingDate, {
         global: {
           plugins: [createTestingPinia()],
