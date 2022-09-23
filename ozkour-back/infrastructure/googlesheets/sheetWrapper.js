@@ -12,7 +12,16 @@ async function getTalks (month, year, spreadsheetId) {
     })
     const talkArray = []
     res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, link]) => {
-      talkArray.push(new Talk(date, universe, eventType, eventName, talkTitle, speakers, link))
+      const newTalk = {
+        date,
+        universe,
+        eventType,
+        eventName,
+        talkTitle,
+        speakers,
+        link
+      }
+      talkArray.push(new Talk(newTalk))
     })
     return talkArray
   } catch (e) {
