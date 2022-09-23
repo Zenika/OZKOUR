@@ -56,7 +56,7 @@ export default {
       if (d.getDay() !== 1) {
         dateStart.value = dateFormat(
           Date.parse(
-            new Date(d.getTime() + seekNextModay(d) * 24 * 60 * 60 * 1000)
+            new Date(d.getTime() + howManyDaysUntilNextMonday(d) * 24 * 60 * 60 * 1000)
           ),
           "yyyy-mm-dd"
         );
@@ -73,14 +73,8 @@ export default {
       );
     }
 
-    function seekNextModay(d = new Date()) {
-      let n = 0;
-
-      if(d.getDay()<1)
-        n = 1-d.getDay()
-      else
-        n = 7 - d.getDay() + 1
-      return n;
+    function howManyDaysUntilNextMonday(d = new Date()) {
+      return d.getDay()===0?  1 : 7 - d.getDay() + 1;
     }
 
     function updateDateStartCalendar() {
@@ -108,6 +102,7 @@ export default {
       talks,
       dateStart,
       dateEnd,
+      howManyDaysUntilNextMonday,
       updateDateStartCalendar,
       updateDateEndCalendar,
     };
