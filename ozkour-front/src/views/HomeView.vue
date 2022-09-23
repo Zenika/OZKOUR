@@ -18,7 +18,6 @@ import PrimaryLink from '@/components/Links/PrimaryLink'
   </div>
 </template>
 
-
 <style lang="scss" scoped>
 
   h1{

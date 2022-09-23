@@ -10,15 +10,15 @@
             alt="Zenika logo"
             src="../assets/images/logoZenika.png"
           >
-        </a>      
-      </div>  
+        </a>
+      </div>
       <AuthenticationDefault />
     </div>
   </header>
 </template>
 
 <script setup>
-import AuthenticationDefault from "@/components/AuthenticationDefault.vue";
+import AuthenticationDefault from '@/components/AuthenticationDefault.vue'
 </script>
 
 <style lang="scss" scoped>
@@ -36,7 +36,7 @@ import AuthenticationDefault from "@/components/AuthenticationDefault.vue";
       display:flex;
       align-items:center;
       justify-content: space-between;
-  }   
+  }
   #header-user{
       height:100px;
       line-height : 100px;
@@ -56,7 +56,7 @@ import AuthenticationDefault from "@/components/AuthenticationDefault.vue";
   span{
     @include body;
       height:100px;
-      line-height : 100px;       
+      line-height : 100px;
       font-weight: 600;
       display: inline-block;
   }
