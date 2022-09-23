@@ -1,8 +1,8 @@
 <script setup>
 defineProps({
   link: {
-    type : String,
-    required:true
+    type: String,
+    required: true
   }
 })
 

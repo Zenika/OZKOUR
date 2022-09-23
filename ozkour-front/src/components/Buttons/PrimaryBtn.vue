@@ -28,6 +28,6 @@ defineProps({
     &:not(.primary-btn__disabled):hover {
       cursor: pointer;
       @include primary-button-hover;
-    }   
+    }
   }
 </style>

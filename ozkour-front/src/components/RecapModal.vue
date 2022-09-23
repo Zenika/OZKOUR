@@ -1,30 +1,29 @@
 <script>
-import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
-import {ref} from 'vue'
+import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
+import { ref } from 'vue'
 
 export default {
-  components:{
+  components: {
     PrimaryBtn
   },
   props: {
-    talks : {
-      type : Array,
-      required : true
+    talks: {
+      type: Array,
+      required: true
     },
-    dates : {
-      type : Object,
-      required : true
+    dates: {
+      type: Object,
+      required: true
     },
-    template : {
-      type : String,
-      required : true
+    template: {
+      type: String,
+      required: true
     }
   },
-  emits:['close', 'submit'],
-  setup(){
-
+  emits: ['close', 'submit'],
+  setup () {
     const loading = ref(false)
-    function load(){
+    function load () {
       loading.value = !loading.value
     }
     return {
@@ -33,7 +32,7 @@ export default {
     }
   },
   expose: ['reset']
-};
+}
 </script>
 
 <template>
@@ -104,11 +103,10 @@ export default {
       <div class="loading">
         <div class="spinner">
           <div class="head" />
-        </div> 
+        </div>
       </div>
     </div>
-    
-    
+
     <div class="validate">
       <PrimaryBtn
         :disabled="loading"

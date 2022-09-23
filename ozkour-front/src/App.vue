@@ -9,7 +9,7 @@ import HeaderDefault from './components/Header-Default.vue'
 export default {
   name: 'App',
   components: {
-    HeaderDefault,
+    HeaderDefault
   }
 }
 </script>

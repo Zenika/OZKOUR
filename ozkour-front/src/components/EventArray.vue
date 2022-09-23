@@ -56,53 +56,53 @@
 </template>
 
 <script>
-import { ref } from "vue";
-import { computed } from "@vue/runtime-core";
-import { useTalkStore } from "../stores/talks";
+import { ref } from 'vue'
+import { computed } from '@vue/runtime-core'
+import { useTalkStore } from '../stores/talks'
 
-import IconArrow from '@/components/icons/IconArrow.vue';
+import IconArrow from '@/components/icons/IconArrow.vue'
 
 export default {
-  components : {
+  components: {
     IconArrow
   },
 
-  setup() {
-    const talks = useTalkStore();
+  setup () {
+    const talks = useTalkStore()
 
-    const sort = ref("");
-    const ascending = ref(false);
+    const sort = ref('')
+    const ascending = ref(false)
 
     const columnsValues = [
-      { columnName: "date", displayColumns: "DATE" },
-      { columnName: "universe", displayColumns: "UNIVERS" },
-      { columnName: "eventType", displayColumns: "TYPE" },
-      { columnName: "eventName", displayColumns: "NOM DE L'EVENEMENT" },
-      { columnName: "talkTitle", displayColumns: "TITRE DU TALK" },
-      { columnName: "speakers", displayColumns: "SPEAKERS" },
-    ];
+      { columnName: 'date', displayColumns: 'DATE' },
+      { columnName: 'universe', displayColumns: 'UNIVERS' },
+      { columnName: 'eventType', displayColumns: 'TYPE' },
+      { columnName: 'eventName', displayColumns: "NOM DE L'EVENEMENT" },
+      { columnName: 'talkTitle', displayColumns: 'TITRE DU TALK' },
+      { columnName: 'speakers', displayColumns: 'SPEAKERS' }
+    ]
 
-    function compare(a, b) {
-      if (a[sort.value] < b[sort.value]) return -1;
-      if (a[sort.value] > b[sort.value]) return 1;
+    function compare (a, b) {
+      if (a[sort.value] < b[sort.value]) return -1
+      if (a[sort.value] > b[sort.value]) return 1
       // a must be equal to b
-      return 0;
+      return 0
     }
 
     const sortedTalk = computed(() => {
-      if (ascending.value) return talks.retrieved.sort((a, b) => compare(a, b));
-      else return talks.retrieved.sort((a, b) => compare(b, a));
-    });
+      if (ascending.value) return talks.retrieved.sort((a, b) => compare(a, b))
+      else return talks.retrieved.sort((a, b) => compare(b, a))
+    })
 
-    function setSort(column) {
-      if (column === sort.value) ascending.value = !ascending.value;
+    function setSort (column) {
+      if (column === sort.value) ascending.value = !ascending.value
       else {
-        ascending.value = true;
-        sort.value = column;
+        ascending.value = true
+        sort.value = column
       }
     }
 
-    function check(talkSelected, event) {
+    function check (talkSelected, event) {
       const value = {
         date: talkSelected.date,
         universe: talkSelected.universe,
@@ -110,15 +110,15 @@ export default {
         eventName: talkSelected.eventName,
         talkTitle: talkSelected.talkTitle,
         speakers: talkSelected.speakers,
-        checked: talkSelected.checked,
-      };
+        checked: talkSelected.checked
+      }
 
       if (event.target.checked) {
-        //is selected
-        talks.checkTalk(value);
+        // is selected
+        talks.checkTalk(value)
       } else {
-        //is not selected
-        talks.uncheckTalk(value);
+        // is not selected
+        talks.uncheckTalk(value)
       }
     }
 
@@ -129,9 +129,9 @@ export default {
       sortedTalk,
       setSort,
       check,
-      columnsValues,
-    };
-  },
+      columnsValues
+    }
+  }
 }
 </script>
 
