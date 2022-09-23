@@ -19,7 +19,7 @@ module.exports = [
 
   {
     method: 'POST',
-    path: '/selected-talks',
+    path: '/talk/quoiDeNeuf',
     handler: async function (request, h) {
       try {
         const talks = request.payload
@@ -27,16 +27,15 @@ module.exports = [
         const slideServiceRepository = googleSlideRepository
         const slideService = new SlideService(slideServiceRepository)
         const res = await slideService.createSlides(talks)
-        return h.response(res).code(200)
+        return h.response(res)
       } catch (e) {
         console.error(e)
-        return h.response(e).code(500)
       }
     }
   },
   {
     method: 'POST',
-    path: '/emailing',
+    path: '/talk/emailing',
     handler: async function (request, h) {
       try {
         const talks = request.payload
@@ -46,10 +45,9 @@ module.exports = [
         const driveServiceRepository = googleDriveRepository
         const docService = new DocService(docServiceRepository, driveServiceRepository)
         const res = await docService.createEmailingDocs(talks)
-        return h.response(res).code(200)
+        return h.response(res)
       } catch (e) {
         console.error(e)
-        return h.response(e).code(500)
       }
     }
   }

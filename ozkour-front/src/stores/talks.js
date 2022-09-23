@@ -7,7 +7,7 @@ export const useTalkStore = defineStore({
   id: "talk",
   state: () => ({
     retrieved: [],
-    template: {template : "", frequency : ""},
+    template: {name : "", frequency : ""},
     date: {},
   }),
   getters: {
@@ -29,7 +29,7 @@ export const useTalkStore = defineStore({
         talk.talkTitle === selected.talkTitle).checked = false;
     },
     pickedTemplate(chosenTemplate,freq) {
-      this.template = {template : chosenTemplate, frequency : freq };
+      this.template = {name : chosenTemplate, frequency : freq };
     },
     selectedDate(start, end) {
       start = dateFormat(Date.parse(start.value), "dd/mm/yyyy");
@@ -37,19 +37,19 @@ export const useTalkStore = defineStore({
       this.date = { start, end };
     },
     async generateSlidesForSelectedTalks() {
-      switch (this.template.template) {
-      case "Quoi de 9": {
+      switch (this.template.name) {
+      case "QuoiDeNeuf": {
         const {data} = await api
-          .post("/selected-talks", this.getSelectedTalks);
+          .post("/talk/quoiDeNeuf", this.getSelectedTalks);
         return data.link;
       }
       case "E-mailing": {
         const {data} = await api
-          .post("/emailing", this.getSelectedTalks);
+          .post("/talk/emailing", this.getSelectedTalks);
         return data.link;
       }
       default:
-        console.error("template :\"",this.template.template,"\" n'est pas reconnu")    
+        console.error("template :\"",this.template.name,"\" n'est pas reconnu")    
         return "/"
       }
     },
