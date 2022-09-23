@@ -1,10 +1,10 @@
 <script>
-import ChoosingTemplate from "@/components/ChoosingTemplate.vue";
-import ChoosingDate from "@/components/ChoosingDate.vue";
-import PrimaryBtn from "@/components/Buttons/PrimaryBtn.vue";
-import EventArray from "@/components/EventArray.vue";
-import RecapModal from '@/components/RecapModal.vue';
-import { useTalkStore } from "@/stores/talks";
+import ChoosingTemplate from '@/components/ChoosingTemplate.vue'
+import ChoosingDate from '@/components/ChoosingDate.vue'
+import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
+import EventArray from '@/components/EventArray.vue'
+import RecapModal from '@/components/RecapModal.vue'
+import { useTalkStore } from '@/stores/talks'
 
 export default {
   components: {
@@ -17,40 +17,40 @@ export default {
   data () {
     return {
       isModalVisible: false,
-      isSlidesGenerationFailed : false,
-      isGetTalksFailed : false,
-      talks : useTalkStore()
-    };
+      isSlidesGenerationFailed: false,
+      isGetTalksFailed: false,
+      talks: useTalkStore()
+    }
   },
   methods: {
-    async onRecapSubmit() {
+    async onRecapSubmit () {
       try {
-        const link = await this.talks.generateSlidesForSelectedTalks();
-        window.open(link, "_blank");
+        const link = await this.talks.generateSlidesForSelectedTalks()
+        window.open(link, '_blank')
       } catch (e) {
-        this.isSlidesGenerationFailed = true;
+        this.isSlidesGenerationFailed = true
       }
 
-      this.closeModal();
+      this.closeModal()
     },
-    async handleSearchTalk({dateStart, dateEnd}) {
+    async handleSearchTalk ({ dateStart, dateEnd }) {
       try {
         await this.talks.getTalks(dateStart, dateEnd)
       } catch (e) {
-        this.isGetTalksFailed = true;
+        this.isGetTalksFailed = true
       }
     },
-    showModal() {
-      this.isModalVisible = true;
+    showModal () {
+      this.isModalVisible = true
     },
-    closeModal() {
-      this.isModalVisible = false;
+    closeModal () {
+      this.isModalVisible = false
     },
-    closeErrorMessage() {
-      this.isSlidesGenerationFailed = false 
+    closeErrorMessage () {
+      this.isSlidesGenerationFailed = false
     }
-  },
-};
+  }
+}
 </script>
 
 <template>

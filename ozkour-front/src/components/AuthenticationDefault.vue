@@ -37,17 +37,16 @@
   </div>
 </template>
 <script setup>
-import { useAuth0 } from '@auth0/auth0-vue';
+import { useAuth0 } from '@auth0/auth0-vue'
 
-
-const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0();
+const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0()
 
 const login = () => {
-  loginWithRedirect();
+  loginWithRedirect()
 }
 
 const doLogout = () => {
-  logout({ returnTo: window.location.origin });
+  logout({ returnTo: window.location.origin })
 }
 </script>
 <style lang="scss">
@@ -65,12 +64,12 @@ const doLogout = () => {
         border-radius:50%;
         cursor: initial;
       }
-    } 
+    }
   }
   span{
     @include body;
       height:100px;
-      line-height : 100px;       
+      line-height : 100px;
       font-weight: 600;
       display: inline-block;
   }

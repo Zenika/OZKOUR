@@ -1,6 +1,6 @@
 <script setup>
-const { useTalkStore }=require("@/stores/talks");
-const { watch, ref }=require("@vue/runtime-core");
+const { useTalkStore } = require('@/stores/talks')
+const { watch, ref } = require('@vue/runtime-core')
 
 const talk = useTalkStore()
 
@@ -8,39 +8,39 @@ const selected = ref('')
 
 const visuals = [
   {
-    id : "quoide9",
-    label : "QUOI DE 9",
-    value : "QuoiDeNeuf",
-    frequency : "week" 
+    id: 'quoide9',
+    label: 'QUOI DE 9',
+    value: 'QuoiDeNeuf',
+    frequency: 'week'
   },
   {
-    id : "emailing",
-    label : "E-MAILING",
-    value : "E-mailing",
-    frequency : "month"
+    id: 'emailing',
+    label: 'E-MAILING',
+    value: 'E-mailing',
+    frequency: 'month'
   },
   {
-    id : "meetup",
-    label : "MEET-UP",
-    value : "Meet-up",
-    frequency : "month"
+    id: 'meetup',
+    label: 'MEET-UP',
+    value: 'Meet-up',
+    frequency: 'month'
   },
   {
-    id : "slack",
-    label : "SLACK",
-    value : "Slack",
-    frequency : "month"
-  },
+    id: 'slack',
+    label: 'SLACK',
+    value: 'Slack',
+    frequency: 'month'
+  }
 ]
-  
-talk.pickedTemplate(visuals[0].value,visuals[0].frequency);
+
+talk.pickedTemplate(visuals[0].value, visuals[0].frequency)
 
 watch(selected, async (newSelect) => {
   let n = 0
-  while(visuals[n].value !== newSelect){
-    n++;
+  while (visuals[n].value !== newSelect) {
+    n++
   }
-  talk.pickedTemplate(newSelect,visuals[n].frequency);
+  talk.pickedTemplate(newSelect, visuals[n].frequency)
 })
 
 </script>

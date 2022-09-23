@@ -6,8 +6,8 @@
     "jest/globals": true
   },
   "extends": [
-    "plugin:vue/vue3-recommended",
-    "eslint:recommended"
+    "standard",
+    "plugin:vue/vue3-recommended"
   ],
   "parser": "vue-eslint-parser",
   "parserOptions": {
