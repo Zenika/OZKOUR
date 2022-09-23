@@ -98,16 +98,12 @@ function addTalkInEmailing (index, titleTalk, speakers, date, eventName, url) {
 
 async function addTextForEmailing (documentId, mapUniverse) {
   const requests = []
-
-  const mapIter = mapUniverse.keys()
-  let universe = mapIter.next().value
   let index = 1
-  while (universe) {
-    requests.push(...addTitle(universe, index))
+  mapUniverse.forEach((talksForUniverse, universe) => {
+    requests.push(addTitle(universe, index))
     index += universe.length + 1
-    const talksForUniverse = mapUniverse.get(universe)
     talksForUniverse.forEach(talk => {
-      requests.push(...addTalkInEmailing(index,
+      requests.push(addTalkInEmailing(index,
         talk.talkTitle,
         talk.speakers,
         talk.date,
@@ -117,12 +113,13 @@ async function addTextForEmailing (documentId, mapUniverse) {
       const line = `${talk.talkTitle}, animé par ${talk.speakers}, le ${talk.date} | ${talk.eventName}` + '\n'
       index += line.length + 1
     })
-    universe = mapIter.next().value
-  }
+  })
   return wrapper.updateDocument(documentId, requests)
 }
 
 module.exports = {
+  addTitle,
+  addTalkInEmailing,
   removeTemplateText,
   addTextForEmailing,
   getSuccessMessage
