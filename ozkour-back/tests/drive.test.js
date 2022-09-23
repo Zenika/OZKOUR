@@ -1,4 +1,4 @@
-const { filterFilesBetween2Dates } = require('../infrastructure/googledrive/drive')
+const { filterFilesBetween2Dates } = require('../infrastructure/googledrive/googleDriveRepository')
 describe('google drive', () => {
   describe('talk file filter', () => {
     describe('when no file match', () => {

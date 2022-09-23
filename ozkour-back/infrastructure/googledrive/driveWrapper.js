@@ -34,7 +34,23 @@ async function findIdOfFileByNameAndFolder (folderId, name) {
   return { name: res.name, id: res.id }
 }
 
+async function copyDocument (fileId, name, parents) {
+  const auth = await connect.getAuthentication()
+  const drive = google.drive({ version: 'v3', auth })
+  const presentationsCopy = util.promisify(drive.files.copy).bind(drive.files)
+  const { data } = await presentationsCopy({
+    fileId,
+    requestBody: {
+      name,
+      parents
+    },
+    ...queryParametersSharedDrive
+  })
+  return data.id
+}
+
 module.exports = {
   listFileInFolder,
+  copyDocument,
   findIdOfFileByNameAndFolder
 }

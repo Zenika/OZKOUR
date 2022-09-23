@@ -2,7 +2,7 @@ const { v4: uuidv4 } = require('uuid')
 const dateUtils = require('../../Utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
-const slideDataOrganizer = require('../../domain/slideDataOrganizer.js')
+const slideDataOrganizer = require('../../domain/quoiDe9Organizer')
 const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 

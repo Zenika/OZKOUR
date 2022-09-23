@@ -33,7 +33,7 @@ type deleteTemplateInfo = (
 type fillSlideWithData = (
     slideId: string,
     organizedTalks: organizedTalk,
-) => Promise<void>
+) => Promise<any>
 
 type getSuccessMessage = (
 ) => {

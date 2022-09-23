@@ -26,7 +26,6 @@ export default {
     async onRecapSubmit() {
       try {
         const link = await this.talks.generateSlidesForSelectedTalks();
-
         window.open(link, "_blank");
       } catch (e) {
         this.isSlidesGenerationFailed = true;
@@ -100,7 +99,7 @@ export default {
       v-if="isModalVisible"
       id="talk-recap-modal"
       :talks="talks.getSelectedTalks"
-      :template="talks.template.template"
+      :template="talks.template.name"
       :dates="talks.date"
       @submit="onRecapSubmit"
       @close="closeModal"

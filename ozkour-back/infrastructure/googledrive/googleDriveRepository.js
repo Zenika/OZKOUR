@@ -4,6 +4,9 @@ const dateUtils = require('../../Utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
 
+const folderEmailingId = process.env.GOOGLE_FOLDER_EMAILING_ID
+const templateEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_ID
+
 async function getListFileTalksBetween2Dates (start, end) {
   const files = await driveWrapper.listFileInFolder(folderTalksId)
   const res = filterFilesBetween2Dates(start, end, files)
@@ -36,8 +39,17 @@ function filterFilesBetween2Dates (start, end, files) {
   }
 }
 
+async function copyDocument (folder, name) {
+  const fileId = templateEmailingId
+  const parents = folderEmailingId
+  const idDocument = await driveWrapper.copyDocument(fileId, name, parents)
+
+  return idDocument
+}
+
 module.exports = {
   getListFileTalksBetween2Dates,
   filterFilesBetween2Dates,
-  getIdOfTalkFileByYear
+  getIdOfTalkFileByYear,
+  copyDocument
 }

@@ -1,4 +1,4 @@
-const slideDataOrganizer = require('./slideDataOrganizer')
+const slideDataOrganizer = require('./quoiDe9Organizer')
 
 class SlideService {
   constructor (slideServiceRepository) {

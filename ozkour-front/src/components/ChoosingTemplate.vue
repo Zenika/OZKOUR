@@ -10,7 +10,7 @@ const visuals = [
   {
     id : "quoide9",
     label : "QUOI DE 9",
-    value : "Quoi de 9",
+    value : "QuoiDeNeuf",
     frequency : "week" 
   },
   {

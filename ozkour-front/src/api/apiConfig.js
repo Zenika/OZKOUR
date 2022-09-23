@@ -5,5 +5,3 @@ export const api = axios.create({
   timeout: 60000
 })
 
-console.log({vueAppServer: process.env.VUE_APP_SERVER, api});
-
