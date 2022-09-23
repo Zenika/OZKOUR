@@ -85,6 +85,7 @@ describe("Talk Store", () => {
       const talk = useTalkStore();
 
       talk.updateTalks(talksRetrieved);
+      talk.pickedTemplate('QuoiDeNeuf', 'week')
 
       api.post.mockResolvedValueOnce({
         data: {

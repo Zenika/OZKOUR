@@ -54,18 +54,15 @@ export default {
 
     function defaultDateNextWeek(d = new Date()) {
       if (d.getDay() !== 1) {
-        console.log("c'est pas lundi");
         dateStart.value = dateFormat(
           Date.parse(
-            new Date(d.getTime() + seekNextModay(d) * 24 * 60 * 60 * 1000)
+            new Date(d.getTime() + howManyDaysUntilNextMonday(d) * 24 * 60 * 60 * 1000)
           ),
           "yyyy-mm-dd"
         );
       } else {
-        console.log("c'est lundi");
         dateStart.value = dateFormat(Date.parse(d), "yyyy-mm-dd");
       }
-      //dateEnd.value =  dateFormat(Date.parse(new Date().getTime()), "yyyy-mm-dd");
       dateEnd.value = dateFormat(
         Date.parse(
           new Date(
@@ -76,18 +73,8 @@ export default {
       );
     }
 
-    function seekNextModay(d = new Date()) {
-      let n = 0;
-      // while ((d.getDay() + n) % 7 !== 1) {
-      //   n++;
-      // }
-
-      if(d.getDay()<1)
-        n = 1-d.getDay()
-      else
-        n = 7 - d.getDay() + 1
-      //console.log("prochain lundi dans " + n + " jours");
-      return n;
+    function howManyDaysUntilNextMonday(d = new Date()) {
+      return d.getDay()===0?  1 : 7 - d.getDay() + 1;
     }
 
     function updateDateStartCalendar() {
@@ -115,6 +102,7 @@ export default {
       talks,
       dateStart,
       dateEnd,
+      howManyDaysUntilNextMonday,
       updateDateStartCalendar,
       updateDateEndCalendar,
     };
