@@ -1,4 +1,4 @@
-const sheet = require('../domain/talks-sheet')
+const sheet = require('../src/domain/talks-sheet')
 
 describe('sheets', () => {
   it('should return only talk between 19-01-2021 and 25-01-2021', () => {

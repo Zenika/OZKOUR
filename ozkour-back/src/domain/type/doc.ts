@@ -1,4 +1,4 @@
-export type Doc = {
+export type DocRepository = {
     removeTemplateText : removeTemplateText,
     addTextForEmailing : addTextForEmailing,
     getSuccessMessage : getSuccessMessage

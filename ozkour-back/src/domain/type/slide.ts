@@ -1,4 +1,4 @@
-export type Slide = {
+export type SlideRepository = {
     getIdSlideTemplate : getIdSlideTemplate ,
     copySlide : copySlide,
     deleteTemplateInfo : deleteTemplateInfo,
