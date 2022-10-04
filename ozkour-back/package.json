@@ -7,8 +7,8 @@
   "scripts": {
     "test": "npm run test:unit && npm run lint",
     "test:unit": "jest",
-    "dev": "node .",
-    "dev:watch": "nodemon .",
+    "dev": "node ./src",
+    "dev:watch": "nodemon ./src",
     "lint": "eslint --ext .js .",
     "lint:fix": "npm run lint -- --fix"
   },

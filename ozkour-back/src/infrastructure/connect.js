@@ -15,11 +15,19 @@ function createAuth () {
 }
 
 async function getAuthentication () {
+  const file = path.join(__dirname, '../config/auth/service_account.json')
+
+  try {
+    await fs.promises.stat(file)
+  } catch (e) {
+    createAuth()
+    console.error('file service account is missing, we tried to recreate one')
+  }
+
   const auth = new GoogleAuth({
-    keyFile: path.join(__dirname, '../config/auth/service_account.json'),
+    keyFile: file,
     scopes: SCOPES
   })
-
   // Auth client Object
   return auth.getClient()
 }

@@ -2,7 +2,6 @@
 
 require('dotenv').config()
 const Hapi = require('@hapi/hapi')
-const connect = require('./infrastructure/connect')
 const routes = require('./routes')
 const Qs = require('qs')
 
@@ -25,7 +24,6 @@ const server = Hapi.server({
 exports.init = async () => {
   await server.initialize()
   server.route(routes)
-  connect.createAuth()
   return server
 }
 
