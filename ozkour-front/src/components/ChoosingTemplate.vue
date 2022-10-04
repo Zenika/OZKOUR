@@ -11,29 +11,33 @@ const visuals = [
     id: 'quoide9',
     label: 'QUOI DE 9',
     value: 'QuoiDeNeuf',
-    frequency: 'week'
+    frequency: 'week',
+    validated: true
   },
   {
     id: 'emailing',
     label: 'E-MAILING',
     value: 'E-mailing',
-    frequency: 'month'
+    frequency: 'month',
+    validated: true
   },
   {
     id: 'meetup',
     label: 'MEET-UP',
     value: 'Meet-up',
-    frequency: 'month'
+    frequency: 'month',
+    validated: false
   },
   {
     id: 'slack',
     label: 'SLACK',
     value: 'Slack',
-    frequency: 'month'
+    frequency: 'month',
+    validated: false
   }
 ]
 
-talk.pickedTemplate(visuals[0].value, visuals[0].frequency)
+talk.pickedTemplate(visuals[0].value, visuals[0].frequency, visuals[0].validated)
 
 watch(selected, async (newSelect) => {
   let n = 0
@@ -61,6 +65,7 @@ watch(selected, async (newSelect) => {
             name="template"
             :value="visual.value"
             :checked="visual.id == 'quoide9'"
+            :disabled="visual.validated ? false : true"
             class="radio-btn"
           >
           <label :for="visual.id">{{ visual.label }}</label>
