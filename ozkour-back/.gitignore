@@ -1,3 +1,2 @@
-config/auth/service_account copy.json
-config/auth/service_account.json
+service_account.json
 .DS_Store
