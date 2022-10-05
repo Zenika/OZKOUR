@@ -1,7 +1,7 @@
-const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
-const { presentationId, getSlides } = require('../infrastructure/googleslide/slideWrapper')
-const { SlideService } = require('../domain/slideService')
-const connect = require('../infrastructure/connect.js')
+const googleSlideRepository = require('../src/infrastructure/googleslide/googleSlideRepository')
+const { presentationId, getSlides } = require('../src/infrastructure/googleslide/slideWrapper')
+const { SlideService } = require('../src/domain/slideService')
+const connect = require('../src/infrastructure/connect.js')
 
 const slideServiceRepository = googleSlideRepository
 const slideService = new SlideService(slideServiceRepository)

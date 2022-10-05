@@ -1,4 +1,4 @@
-const slide = require('../domain/quoiDe9Organizer')
+const slide = require('../src/domain/quoiDe9Organizer')
 const simpleTalk = require('./dataset/slideDataOrganizer/talk.json')
 const talkClusterDate = require('./dataset/slideDataOrganizer/talkClusterDate.json')
 const talkClusterEvent = require('./dataset/slideDataOrganizer/talkClusterEvent.json')
