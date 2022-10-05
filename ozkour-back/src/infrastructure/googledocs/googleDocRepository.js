@@ -11,7 +11,11 @@ function removeTemplateText (documentId) {
       }
     }
   ]
-  return wrapper.updateDocument(documentId, requests)
+  try {
+    return wrapper.updateDocument(documentId, requests)
+  } catch (e) {
+    throw new Error(`error while trying to remove tempate text on document : ${documentId} (${e})`)
+  }
 }
 
 function getSuccessMessage (documentId) {
@@ -114,7 +118,11 @@ async function addTextForEmailing (documentId, mapUniverse) {
       index += line.length + 1
     })
   })
-  return wrapper.updateDocument(documentId, requests)
+  try {
+    return wrapper.updateDocument(documentId, requests)
+  } catch (e) {
+    throw new Error(`error while trying to add text for emaling on document : ${documentId} (${e})`)
+  }
 }
 
 module.exports = {

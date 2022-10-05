@@ -5,6 +5,7 @@ const customParseFormat = require('dayjs/plugin/customParseFormat')
 const slideDataOrganizer = require('../../domain/quoiDe9Organizer')
 const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
+const { logger } = require('../../logger')
 
 const pictogram = new Map()
 pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
@@ -362,7 +363,9 @@ function createImage (idPage, eventType, yNextElmt) {
   try {
     return sendRequest(requests)
   } catch (error) {
-    console.log('error on loading image for event : ' + eventType)
+    logger.error({
+      message: `error on loading image for event : ${eventType}`
+    })
   }
 }
 
@@ -431,9 +434,13 @@ function fillSlideWithData (idPage, dataOrganized) {
       }
     }
   })
-  const imagesPromises = Promise.allSettled(ImagePromiseList)
-  const allPromises = Promise.all([imagesPromises, sendRequest(requests)])
-  return allPromises
+  try {
+    const imagesPromises = Promise.allSettled(ImagePromiseList)
+    const allPromises = Promise.all([imagesPromises, sendRequest(requests)])
+    return allPromises
+  } catch (e) {
+    throw new Error(`error encountered while trying to fill a slide (${e})`)
+  }
 }
 
 /**
@@ -445,7 +452,7 @@ async function deleteTemplateInfo (idPage) {
     (slide) => slide.objectId === idPage
   )
   if (!slide) {
-    throw (new Error('error delete template element'))
+    throw (new Error('cannot find the slide on which we want to delete the template info'))
   }
   // if the page is the one we're looking for
   const pageElements = slide.pageElements
@@ -472,7 +479,7 @@ async function deleteTemplateInfo (idPage) {
     })
     return sendRequest(requests)
   } catch (e) {
-    throw (new Error('missing element on template slide'))
+    throw (new Error(`missing element(s) on template slide (${e})`))
   }
 }
 
@@ -491,8 +498,12 @@ async function copySlide (idPage) {
       }
     }
   ]
-  await sendRequest(requests)
-  return newIdPage
+  try {
+    await sendRequest(requests)
+    return newIdPage
+  } catch (e) {
+    throw new Error(`error encounterred while trying to copy a slide (${e})`)
+  }
 }
 
 module.exports = {

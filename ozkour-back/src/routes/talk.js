@@ -1,5 +1,5 @@
 // @ts-check
-
+const { logger } = require('../logger')
 const { getTalk } = require('../domain/talks-sheet')
 
 const { SlideService } = require('../domain/slideService')
@@ -13,6 +13,9 @@ module.exports = [
     method: 'GET',
     path: '/talk',
     handler: function (request, h) {
+      logger.info({
+        message: `request get Talks (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+      })
       return getTalk(request.query.start, request.query.end)
     }
   },
@@ -22,6 +25,9 @@ module.exports = [
     path: '/talk/quoiDeNeuf',
     handler: async function (request, h) {
       try {
+        logger.info({
+          message: `request generate quoi de 9 (${request.path})`
+        })
         const talks = request.payload
         /** @type {import ("../domain/type/slide").SlideRepository} */
         const slideServiceRepository = googleSlideRepository
@@ -29,7 +35,9 @@ module.exports = [
         const res = await slideService.createSlides(talks)
         return h.response(res)
       } catch (e) {
-        console.error(e)
+        logger.error({
+          message: `${e}`
+        })
       }
     }
   },
@@ -38,6 +46,9 @@ module.exports = [
     path: '/talk/emailing',
     handler: async function (request, h) {
       try {
+        logger.info({
+          message: `request generate emaling (${request.path})`
+        })
         const talks = request.payload
         /** @type {import ("../domain/type/doc").DocRepository} */
         const docServiceRepository = googleDocRepository
@@ -47,7 +58,9 @@ module.exports = [
         const res = await docService.createEmailingDocs(talks)
         return h.response(res)
       } catch (e) {
-        console.error(e)
+        logger.error({
+          message: `${e}`
+        })
       }
     }
   }

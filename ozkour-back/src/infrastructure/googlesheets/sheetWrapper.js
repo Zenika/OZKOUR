@@ -1,6 +1,7 @@
 const { google } = require('googleapis')
 const connect = require('../connect')
 const { Talk } = require('../../domain/model/talk')
+const { logger } = require('../../logger')
 
 async function getTalks (month, year, spreadsheetId) {
   const auth = await connect.getAuthentication()
@@ -25,7 +26,9 @@ async function getTalks (month, year, spreadsheetId) {
     })
     return talkArray
   } catch (e) {
-    console.log(e)
+    logger.error({
+      message: `error while trying to retrieved talks for ${month} ${year} on file ${spreadsheetId} (${e})`
+    })
   }
 }
 

@@ -37,7 +37,9 @@ exports.start = async () => {
 }
 
 process.on('unhandledRejection', (err) => {
-  console.error(err)
+  logger.error({
+    message: `${err}`
+  })
   throw err
 })
 

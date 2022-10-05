@@ -1,4 +1,5 @@
 require('dotenv').config()
+const { logger } = require('../logger')
 const { GoogleAuth } = require('google-auth-library')
 const serviceAccount = require('../config/auth/service_account.js')
 const path = require('path')
@@ -12,6 +13,9 @@ function createAuth () {
     .replace('}}', '}')
     .replaceAll('\\\\', '\\')
   fs.writeFileSync(path.join(__dirname, '../config/auth/service_account.json'), serviceAccountParsed)
+  logger.debug({
+    message: 'authentication file created'
+  })
 }
 
 async function getAuthentication () {
@@ -27,6 +31,9 @@ async function getAuthentication () {
   const auth = new GoogleAuth({
     keyFile: file,
     scopes: SCOPES
+  })
+  logger.debug({
+    message: 'authentication granted'
   })
   // Auth client Object
   return auth.getClient()

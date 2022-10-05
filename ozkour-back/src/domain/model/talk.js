@@ -9,6 +9,10 @@ class Talk {
     this.link = link
     this.checked = checked
   }
+
+  toString () {
+    return `date : ${this.date},universe : ${this.universe},eventType : ${this.eventType},eventName : ${this.eventName},talkTitle : ${this.talkTitle},speakers : ${this.speakers},link : ${this.link},checked : ${this.checked},`
+  }
 }
 
 module.exports = {

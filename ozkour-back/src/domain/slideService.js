@@ -1,3 +1,4 @@
+const { logger } = require('../logger')
 const slideDataOrganizer = require('./quoiDe9Organizer')
 
 class SlideService {
@@ -7,17 +8,39 @@ class SlideService {
 
   async createSlides (talks) {
     if (!this.verifyTalks(talks)) {
-      console.log('error')
-      throw (new Error('error : wrong format'))
+      throw (new Error('wrong format of talk for "quoi de 9"'))
     }
     const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
+    logger.verbose({
+      message: 'data sorted for slide'
+    })
     const idTemplate = await this.slideServiceRepository.getIdSlideTemplate()
+    logger.verbose({
+      message: `id received for the slide template :${idTemplate}`
+    })
     const unorderedPromises = []
     for (const dataOrganized of dataOrganizedBySlide) {
-      const newIdPage = await this.copySlide(idTemplate)
-      unorderedPromises.push(this.deleteTemplateInfo(newIdPage).then(() => this.addTableData(newIdPage, dataOrganized)).catch(e => console.log(e)))
+      try { // le try est là pour empecher la suite du traitement si la slide n'a pas pu être copié
+        const newIdPage = await this.copySlide(idTemplate)
+        logger.verbose({
+          message: `created new slide with id ${newIdPage}`
+        })
+        unorderedPromises.push(this.deleteTemplateInfo(newIdPage)
+          .then(() => this.addTableData(newIdPage, dataOrganized)))
+        // .catch(e =>
+        //   logger.error({
+        //     message: `error encountered while adding data to ${newIdPage} (error : ${e})`
+        //   })))
+      } catch (e) {
+        logger.error({
+          message: `error : ${e}`
+        })
+      }
     }
     await Promise.all(unorderedPromises)
+    logger.verbose({
+      message: 'all slides have been created'
+    })
     return this.slideServiceRepository.getSuccessMessage()
   }
 

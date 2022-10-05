@@ -1,7 +1,15 @@
+const { logger } = require('../logger')
 function sortTalksEmailing (talks) {
+  logger.debug({
+    message: 'talk recieved :'
+  })
+  talks.forEach(talk => {
+    logger.debug({
+      message: `${talk.toString()}`
+    })
+  })
   if (!verifyTalkEmailing(talks)) {
-    console.log('error')
-    throw (new Error('error : wrong format for Emailing'))
+    throw (new Error('wrong format of talk for Emailing'))
   }
   const mapUniverse = new Map()
   talks.forEach(talk => {
