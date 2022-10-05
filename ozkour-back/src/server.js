@@ -4,6 +4,7 @@ require('dotenv').config()
 const Hapi = require('@hapi/hapi')
 const routes = require('./routes')
 const Qs = require('qs')
+const { logger } = require('./logger')
 
 const port = process.env.PORT
 
@@ -29,7 +30,9 @@ exports.init = async () => {
 
 exports.start = async () => {
   await server.start()
-  console.log(`Server running on: ${server.info.uri}`)
+  logger.info({
+    message: `Server running on: ${server.info.uri}`
+  })
   return server
 }
 
