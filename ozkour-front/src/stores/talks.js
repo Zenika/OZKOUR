@@ -8,7 +8,8 @@ export const useTalkStore = defineStore({
   state: () => ({
     retrieved: [],
     template: { name: '', frequency: '' },
-    date: {}
+    date: {},
+    retreiving_talks: false
   }),
   getters: {
     getSelectedTalks: (state) =>
@@ -54,6 +55,7 @@ export const useTalkStore = defineStore({
       }
     },
     async getTalks (dateStart, dateEnd) {
+      this.retreiving_talks = true
       const { data } = await api
         .get('/talk', {
           params: {
@@ -62,6 +64,8 @@ export const useTalkStore = defineStore({
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
+
+      this.retreiving_talks = false
       this.updateTalks(data)
       this.selectedDate(dateStart, dateEnd)
     }
