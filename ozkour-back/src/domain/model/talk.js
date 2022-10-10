@@ -1,5 +1,5 @@
 class Talk {
-  constructor ({ date, universe, eventType, eventName, talkTitle, speakers, link, checked = true }) {
+  constructor ({ date, universe, eventType, eventName, talkTitle, speakers, link, checked = true, complete = false }) {
     this.date = date
     this.universe = universe
     this.eventType = eventType
@@ -8,6 +8,7 @@ class Talk {
     this.speakers = speakers
     this.link = link
     this.checked = checked
+    this.complete = complete
   }
 
   toString () {
