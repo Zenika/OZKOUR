@@ -35,10 +35,10 @@ async function getTalkFromDate (params) {
     tempDateStart = tempDateStart.add(1, 'month')
   }
   logger.verbose({
-    message: `talk data between ${params.start} and ${params.end}retrived`
+    message: `talk data between ${params.start} and ${params.end}retrieved`
   })
   logger.debug({
-    message: 'talk retrived xD:'
+    message: 'talk retrieved:'
   })
   res.forEach(talk => {
     logger.debug({

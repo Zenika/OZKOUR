@@ -27,10 +27,6 @@ class SlideService {
         })
         unorderedPromises.push(this.deleteTemplateInfo(newIdPage)
           .then(() => this.addTableData(newIdPage, dataOrganized)))
-        // .catch(e =>
-        //   logger.error({
-        //     message: `error encountered while adding data to ${newIdPage} (error : ${e})`
-        //   })))
       } catch (e) {
         logger.error({
           message: `error : ${e}`
