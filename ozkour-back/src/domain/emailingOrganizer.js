@@ -1,13 +1,9 @@
 const { logger } = require('../logger')
 function sortTalksEmailing (talks) {
   logger.debug({
-    message: 'talk recieved :'
+    message: 'talk recieved :' + talks.map(talk => talk.toString()).join('\n')
   })
-  talks.forEach(talk => {
-    logger.debug({
-      message: `${talk.toString()}`
-    })
-  })
+
   if (!verifyTalkEmailing(talks)) {
     throw (new Error('wrong format of talk for Emailing'))
   }

@@ -38,12 +38,7 @@ async function getTalkFromDate (params) {
     message: `talk data between ${params.start} and ${params.end}retrieved`
   })
   logger.debug({
-    message: 'talk retrieved:'
-  })
-  res.forEach(talk => {
-    logger.debug({
-      message: `${talk.toString()}`
-    })
+    message: 'talk recieved :' + res.map(talk => talk.toString()).join('\n')
   })
   return res
 }

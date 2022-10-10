@@ -1,6 +1,7 @@
 const { createLogger, format, transports } = require('winston')
 
 const logger = createLogger({
+  level: process.env.LOGGER_LEVEL,
   format: format.combine(
     format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss'
@@ -9,15 +10,7 @@ const logger = createLogger({
     format.splat(),
     format.json()
   ),
-  defaultMeta: { service: 'ozkour' },
-  transports: [
-    new transports.File({ filename: 'ozkour-back-error.log', level: 'error' }),
-    new transports.File({ filename: 'ozkour-back-info.log', level: 'info' }),
-    new transports.File({ filename: 'ozkour-back-warn.log', level: 'warn' }),
-    new transports.File({ filename: 'ozkour-back-verbose.log', level: 'verbose' }),
-    new transports.File({ filename: 'ozkour-back-debug.log', level: 'debug' }),
-    new transports.File({ filename: 'ozkour-back-combined-log.log' })
-  ]
+  defaultMeta: { service: 'ozkour' }
 })
 
 if (process.env.NODE_ENV !== 'production') {

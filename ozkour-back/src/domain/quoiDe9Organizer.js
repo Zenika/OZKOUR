@@ -16,12 +16,7 @@ const END_OF_SLIDE = 750
 const { logger } = require('../logger')
 function clusterByDate (data) {
   logger.debug({
-    message: 'talk recieved :'
-  })
-  data.forEach(talk => {
-    logger.debug({
-      message: `talk : ${talk.toString()}`
-    })
+    message: 'talk recieved :' + data.map(talk => talk.toString()).join('\n')
   })
   const dataOrganized = new Map()
   data.forEach(talk => {
