@@ -28,7 +28,7 @@ function sortTalksEmailing (data) {
       newValue.push(newTalk)
     }
   })
-  return mapUniverse
+  return { mapUniverse, allTalkComplete }
 }
 
 function verifyTalkEmailing (talks) {

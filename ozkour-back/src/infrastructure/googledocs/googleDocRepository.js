@@ -18,9 +18,9 @@ function removeTemplateText (documentId) {
   }
 }
 
-function getSuccessMessage (documentId) {
+function getSuccessMessage (documentId, message) {
   return {
-    message: 'Created !',
+    message,
     link:
         'https://docs.google.com/document/d/' +
         documentId +

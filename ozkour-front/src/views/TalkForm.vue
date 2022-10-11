@@ -25,7 +25,8 @@ export default {
   methods: {
     async onRecapSubmit () {
       try {
-        const link = await this.talks.generateSlidesForSelectedTalks()
+        const { link, message } = await this.talks.generateSlidesForSelectedTalks()
+        console.log(message)
         window.open(link, '_blank')
       } catch (e) {
         this.isSlidesGenerationFailed = true
