@@ -85,7 +85,8 @@ describe('Docs creation', () => {
       date: '11/03/2021',
       eventName: 'eventName',
       talkTitle: 'Title',
-      speakers: 'speaker'
+      speakers: 'speaker',
+      complete: true
     }
     // when
     const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
@@ -100,7 +101,34 @@ describe('Docs creation', () => {
       eventName: 'eventName',
       talkTitle: 'Title',
       speakers: 'speaker',
-      url: 'https://example.com'
+      url: 'https://example.com',
+      complete: true
+    }
+
+    // when
+    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
+    // then
+    expect(addTalksRequest).toMatchSnapshot()
+  })
+  it('should return a JSON request to add a title in red to a document when the title is "Sans Univers"', () => {
+    // given
+    const title = 'Sans Univers'
+    const index = 1
+    // when
+    const addTitleRequest = googleDocRepository.addTitle(title, index)
+    // then
+    expect(addTitleRequest).toMatchSnapshot()
+  })
+  it('should return a JSON request to add a talk to the doc in red when the talk is incomplete', () => {
+    // given
+    const index = 10
+    const newTalk = {
+      date: '11/03/2021',
+      eventName: 'eventName',
+      talkTitle: 'Title',
+      speakers: '',
+      url: 'https://example.com',
+      complete: false
     }
 
     // when
