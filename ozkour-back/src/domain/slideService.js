@@ -25,8 +25,11 @@ class SlideService {
         logger.verbose({
           message: `created new slide with id ${newIdPage}`
         })
-        unorderedPromises.push(this.deleteTemplateInfo(newIdPage)
-          .then(() => this.addTableData(newIdPage, dataOrganized)))
+        unorderedPromises.push(new Promise((resolve) => {
+          this.deleteTemplateInfo(newIdPage)
+            .then(this.addTableData(newIdPage, dataOrganized))
+            .then(resolve())
+        }))
       } catch (e) {
         logger.error({
           message: `error : ${e}`
