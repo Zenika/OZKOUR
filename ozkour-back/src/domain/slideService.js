@@ -68,6 +68,10 @@ class SlideService {
   async addTableData (idPage, data) {
     return await this.slideServiceRepository.fillSlideWithData(idPage, data)
   }
+
+  async deleteLastSlide () {
+    return await this.slideServiceRepository.deleteLastSlide()
+  }
 }
 
 module.exports = {

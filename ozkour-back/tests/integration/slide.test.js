@@ -28,6 +28,8 @@ describe('Integration test on create a slide', () => {
         .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')
         .replace(/"listId":".*?"/g, '"listId":"listId"')
         .replace(/"lists":{".*?"/g, '"lists":"lists"')).toMatchSnapshot()
+
+      await slideService.deleteLastSlide()
     } catch (e) {
       console.error(e)
       throw e

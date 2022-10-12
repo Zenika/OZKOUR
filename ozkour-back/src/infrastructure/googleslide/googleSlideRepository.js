@@ -506,6 +506,23 @@ async function copySlide (idPage) {
   }
 }
 
+async function deleteLastSlide () {
+  const res = await getSlides()
+  const idPage = res[1].objectId
+  const requests = [
+    {
+      deleteObject: {
+        objectId: idPage
+      }
+    }
+  ]
+  try {
+    await sendRequest(requests)
+  } catch (e) {
+    throw new Error(`error encounterred while trying to delete a slide (${e})`)
+  }
+}
+
 module.exports = {
   addDateTextWithStyle,
   createTableWithStyleForAllEventsInDate,
@@ -517,5 +534,6 @@ module.exports = {
   fillSlideWithData,
   copySlide,
   getIdSlideTemplate,
-  getSuccessMessage
+  getSuccessMessage,
+  deleteLastSlide
 }
