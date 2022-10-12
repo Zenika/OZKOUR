@@ -32,7 +32,7 @@ class SlideService {
         }))
       } catch (e) {
         logger.error({
-          message: `error : ${e}`
+          message: `${e}`
         })
       }
     }

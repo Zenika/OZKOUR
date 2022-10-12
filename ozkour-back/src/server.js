@@ -44,6 +44,11 @@ process.on('unhandledRejection', (err) => {
 })
 
 server.ext('onPreResponse', function (request, h) {
-  console.error(request.response)
+  if (request.response.isBoom) {
+    logger.error({
+      message: `${request.response}`
+    })
+  }
+
   return h.continue
 })
