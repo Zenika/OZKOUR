@@ -1,4 +1,4 @@
-const { Talk } = require('../src/domain/model/talk.js')
+const { Talk } = require('../../src/domain/model/talk.js')
 describe('Talks', () => {
   it('return the talk as a String', () => {
     const newTalk = {

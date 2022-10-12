@@ -1,6 +1,6 @@
-const googleDocRepository = require('../src/infrastructure/googledocs/googleDocRepository')
+const googleDocRepository = require('../../src/infrastructure/googledocs/googleDocRepository')
 
-const emailingOrganizer = require('../src/domain/emailingOrganizer')
+const emailingOrganizer = require('../../src/domain/emailingOrganizer')
 
 describe('Verify data emailing', () => {
   describe('undefined value', () => {
