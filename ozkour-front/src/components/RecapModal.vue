@@ -90,7 +90,7 @@ export default {
             :key="talk"
             data-test="talk-title"
           >
-            {{ talk.talkTitle }}
+            {{ talk.talkTitle?talk.talkTitle:"non renseigné" }}
           </li>
         </ul>
       </div>

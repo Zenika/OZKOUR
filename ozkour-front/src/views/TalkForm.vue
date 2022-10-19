@@ -5,6 +5,7 @@ import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
 import EventArray from '@/components/EventArray.vue'
 import RecapModal from '@/components/RecapModal.vue'
 import { useTalkStore } from '@/stores/talks'
+import PopUp from '../components/PopUp.vue'
 
 export default {
   components: {
@@ -12,10 +13,13 @@ export default {
     ChoosingDate,
     PrimaryBtn,
     EventArray,
-    RecapModal
+    RecapModal,
+    PopUp
   },
   data () {
     return {
+      replyMessage: '',
+      isPopUpVisible: false,
       isModalVisible: false,
       isSlidesGenerationFailed: false,
       isGetTalksFailed: false,
@@ -28,6 +32,8 @@ export default {
         const { link, message } = await this.talks.generateSlidesForSelectedTalks()
         console.log(message)
         window.open(link, '_blank')
+        this.replyMessage = message
+        this.showPopUp()
       } catch (e) {
         this.isSlidesGenerationFailed = true
       }
@@ -47,6 +53,13 @@ export default {
     closeModal () {
       this.isModalVisible = false
     },
+    showPopUp () {
+      this.isPopUpVisible = true
+    },
+    closePopUp () {
+      this.replyMessage = ''
+      this.isPopUpVisible = false
+    },
     closeErrorMessage () {
       this.isSlidesGenerationFailed = false
     }
@@ -56,7 +69,7 @@ export default {
 
 <template>
   <main
-    :class="{ 'container--blured': isModalVisible }"
+    :class="{ 'container--blured': isModalVisible || isPopUpVisible}"
     class="container"
   >
     <h1 class="container__title">
@@ -99,11 +112,20 @@ export default {
     <RecapModal
       v-if="isModalVisible"
       id="talk-recap-modal"
+      class="non-blurable"
       :talks="talks.getSelectedTalks"
       :template="talks.template.name"
       :dates="talks.date"
       @submit="onRecapSubmit"
       @close="closeModal"
+    />
+    <PopUp
+      v-if="isPopUpVisible"
+      id="talk-popup-modal"
+      class="non-blurable"
+      :message="replyMessage"
+      :title="'Résultat'"
+      @close="closePopUp"
     />
   </main>
 </template>
@@ -113,7 +135,7 @@ export default {
 .container {
   @include form-container;
 
-  &--blured > :not(#talk-recap-modal) {
+  &--blured > :not(.non-blurable) {
     filter: blur(5px);
   }
 
