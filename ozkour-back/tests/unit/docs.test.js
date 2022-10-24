@@ -50,20 +50,15 @@ describe('Verify data emailing', () => {
     it('should return an error if parameter is an array with zero element', () => {
       const array = []
       // then
-      try {
-        emailingOrganizer.verifyTalkEmailing(array)
-      } catch (e) {
-        expect('' + e).toBe('Error: Can\'t create visual without talks')
-      }
+      const error = () => emailingOrganizer.verifyTalkEmailing(array)
+      expect(error).toThrow('Can\'t create visual without talks')
     })
     it('should return false if the talks are undefined', () => {
       const notArray = undefined
+      // when
+      const error = () => emailingOrganizer.verifyTalkEmailing(notArray)
       // then
-      try {
-        emailingOrganizer.verifyTalkEmailing(notArray)
-      } catch (e) {
-        expect('' + e).toBe('Error: Can\'t create visual without talks')
-      }
+      expect(error).toThrow('Can\'t create visual without talks')
     })
   })
 })
