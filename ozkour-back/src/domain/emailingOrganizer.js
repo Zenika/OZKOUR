@@ -3,7 +3,7 @@ const { Talk } = require('./model/talk')
 function sortTalksEmailing (data) {
   const talks = data.map(talk => new Talk(talk))
   logger.debug({
-    message: `talk recieved : \n${talks.map(talk => ' ' + talk.toString()).join('\n')}`
+    message: `talks recieved : \n${talks.map(talk => ' ' + talk.toString()).join('\n')}`
   })
 
   if (!verifyTalkEmailing(talks)) {
