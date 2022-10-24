@@ -12,6 +12,7 @@ function sortTalksEmailing (data) {
   }
   const mapUniverse = new Map()
   talks.forEach(talk => {
+    const thisTalkIsComplete = (!!talk.date && !!talk.eventType && !!talk.eventName && !!talk.talkTitle && !!talk.speakers)
     const newTalk = {
       date: talk.date,
       eventType: talk.eventType,
@@ -19,7 +20,7 @@ function sortTalksEmailing (data) {
       talkTitle: talk.talkTitle,
       speakers: talk.speakers,
       link: talk.link,
-      complete: (allTalkComplete || (!!talk.date && !!talk.eventType && !!talk.eventName && !!talk.talkTitle && !!talk.speakers))
+      complete: (allTalkComplete || thisTalkIsComplete)
     }
     if (!mapUniverse.has(talk.universe)) {
       mapUniverse.set(talk.universe, [newTalk])
