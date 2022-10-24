@@ -508,7 +508,8 @@ async function copySlide (idPage) {
 
 async function deleteLastSlide () {
   const res = await getSlides()
-  const idPage = res[1].objectId
+  const indexAddedSlide = 1
+  const idPage = res[indexAddedSlide].objectId
   const requests = [
     {
       deleteObject: {
