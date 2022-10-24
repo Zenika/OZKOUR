@@ -1,7 +1,13 @@
-function sortTalksEmailing (talks) {
+const { logger } = require('../logger')
+const { Talk } = require('./model/talk')
+function sortTalksEmailing (data) {
+  const talks = data.map(talk => new Talk(talk))
+  logger.debug({
+    message: `talks recieved : \n${talks.map(talk => ' ' + talk.toString()).join('\n')}`
+  })
+
   if (!verifyTalkEmailing(talks)) {
-    console.log('error')
-    throw (new Error('error : wrong format for Emailing'))
+    throw (new Error('wrong format of talk for Emailing'))
   }
   const mapUniverse = new Map()
   talks.forEach(talk => {

@@ -41,4 +41,6 @@ type getSuccessMessage = (
     link: string;
 }
 
+type deleteLastSlide = (
+) => Promise<void>
     
