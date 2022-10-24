@@ -42,7 +42,6 @@ module.exports = [
       logger.info({
         message: `request generate emaling (${request.path})`
       })
-      console.log(request.payload)
       const talks = request.payload
       /** @type {import ("../domain/type/doc").DocRepository} */
       const docServiceRepository = googleDocRepository

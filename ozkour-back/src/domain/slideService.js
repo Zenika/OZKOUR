@@ -31,9 +31,7 @@ class SlideService {
             .then(resolve())
         }))
       } catch (e) {
-        logger.error({
-          message: `${e}`
-        })
+        logger.error(e)
       }
     }
     await Promise.all(unorderedPromises)
@@ -58,19 +56,19 @@ class SlideService {
   }
 
   async copySlide (idPage) {
-    return await this.slideServiceRepository.copySlide(idPage)
+    return this.slideServiceRepository.copySlide(idPage)
   }
 
   async deleteTemplateInfo (idPage) {
-    return await this.slideServiceRepository.deleteTemplateInfo(idPage)
+    return this.slideServiceRepository.deleteTemplateInfo(idPage)
   }
 
   async addTableData (idPage, data) {
-    return await this.slideServiceRepository.fillSlideWithData(idPage, data)
+    return this.slideServiceRepository.fillSlideWithData(idPage, data)
   }
 
   async deleteLastSlide () {
-    return await this.slideServiceRepository.deleteLastSlide()
+    return this.slideServiceRepository.deleteLastSlide()
   }
 }
 
