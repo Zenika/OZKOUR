@@ -37,18 +37,12 @@ function verifyTalkEmailing (talks) {
     throw new Error('Can\'t create visual without talks')
   }
   return talks.every(
-    ({ date, universe, eventName, talkTitle, speakers }) => {
-      if (date === '') { date = undefined }
-      if (universe === '') { universe = undefined }
-      if (eventName === '') { eventName = undefined }
-      if (talkTitle === '') { talkTitle = undefined }
-      if (speakers === '') { speakers = undefined }
-      return Boolean(date) &&
+    ({ date, universe, eventName, talkTitle, speakers }) =>
+      Boolean(date) &&
       Boolean(universe) &&
       Boolean(eventName) &&
       Boolean(talkTitle) &&
       Boolean(speakers)
-    }
   )
 }
 module.exports = {
