@@ -45,29 +45,20 @@ describe('Verify data emailing', () => {
       // then
       expect(emailingOrganizer.verifyTalkEmailing(array)).toBe(true)
     })
-    it('should return false if parameter is an array with zero element', () => {
+  })
+  describe('the talks are not in a valid array', () => {
+    it('should return an error if parameter is an array with zero element', () => {
       const array = []
       // then
-      expect(emailingOrganizer.verifyTalkEmailing(array)).toBe(false)
+      const error = () => emailingOrganizer.verifyTalkEmailing(array)
+      expect(error).toThrow('Can\'t create visual without talks')
     })
-  })
-  describe('the talks are not in an array', () => {
-    describe('the talks is a String', () => {
-      it('should return false', () => {
-        // given
-        const notArray = 'This is not an array'
-        // when
-        const isNotAnArray = emailingOrganizer.verifyTalkEmailing(notArray)
-        // then
-        expect(isNotAnArray).toBe(false)
-      })
-    })
-    describe('the talks are undefined', () => {
-      it('should return false', () => {
-        const notArray = undefined
-        // then
-        expect(emailingOrganizer.verifyTalkEmailing(notArray)).toBe(false)
-      })
+    it('should return false if the talks are undefined', () => {
+      const notArray = undefined
+      // when
+      const error = () => emailingOrganizer.verifyTalkEmailing(notArray)
+      // then
+      expect(error).toThrow('Can\'t create visual without talks')
     })
   })
 })
@@ -85,25 +76,58 @@ describe('Docs creation', () => {
   it('should return a JSON request to add a talk to the doc without url', () => {
     // given
     const index = 10
-    const titleTalk = 'Title'
-    const speakers = 'speaker'
-    const date = '11/03/2021'
-    const eventName = 'eventName'
+    const newTalk = {
+      date: '11/03/2021',
+      eventName: 'eventName',
+      talkTitle: 'Title',
+      speakers: 'speaker',
+      complete: true
+    }
     // when
-    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, titleTalk, speakers, date, eventName)
+    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
     // then
     expect(addTalksRequest).toMatchSnapshot()
   })
   it('should return a JSON request to add a talk to the doc with url', () => {
     // given
     const index = 10
-    const titleTalk = 'Title'
-    const speakers = 'speaker'
-    const date = '11/03/2021'
-    const eventName = 'eventName'
-    const url = 'https://example.com'
+    const newTalk = {
+      date: '11/03/2021',
+      eventName: 'eventName',
+      talkTitle: 'Title',
+      speakers: 'speaker',
+      url: 'https://example.com',
+      complete: true
+    }
+
     // when
-    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, titleTalk, speakers, date, eventName, url)
+    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
+    // then
+    expect(addTalksRequest).toMatchSnapshot()
+  })
+  it('should return a JSON request to add a title in red to a document when the title is "Sans Univers"', () => {
+    // given
+    const title = 'Sans Univers'
+    const index = 1
+    // when
+    const addTitleRequest = googleDocRepository.addTitle(title, index)
+    // then
+    expect(addTitleRequest).toMatchSnapshot()
+  })
+  it('should return a JSON request to add a talk to the doc in red when the talk is incomplete', () => {
+    // given
+    const index = 10
+    const newTalk = {
+      date: '11/03/2021',
+      eventName: 'eventName',
+      talkTitle: 'Title',
+      speakers: '',
+      url: 'https://example.com',
+      complete: false
+    }
+
+    // when
+    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
     // then
     expect(addTalksRequest).toMatchSnapshot()
   })

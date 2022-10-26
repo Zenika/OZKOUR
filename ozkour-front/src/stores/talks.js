@@ -42,16 +42,16 @@ export const useTalkStore = defineStore({
       case 'QuoiDeNeuf': {
         const { data } = await api
           .post('/talk/quoiDeNeuf', this.getSelectedTalks)
-        return data.link
+        return { link: data.link, message: data.message }
       }
       case 'E-mailing': {
         const { data } = await api
           .post('/talk/emailing', this.getSelectedTalks)
-        return data.link
+        return { link: data.link, message: data.message }
       }
       default:
         console.error('template :"', this.template.name, "\" n'est pas reconnu")
-        return '/'
+        return { link: '/', message: 'unknown template' }
       }
     },
     async getTalks (dateStart, dateEnd) {

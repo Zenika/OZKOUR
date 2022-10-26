@@ -6,18 +6,21 @@ function sortTalksEmailing (data) {
     message: `talks recieved : \n${talks.map(talk => ' ' + talk.toString()).join('\n')}`
   })
 
-  if (!verifyTalkEmailing(talks)) {
+  const allTalkComplete = verifyTalkEmailing(data)
+  if (!allTalkComplete) {
     throw (new Error('wrong format of talk for Emailing'))
   }
   const mapUniverse = new Map()
   talks.forEach(talk => {
+    const thisTalkIsComplete = (!!talk.date && !!talk.eventType && !!talk.eventName && !!talk.talkTitle && !!talk.speakers)
     const newTalk = {
       date: talk.date,
       eventType: talk.eventType,
       eventName: talk.eventName,
       talkTitle: talk.talkTitle,
       speakers: talk.speakers,
-      link: talk.link
+      link: talk.link,
+      complete: (allTalkComplete || thisTalkIsComplete)
     }
     if (!mapUniverse.has(talk.universe)) {
       mapUniverse.set(talk.universe, [newTalk])
@@ -26,12 +29,12 @@ function sortTalksEmailing (data) {
       newValue.push(newTalk)
     }
   })
-  return mapUniverse
+  return { mapUniverse, allTalkComplete }
 }
 
 function verifyTalkEmailing (talks) {
   if (!Array.isArray(talks) || talks.length <= 0) {
-    return false
+    throw new Error('Can\'t create visual without talks')
   }
   return talks.every(
     ({ date, universe, eventName, talkTitle, speakers }) =>

@@ -8,7 +8,7 @@ class DocService {
   }
 
   async createEmailingDocs (talks) {
-    const talksByUniverses = emailingOrganizer.sortTalksEmailing(talks)
+    const { mapUniverse: talksByUniverses, allTalkComplete } = emailingOrganizer.sortTalksEmailing(talks)
     const { date: talkeDate } = talks[0]
     const year = dateUtils.getYear(talkeDate)
     const month = dateUtils.convDateToMonthInLetter(talkeDate)
@@ -22,10 +22,11 @@ class DocService {
       message: 'removed template text'
     })
     await this.docServiceRepository.addTextForEmailing(documentId, talksByUniverses)
+    const message = allTalkComplete ? 'Created !' : 'At least one talk is incomplete...'
     logger.verbose({
       message: 'add text for emailing document'
     })
-    return this.docServiceRepository.getSuccessMessage(documentId)
+    return this.docServiceRepository.getSuccessMessage(documentId, message)
   }
 }
 
