@@ -92,7 +92,7 @@ describe('Talk Store', () => {
           link: 'https://monliendeslide.com'
         }
       })
-      const res = await talk.generateSlidesForSelectedTalks(talksRetrieved)
+      const res = await talk.generateVisualForSelectedTalks()
 
       expect(res.link).toBe('https://monliendeslide.com')
     })

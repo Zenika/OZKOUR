@@ -1,50 +1,23 @@
 <script setup>
-const { useTalkStore } = require('@/stores/talks')
 const { watch, ref } = require('@vue/runtime-core')
 
-const talk = useTalkStore()
-
+const props = defineProps({
+  visuals: {
+    type: Array,
+    required: true
+  }
+})
+const emit = defineEmits(['changeTemplate'])
 const selected = ref('')
 
-const visuals = [
-  {
-    id: 'quoide9',
-    label: 'QUOI DE 9',
-    value: 'QuoiDeNeuf',
-    frequency: 'week',
-    validated: true
-  },
-  {
-    id: 'emailing',
-    label: 'E-MAILING',
-    value: 'E-mailing',
-    frequency: 'month',
-    validated: true
-  },
-  {
-    id: 'meetup',
-    label: 'MEET-UP',
-    value: 'Meet-up',
-    frequency: 'month',
-    validated: false
-  },
-  {
-    id: 'slack',
-    label: 'SLACK',
-    value: 'Slack',
-    frequency: 'month',
-    validated: false
-  }
-]
-
-talk.pickedTemplate(visuals[0].value, visuals[0].frequency, visuals[0].validated)
+emit('changeTemplate', 0)
 
 watch(selected, async (newSelect) => {
   let n = 0
-  while (visuals[n].value !== newSelect) {
+  while (props.visuals[n].value !== newSelect) {
     n++
   }
-  talk.pickedTemplate(newSelect, visuals[n].frequency)
+  emit('changeTemplate', n)
 })
 
 </script>

@@ -37,7 +37,7 @@ export const useTalkStore = defineStore({
       end = dateFormat(Date.parse(end.value), 'dd/mm/yyyy')
       this.date = { start, end }
     },
-    async generateSlidesForSelectedTalks () {
+    async generateVisualForSelectedTalks () {
       switch (this.template.name) {
       case 'QuoiDeNeuf': {
         const { data } = await api

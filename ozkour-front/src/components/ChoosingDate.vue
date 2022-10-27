@@ -1,7 +1,6 @@
 <script>
 import dateFormat from 'dateformat'
-import { ref, watch } from 'vue'
-import { useTalkStore } from '../stores/talks'
+import { ref } from 'vue'
 
 import Datepicker from '@vuepic/vue-datepicker'
 
@@ -9,103 +8,96 @@ export default {
   components: {
     Datepicker
   },
-  emits: ['onSearchTalk'],
-  setup (props, context) {
+  props: {
+    chosenTemplate: {
+      type: Object,
+      required: true
+    }
+  },
+  emits: ['onSearchEvent'],
+  data () {
     const date = ref(new Date())
-    const dateStart = ref('')
-    const dateEnd = ref('')
-
-    const talks = useTalkStore()
+    const dateStart = ref()
+    const dateEnd = ref()
 
     date.value = [dateStart.value, dateEnd.value]
-
-    let currentTemplateName = ''
-    talks.$subscribe((_mutation, state) => {
-      if (state.template.name !== currentTemplateName) {
-        currentTemplateName = state.template.name
-        if (state.template.frequency === 'week') {
-          defaultDateNextWeek()
-        } else if (state.template.frequency === 'month') {
-          defaultDateNextMonth()
-        }
-        updateDateStartCalendar()
-        updateDateEndCalendar()
-        searchTalk()
+    return {
+      date,
+      dateStart,
+      dateEnd
+    }
+  },
+  watch: {
+    chosenTemplate: function (newTemplate) {
+      if (newTemplate.frequency === 'week') {
+        this.defaultDateNextWeek()
+      } else if (newTemplate.frequency === 'month') {
+        this.defaultDateNextMonth()
       }
-    })
-
-    function defaultDateNextMonth (d = new Date()) {
+      this.updateDateStartCalendar()
+      this.updateDateEndCalendar()
+      this.searchTalk()
+    },
+    date: function (newDate) {
+      this.dateStart = dateFormat(Date.parse(newDate[0]), 'yyyy-mm-dd')
+      this.dateEnd = dateFormat(Date.parse(newDate[1]), 'yyyy-mm-dd')
+      this.searchTalk()
+    }
+  },
+  methods: {
+    defaultDateNextMonth (d = new Date()) {
       if (d.getDate() < 7) {
-        dateStart.value = dateFormat(Date.parse(d), 'yyyy-mm-dd')
-        dateEnd.value = dateFormat(
+        this.dateStart = dateFormat(Date.parse(d), 'yyyy-mm-dd')
+        this.dateEnd = dateFormat(
           Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 0)),
           'yyyy-mm-dd'
         )
       } else {
-        dateStart.value = dateFormat(
+        this.dateStart = dateFormat(
           Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 1)),
           'yyyy-mm-dd'
         )
-        dateEnd.value = dateFormat(
+        this.dateEnd = dateFormat(
           Date.parse(new Date(d.getFullYear(), d.getMonth() + 2, 0)),
           'yyyy-mm-dd'
         )
       }
-    }
-
-    function defaultDateNextWeek (d = new Date()) {
+    },
+    defaultDateNextWeek (d = new Date()) {
       if (d.getDay() !== 1) {
-        dateStart.value = dateFormat(
+        this.dateStart = dateFormat(
           Date.parse(
-            new Date(d.getTime() + howManyDaysUntilNextMonday(d) * 24 * 60 * 60 * 1000)
+            new Date(d.getTime() + this.howManyDaysUntilNextMonday(d) * 24 * 60 * 60 * 1000)
           ),
           'yyyy-mm-dd'
         )
       } else {
-        dateStart.value = dateFormat(Date.parse(d), 'yyyy-mm-dd')
+        this.dateStart = dateFormat(Date.parse(d), 'yyyy-mm-dd')
       }
-      dateEnd.value = dateFormat(
+      this.dateEnd = dateFormat(
         Date.parse(
           new Date(
-            new Date(dateStart.value).getTime() + 6 * 24 * 60 * 60 * 1000
+            new Date(this.dateStart).getTime() + 6 * 24 * 60 * 60 * 1000
           )
         ),
         'yyyy-mm-dd'
       )
-    }
-
-    function howManyDaysUntilNextMonday (d = new Date()) {
+    },
+    updateDateEndCalendar () {
+      if (this.dateEnd < this.dateStart && this.dateStart !== '') this.dateEnd = this.dateStart
+      this.date[1] = this.dateEnd
+    },
+    updateDateStartCalendar () {
+      if (this.dateEnd < this.dateStart && this.dateEnd !== '') this.dateStart = this.dateEnd
+      this.date[0] = this.dateStart
+    },
+    howManyDaysUntilNextMonday (d = new Date()) {
       return d.getDay() === 0 ? 1 : 7 - d.getDay() + 1
-    }
-
-    function updateDateStartCalendar () {
-      if (dateEnd.value < dateStart.value && dateEnd.value !== '') dateStart.value = dateEnd.value
-      date.value[0] = dateStart.value
-    }
-
-    function updateDateEndCalendar () {
-      if (dateEnd.value < dateStart.value && dateStart.value !== '') dateEnd.value = dateStart.value
-      date.value[1] = dateEnd.value
-    }
-
-    function searchTalk () {
-      context.emit('onSearchTalk', { dateStart, dateEnd })
-    }
-
-    watch(date, async (newDate) => {
-      dateStart.value = dateFormat(Date.parse(newDate[0]), 'yyyy-mm-dd')
-      dateEnd.value = dateFormat(Date.parse(newDate[1]), 'yyyy-mm-dd')
-      searchTalk()
-    })
-
-    return {
-      date,
-      talks,
-      dateStart,
-      dateEnd,
-      howManyDaysUntilNextMonday,
-      updateDateStartCalendar,
-      updateDateEndCalendar
+    },
+    searchTalk () {
+      const dateStart = this.dateStart
+      const dateEnd = this.dateEnd
+      this.$emit('onSearchEvent', { dateStart, dateEnd })
     }
   }
 }
@@ -119,7 +111,7 @@ export default {
         id="start"
         v-model="dateStart"
         type="date"
-        name="talk-start"
+        name="event-start"
         @change="updateDateStartCalendar"
       >
     </div>
@@ -130,7 +122,7 @@ export default {
         id="end"
         v-model="dateEnd"
         type="date"
-        name="talk-end"
+        name="event-end"
         :min="dateStart"
         @change="updateDateEndCalendar"
       >

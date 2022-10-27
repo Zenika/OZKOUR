@@ -42,7 +42,7 @@ $darkshadow:                rgba(0, 0, 0, 0.25);
     gap: 50px;
 }
 
-@mixin talks-list {
+@mixin events-list {
     width: 80%;
     display: flex;
     flex-direction: column;

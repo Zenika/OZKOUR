@@ -6,12 +6,12 @@ import PrimaryLink from '@/components/Links/PrimaryLink'
   <h1>Generateur de Visuel</h1>
   <div id="btn-container">
     <PrimaryLink
-      link="/talkform"
+      link="/talk"
     >
       Talk
     </PrimaryLink>
     <PrimaryLink
-      link="/"
+      link="/training"
     >
       Training
     </PrimaryLink>

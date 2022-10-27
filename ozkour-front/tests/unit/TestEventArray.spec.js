@@ -1,208 +1,207 @@
-import { mount } from "@vue/test-utils";
-import EventArray from "@/components/EventArray.vue";
-import { createTestingPinia } from "@pinia/testing";
-import { useTalkStore } from "../../src/stores/talks";
+import { mount } from '@vue/test-utils'
+import EventArray from '@/components/TalksArray.vue'
+import { createTestingPinia } from '@pinia/testing'
+import { useTalkStore } from '../../src/stores/talks'
 
-function isAscending(arr) {
+function isAscending (arr) {
   return arr.every(function (x, i) {
-    return i === 0 || x >= arr[i - 1];
-  });
+    return i === 0 || x >= arr[i - 1]
+  })
 }
-function isDescending(arr) {
+function isDescending (arr) {
   return arr.every(function (x, i) {
-    return i === 0 || x <= arr[i - 1];
-  });
+    return i === 0 || x <= arr[i - 1]
+  })
 }
 
-describe("ListEvent Component", () => {
-  it("Display title when no talk", () => {
+describe('ListEvent Component', () => {
+  it('Display title when no talk', () => {
     const wrapper = mount(EventArray, {
       global: {
-        plugins: [createTestingPinia()],
-      },
-    });
+        plugins: [createTestingPinia()]
+      }
+    })
 
-    const todo = wrapper.get("h2");
-    expect(todo.text()).toBe("Pas de talks entre les dates recherchées");
+    const todo = wrapper.get('h2')
+    expect(todo.text()).toBe('Pas de talks entre les dates recherchées')
   })
 
-  it("Display Title when talks", () => {
+  it('Display Title when talks', () => {
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrieved: talksRetrieved },
-            },
-          }),
-        ],
-      },
-    });
+              talk: { retrieved: talksRetrieved }
+            }
+          })
+        ]
+      }
+    })
 
-    const todo = wrapper.get("h2");
-    expect(todo.text()).toBe("Liste des événements sélectionnés");
+    const todo = wrapper.get('h2')
+    expect(todo.text()).toBe('Liste des événements sélectionnés')
   })
 
-  it("Right amount of columns when talks", () => {
+  it('Right amount of columns when talks', () => {
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrieved: talksRetrieved },
-            },
-          }),
-        ],
-      },
-    });
+              talk: { retrieved: talksRetrieved }
+            }
+          })
+        ]
+      }
+    })
 
-    expect(wrapper.findAll("th")).toHaveLength(7);
+    expect(wrapper.findAll('th')).toHaveLength(7)
   })
 
-  it("Same number of talks", () => {
+  it('Same number of talks', () => {
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrieved: talksRetrieved },
-            },
-          }),
-        ],
-      },
-    });
-    expect(wrapper.findAll('[data-test="talks"]')).toHaveLength(5);
+              talk: { retrieved: talksRetrieved }
+            }
+          })
+        ]
+      }
+    })
+    expect(wrapper.findAll('[data-test="talks"]')).toHaveLength(5)
   })
-  
-  it("uncheck is working", async () => {
+
+  it('uncheck is working', async () => {
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrieved: talksRetrieved },
-            },
-          }),
-        ],
-      },
-    });
+              talk: { retrieved: talksRetrieved }
+            }
+          })
+        ]
+      }
+    })
 
-    const talk = useTalkStore();
-    const inputCheckbox = wrapper.find('[type="checkbox"]');
-    await inputCheckbox.setChecked(false);
+    const talk = useTalkStore()
+    const inputCheckbox = wrapper.find('[type="checkbox"]')
+    await inputCheckbox.setChecked(false)
 
-    expect(inputCheckbox.element.checked).toBe(false);
-    expect(talk.uncheckTalk).toHaveBeenCalledTimes(1);
+    expect(inputCheckbox.element.checked).toBe(false)
+    expect(talk.uncheckTalk).toHaveBeenCalledTimes(1)
   })
 
-  it("check talk is working", async () => {
+  it('check talk is working', async () => {
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrieved: talksRetrieved },
-            },
-          }),
-        ],
-      },
-    });
+              talk: { retrieved: talksRetrieved }
+            }
+          })
+        ]
+      }
+    })
 
-    const talk = useTalkStore();
-    const inputCheckbox = wrapper.find('[type="checkbox"]');
+    const talk = useTalkStore()
+    const inputCheckbox = wrapper.find('[type="checkbox"]')
 
-    await inputCheckbox.setChecked(false);
-    await inputCheckbox.setChecked(true);
+    await inputCheckbox.setChecked(false)
+    await inputCheckbox.setChecked(true)
 
-    expect(inputCheckbox.element.checked).toBe(true);
-    expect(talk.checkTalk).toHaveBeenCalledTimes(1);
+    expect(inputCheckbox.element.checked).toBe(true)
+    expect(talk.checkTalk).toHaveBeenCalledTimes(1)
   })
-  
-  it("check order(ascending/discending) when clicking on column", async () => {
+
+  it('check order(ascending/discending) when clicking on column', async () => {
     const wrapper = mount(EventArray, {
       global: {
         plugins: [
           createTestingPinia({
             initialState: {
-              talk: { retrieved: talksRetrieved },
-            },
-          }),
-        ],
-      },
-    });
+              talk: { retrieved: talksRetrieved }
+            }
+          })
+        ]
+      }
+    })
 
-    let columns = wrapper.find('[data-test="speakers"]');
-    let talksLines = wrapper.findAll('[data-test="talks"]');
-    let listSpeakersOrderedAsTheyAppear = [];
+    const columns = wrapper.find('[data-test="speakers"]')
+    let talksLines = wrapper.findAll('[data-test="talks"]')
+    let listSpeakersOrderedAsTheyAppear = []
 
-    await columns.trigger("click");
+    await columns.trigger('click')
 
-    talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
+    talksLines = wrapper.findAll('[data-test="talks"]')// reload talks
 
     talksLines.forEach((element) => {
-      listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
-    });
+      listSpeakersOrderedAsTheyAppear.push(element.findAll('td')[6].text())
+    })
 
-    expect(isAscending(listSpeakersOrderedAsTheyAppear)).toBe(true);
+    expect(isAscending(listSpeakersOrderedAsTheyAppear)).toBe(true)
 
-    await columns.trigger("click");
+    await columns.trigger('click')
 
-    talksLines = wrapper.findAll('[data-test="talks"]');//reload talks
-    listSpeakersOrderedAsTheyAppear = [];
+    talksLines = wrapper.findAll('[data-test="talks"]')// reload talks
+    listSpeakersOrderedAsTheyAppear = []
 
     talksLines.forEach((element) => {
-      listSpeakersOrderedAsTheyAppear.push(element.findAll("td")[6].text());
-    });
+      listSpeakersOrderedAsTheyAppear.push(element.findAll('td')[6].text())
+    })
 
-    expect(isDescending(listSpeakersOrderedAsTheyAppear)).toBe(true);
-
+    expect(isDescending(listSpeakersOrderedAsTheyAppear)).toBe(true)
   })
-});
+})
 
 const talksRetrieved = [
   {
-    date: "19/01/2021",
-    universe: "",
-    eventType: "Meetup",
-    eventName: "GraalVM Night",
-    talkTitle: "GraalVM for Sustainable Software Development?",
-    speakers: "John Doe",
-    checked: true,
+    date: '19/01/2021',
+    universe: '',
+    eventType: 'Meetup',
+    eventName: 'GraalVM Night',
+    talkTitle: 'GraalVM for Sustainable Software Development?',
+    speakers: 'John Doe',
+    checked: true
   },
   {
-    date: "19/01/2021",
-    universe: "",
-    eventType: "NightClazz",
-    eventName: "NightClass",
-    talkTitle: "Migration JS vers TS sur du react",
-    speakers: "John Doe",
-    checked: true,
+    date: '19/01/2021',
+    universe: '',
+    eventType: 'NightClazz',
+    eventName: 'NightClass',
+    talkTitle: 'Migration JS vers TS sur du react',
+    speakers: 'John Doe',
+    checked: true
   },
   {
-    date: "21/01/2021",
-    universe: "",
-    eventType: "Meetup",
-    eventName: "Nantes JS #55",
-    talkTitle: "Nuxt 2021",
-    speakers: "John Doe",
-    checked: true,
+    date: '21/01/2021',
+    universe: '',
+    eventType: 'Meetup',
+    eventName: 'Nantes JS #55',
+    talkTitle: 'Nuxt 2021',
+    speakers: 'John Doe',
+    checked: true
   },
   {
-    date: "21/01/2021",
-    universe: "",
-    eventType: "Autre",
-    eventName: "Webinar Strigo",
-    talkTitle: "Simplify Remote Hands-On Training and Improve Engagement",
-    speakers: "John Doe",
-    checked: true,
+    date: '21/01/2021',
+    universe: '',
+    eventType: 'Autre',
+    eventName: 'Webinar Strigo',
+    talkTitle: 'Simplify Remote Hands-On Training and Improve Engagement',
+    speakers: 'John Doe',
+    checked: true
   },
   {
-    date: "25/01/2021",
-    universe: "",
-    eventType: "NightClazz",
-    eventName: "RemoteClazz Nodejs",
-    talkTitle: "Techniques minimalistes pour Node.js",
-    speakers: "John Doe",
-    checked: true,
-  },
-];
+    date: '25/01/2021',
+    universe: '',
+    eventType: 'NightClazz',
+    eventName: 'RemoteClazz Nodejs',
+    talkTitle: 'Techniques minimalistes pour Node.js',
+    speakers: 'John Doe',
+    checked: true
+  }
+]

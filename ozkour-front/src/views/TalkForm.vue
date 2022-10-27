@@ -2,7 +2,7 @@
 import ChoosingTemplate from '@/components/ChoosingTemplate.vue'
 import ChoosingDate from '@/components/ChoosingDate.vue'
 import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
-import EventArray from '@/components/EventArray.vue'
+import EventArray from '@/components/TalksArray.vue'
 import RecapModal from '@/components/RecapModal.vue'
 import { useTalkStore } from '@/stores/talks'
 import PopUp from '../components/PopUp.vue'
@@ -17,25 +17,67 @@ export default {
     PopUp
   },
   data () {
+    const visuals = [
+      {
+        id: 'quoide9',
+        label: 'QUOI DE 9',
+        value: 'QuoiDeNeuf',
+        frequency: 'week',
+        validated: true
+      },
+      {
+        id: 'emailing',
+        label: 'E-MAILING',
+        value: 'E-mailing',
+        frequency: 'month',
+        validated: true
+      },
+      {
+        id: 'meetup',
+        label: 'MEET-UP',
+        value: 'Meet-up',
+        frequency: 'month',
+        validated: false
+      },
+      {
+        id: 'slack',
+        label: 'SLACK',
+        value: 'Slack',
+        frequency: 'month',
+        validated: false
+      }
+    ]
     return {
       replyMessage: '',
       isPopUpVisible: false,
+      visuals,
       isModalVisible: false,
-      isSlidesGenerationFailed: false,
+      isVisualGenerationFailed: false,
       isGetTalksFailed: false,
       talks: useTalkStore()
+    }
+  },
+  computed: {
+    chosenTemplate () {
+      if (this.talks.$state.template) {
+        return this.talks.$state.template
+      } else {
+        return {
+          name: '',
+          frequency: ''
+        }
+      }
     }
   },
   methods: {
     async onRecapSubmit () {
       try {
-        const { link, message } = await this.talks.generateSlidesForSelectedTalks()
-        console.log(message)
+        const { link, message } = await this.talks.generateVisualForSelectedTalks()
         window.open(link, '_blank')
         this.replyMessage = message
         this.showPopUp()
       } catch (e) {
-        this.isSlidesGenerationFailed = true
+        this.isVisualGenerationFailed = true
       }
 
       this.closeModal()
@@ -61,7 +103,10 @@ export default {
       this.isPopUpVisible = false
     },
     closeErrorMessage () {
-      this.isSlidesGenerationFailed = false
+      this.isVisualGenerationFailed = false
+    },
+    changeTemplate (n) {
+      this.talks.pickedTemplate(this.visuals[n].value, this.visuals[n].frequency)
     }
   }
 }
@@ -77,8 +122,14 @@ export default {
     </h1>
 
     <section class="container__section">
-      <ChoosingTemplate />
-      <ChoosingDate @on-search-talk="handleSearchTalk" />
+      <ChoosingTemplate
+        :visuals="visuals"
+        @change-template="changeTemplate"
+      />
+      <ChoosingDate
+        :chosen-template="chosenTemplate"
+        @on-search-event="handleSearchTalk"
+      />
     </section>
 
     <section class="container__eventList">
@@ -93,7 +144,7 @@ export default {
     </PrimaryBtn>
 
     <div
-      v-if="isSlidesGenerationFailed"
+      v-if="isVisualGenerationFailed"
       class="errorMsg"
     >
       <img
@@ -114,7 +165,7 @@ export default {
       id="talk-recap-modal"
       class="non-blurable"
       :talks="talks.getSelectedTalks"
-      :template="talks.template.name"
+      :template="chosenTemplate.name"
       :dates="talks.date"
       @submit="onRecapSubmit"
       @close="closeModal"
@@ -144,7 +195,7 @@ export default {
   }
 
   &__eventList {
-    @include talks-list;
+    @include events-list;
   }
 
   &__lastSection {
