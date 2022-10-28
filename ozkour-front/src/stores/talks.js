@@ -55,13 +55,14 @@ export const useTalkStore = defineStore({
       }
     },
     async getTalks (dateStart, dateEnd) {
+      console.log(dateStart, dateEnd)
       this.retreivingTalks = true
       try {
         const { data } = await api
           .get('/talk', {
             params: {
-              start: dateStart.value,
-              end: dateEnd.value
+              start: dateStart,
+              end: dateEnd
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
