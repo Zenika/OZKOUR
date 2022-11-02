@@ -5,8 +5,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:unit && npm run lint",
-    "test:unit": "jest",
+    "test": "npm run test:all && npm run lint",
+    "test:all": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
     "dev": "node ./src",
     "dev:watch": "nodemon ./src",
     "lint": "eslint --ext .js .",
@@ -20,7 +22,8 @@
     "dotenv": "^16.0.0",
     "googleapis": "^39.2.0",
     "nodemon": "^2.0.20",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "eslint": "^8.23.1",

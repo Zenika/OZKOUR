@@ -13,7 +13,11 @@ const END_OF_SLIDE = 750
  * @param {Array} The talks that need to be clustered
  * @return {dataOrganized} dataOrganized where the keys are the date and the values are the talks
  */
+const { logger } = require('../logger')
 function clusterByDate (data) {
+  logger.debug({
+    message: 'talk recieved :' + data.map(talk => talk.toString()).join('\n')
+  })
   const dataOrganized = new Map()
   data.forEach(talk => {
     if (!dataOrganized.has(talk.date)) {

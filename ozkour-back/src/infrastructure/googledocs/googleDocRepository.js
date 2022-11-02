@@ -11,12 +11,16 @@ function removeTemplateText (documentId) {
       }
     }
   ]
-  return wrapper.updateDocument(documentId, requests)
+  try {
+    return wrapper.updateDocument(documentId, requests)
+  } catch (e) {
+    throw new Error(`error while trying to remove tempate text on document : ${documentId} (${e})`)
+  }
 }
 
-function getSuccessMessage (documentId) {
+function getSuccessMessage (documentId, message) {
   return {
-    message: 'Created !',
+    message,
     link:
         'https://docs.google.com/document/d/' +
         documentId +
@@ -38,7 +42,7 @@ function addTitle (title, index) {
     {
       updateParagraphStyle: {
         paragraphStyle: {
-          namedStyleType: 'HEADING_1'
+          namedStyleType: title === 'Sans Univers' ? 'HEADING_2' : 'HEADING_1'
         },
         fields: 'namedStyleType',
         range: {
@@ -51,8 +55,9 @@ function addTitle (title, index) {
   return requests
 }
 
-function addTalkInEmailing (index, titleTalk, speakers, date, eventName, url) {
-  const line = `${titleTalk}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
+function addTalkInEmailing (index, talk) {
+  const { talkTitle, speakers, date, eventName, url } = talk
+  const line = `${talkTitle}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
   const end = index + (line.length)
   const request = [
     {
@@ -66,7 +71,7 @@ function addTalkInEmailing (index, titleTalk, speakers, date, eventName, url) {
     {
       updateParagraphStyle: {
         paragraphStyle: {
-          namedStyleType: 'NORMAL_TEXT'
+          namedStyleType: talk.complete ? 'NORMAL_TEXT' : 'SUBTITLE'
         },
         fields: 'namedStyleType',
         range: {
@@ -88,7 +93,7 @@ function addTalkInEmailing (index, titleTalk, speakers, date, eventName, url) {
         fields: 'link',
         range: {
           startIndex: index,
-          endIndex: index + titleTalk.length
+          endIndex: index + talkTitle.length
         }
       }
     })
@@ -100,21 +105,22 @@ async function addTextForEmailing (documentId, mapUniverse) {
   const requests = []
   let index = 1
   mapUniverse.forEach((talksForUniverse, universe) => {
+    if (universe === '') { universe = 'Sans Univers' }
     requests.push(addTitle(universe, index))
     index += universe.length + 1
     talksForUniverse.forEach(talk => {
       requests.push(addTalkInEmailing(index,
-        talk.talkTitle,
-        talk.speakers,
-        talk.date,
-        talk.eventName,
-        talk.link
+        talk
       ))
       const line = `${talk.talkTitle}, animé par ${talk.speakers}, le ${talk.date} | ${talk.eventName}` + '\n'
       index += line.length + 1
     })
   })
-  return wrapper.updateDocument(documentId, requests)
+  try {
+    return wrapper.updateDocument(documentId, requests)
+  } catch (e) {
+    throw new Error(`error while trying to add text for emaling on document : ${documentId} (${e})`)
+  }
 }
 
 module.exports = {

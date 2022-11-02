@@ -1,4 +1,5 @@
 const dayjs = require('dayjs')
+const { logger } = require('../logger')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
@@ -33,6 +34,12 @@ async function getTalkFromDate (params) {
     res = res.concat(talkFromMonth)
     tempDateStart = tempDateStart.add(1, 'month')
   }
+  logger.verbose({
+    message: `talk data between ${params.start} and ${params.end}retrieved`
+  })
+  logger.debug({
+    message: 'talk recieved :' + res.map(talk => talk.toString()).join('\n')
+  })
   return res
 }
 
