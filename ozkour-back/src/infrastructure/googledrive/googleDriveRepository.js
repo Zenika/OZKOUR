@@ -3,6 +3,7 @@ const driveWrapper = require('./driveWrapper')
 const dateUtils = require('../../Utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
+const folderTrainingsId = process.env.GOOGLE_FOLDER_TALK_ID
 
 const folderEmailingId = process.env.GOOGLE_FOLDER_EMAILING_ID
 const templateEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_ID
@@ -16,6 +17,15 @@ async function getListFileTalksBetween2Dates (start, end) {
 async function getIdOfTalkFileByYear (year) {
   const Filename = year + ' - Les Evénements et talks Zenika  (Zenika talks and events)'
   const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTalksId, Filename)
+  if (res === undefined) {
+    throw (new Error('no file named :"' + Filename + '" found'))
+  }
+  return res.id
+}
+
+async function getIdOfTrainingFileByYear (year) {
+  const Filename = year + ' - Les formations Zenika (Zenika trainings)'
+  const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTrainingsId, Filename)
   if (res === undefined) {
     throw (new Error('no file named :"' + Filename + '" found'))
   }
@@ -51,5 +61,6 @@ module.exports = {
   getListFileTalksBetween2Dates,
   filterFilesBetween2Dates,
   getIdOfTalkFileByYear,
+  getIdOfTrainingFileByYear,
   copyDocument
 }
