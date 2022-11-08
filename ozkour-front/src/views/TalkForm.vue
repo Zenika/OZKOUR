@@ -164,9 +164,10 @@ export default {
       v-if="isModalVisible"
       id="talk-recap-modal"
       class="non-blurable"
-      :talks="talks.getSelectedTalks"
+      :events="talks.getSelectedTalks"
       :template="chosenTemplate.name"
       :dates="talks.date"
+      :is-event-type-talk="true"
       @submit="onRecapSubmit"
       @close="closeModal"
     />

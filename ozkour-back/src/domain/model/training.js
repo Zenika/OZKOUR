@@ -1,11 +1,12 @@
 class Training {
-  constructor ({ date, trainingTitle, universe, duration, price, link }) {
+  constructor ({ date, trainingTitle, universe, duration, price, link, checked = true }) {
     this.date = date
     this.trainingTitle = trainingTitle
     this.universe = universe
     this.duration = duration
     this.price = price
     this.link = link
+    this.checked = checked
   }
 
   toString () {

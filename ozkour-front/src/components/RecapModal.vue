@@ -1,15 +1,27 @@
 <script>
 import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
+import RecapTalks from '@/components/RecapTalks.vue'
+import RecapTrainings from '@/components/RecapTrainings.vue'
 import { ref } from 'vue'
 
 export default {
   components: {
-    PrimaryBtn
+    PrimaryBtn,
+    RecapTalks,
+    RecapTrainings
   },
   props: {
-    talks: {
+    events: {
       type: Array,
       required: true
+    },
+    isEventTypeTalk: {
+      type: Boolean,
+      default: false
+    },
+    isEventTypeTraining: {
+      type: Boolean,
+      default: false
     },
     dates: {
       type: Object,
@@ -73,27 +85,14 @@ export default {
           <b>Dates : </b>{{ dates.start }} au {{ dates.end }}
         </p>
       </div>
-      <div>
-        <div class="recap-details">
-          <div class="icon-bg">
-            <img
-              src="../assets/images/microphone.png"
-              alt="calendar"
-              class="icon"
-            >
-          </div>
-          <p><b>Liste des talks : </b></p>
-        </div>
-        <ul class="events">
-          <li
-            v-for="talk in talks"
-            :key="talk"
-            data-test="talk-title"
-          >
-            {{ talk.talkTitle?talk.talkTitle:"non renseigné" }}
-          </li>
-        </ul>
-      </div>
+      <RecapTalks
+        v-if="isEventTypeTalk"
+        :talks="events"
+      />
+      <RecapTrainings
+        v-if="isEventTypeTraining"
+        :trainings="events"
+      />
     </div>
 
     <div

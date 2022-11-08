@@ -148,9 +148,10 @@ export default {
       v-if="isModalVisible"
       id="trainings-recap-modal"
       class="non-blurable"
-      :trainings="trainings.getSelectedTrainings"
+      :events="trainings.getSelectedTrainings"
       :template="chosenTemplate.name"
       :dates="trainings.date"
+      :is-event-type-training="true"
       @submit="onRecapSubmit"
       @close="closeModal"
     />
