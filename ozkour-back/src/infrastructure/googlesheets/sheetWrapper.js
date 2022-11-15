@@ -38,15 +38,12 @@ async function getTrainings () {
   const sheets = google.sheets({ version: 'v4', auth })
 
   const spreadsheetId = '12_8zEfeeAo6WaQNkmjVLxrI39h3EDtmfThhYyMc3qC0'
-  const month = 'Octobre'
-  const year = '2022'
-
+  const sheetName = 'Promotion training'
   try {
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${month} ${year}!A2:F`
+      range: `${sheetName}!A2:F`
     })
-    console.log(res.data.values)
     const trainingArray = []
     res.data.values.forEach(([trainingTitle, universe, duration, price, link, date]) => {
       const newTraining = {
@@ -62,7 +59,7 @@ async function getTrainings () {
     return trainingArray
   } catch (e) {
     logger.error({
-      message: `error while trying to retrieved trainings for ${month} ${year} on file ${spreadsheetId} (${e})`
+      message: `error while trying to retrieved trainings for ${sheetName} on file ${spreadsheetId} (${e})`
     })
   }
 }

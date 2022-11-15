@@ -29,7 +29,7 @@ module.exports = [
       /** @type {import ("../domain/type/drive").DriveRepository} */
       const driveServiceRepository = googleDriveRepository
       const docService = new DocService(docServiceRepository, driveServiceRepository)
-      const res = await docService.createEmailingDocs(trainings)
+      const res = await docService.createEmailingTrainingDocs(trainings)
       return h.response(res)
     }
   }

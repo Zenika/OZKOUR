@@ -1,5 +1,6 @@
 const { logger } = require('../logger')
 const { Talk } = require('./model/talk')
+const { Training } = require('./model/training')
 function sortTalksEmailing (data) {
   const talks = data.map(talk => new Talk(talk))
   logger.debug({
@@ -8,7 +9,9 @@ function sortTalksEmailing (data) {
 
   const allTalkComplete = verifyTalkEmailing(data)
   if (!allTalkComplete) {
-    throw (new Error('wrong format of talk for Emailing'))
+    logger.warn({
+      message: 'wrong format of talk for Emailing'
+    })
   }
   const mapUniverse = new Map()
   talks.forEach(talk => {
@@ -45,7 +48,54 @@ function verifyTalkEmailing (talks) {
       Boolean(speakers)
   )
 }
+
+function sortTrainingsEmailing (data) {
+  if (!verifyTrainingEmailing(data)) {
+    throw (new Error('wrong format of training for Emailing'))
+  }
+
+  const trainings = data.map(training => new Training(training))
+  logger.debug({
+    message: `trainings recieved : \n${trainings.map(training => ' ' + training.toString()).join('\n')}`
+  })
+  const mapUniverse = new Map()
+  trainings.forEach(training => {
+    const newTraining = {
+      date: training.date,
+      trainingTitle: training.trainingTitle,
+      universe: training.universe,
+      duration: training.duration,
+      price: training.price,
+      link: training.link,
+      checked: training.checked
+    }
+    if (!mapUniverse.has(training.universe)) {
+      mapUniverse.set(training.universe, [newTraining])
+    } else {
+      const newValue = mapUniverse.get(training.universe)
+      newValue.push(newTraining)
+    }
+  })
+  return { mapUniverse }
+}
+
+function verifyTrainingEmailing (trainings) {
+  if (!Array.isArray(trainings) || trainings.length <= 0) {
+    throw new Error('Can\'t create visual without trainings')
+  }
+  return trainings.every(
+    ({ date, universe, trainingTitle, duration, link }) =>
+      Boolean(date) &&
+      Boolean(universe) &&
+      Boolean(trainingTitle) &&
+      Boolean(duration) &&
+      Boolean(link)
+  )
+}
+
 module.exports = {
   sortTalksEmailing,
-  verifyTalkEmailing
+  verifyTalkEmailing,
+  sortTrainingsEmailing,
+  verifyTrainingEmailing
 }

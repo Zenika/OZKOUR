@@ -1,6 +1,6 @@
 export type DocRepository = {
-    removeTemplateText : removeTemplateText,
-    addTextForEmailing : addTextForEmailing,
+    removeTemplateTextEmailingTalk : removeTemplateTextEmailingTalk,
+    addTextForTalkEmailing : addTextForTalkEmailing,
     getSuccessMessage : getSuccessMessage
 }
 
@@ -17,11 +17,11 @@ type mapUniverse = {
     ]>
 }
 
-type removeTemplateText = (
+type removeTemplateTextEmailingTalk = (
     documentId: string,
 ) => Promise<void>
 
-type addTextForEmailing = (
+type addTextForTalkEmailing = (
     documentId: string,
     talksByUniverse: mapUniverse
 ) => Promise<void>

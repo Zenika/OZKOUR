@@ -24,5 +24,19 @@ describe('dateUtils', () => {
     it('should return a date as words, given a month in number format', () => {
       expect(dateUtils.displayFullDateWithWords('11/03/2021')).toBe('11 mars 2021')
     })
+    describe('Date and Duration to Date Interval', () => {
+      it('should return a date at a format similar to "le [day] [month]", given a date and a duration equal to 1', () => {
+        const res = dateUtils.convDateAndDurationToDateIntervalInLetter('11/03/2022', 1)
+        expect(res).toBe('le 11 mars')
+      })
+      it('should return a date at a format similar to "les [day] et [day] [month]", given a date, a duration equal to 2 and the dates of the interval are from the same month', () => {
+        const res = dateUtils.convDateAndDurationToDateIntervalInLetter('11/03/2022', 2)
+        expect(res).toBe('les 11 et 12 mars')
+      })
+      it('should return a date at a format similar to "du [day] [month] au [day] [month]", given a date and a duration equal or superior to 2', () => {
+        const res = dateUtils.convDateAndDurationToDateIntervalInLetter('31/03/2022', 2)
+        expect(res).toBe('du 31 mars au 1er avril')
+      })
+    })
   })
 })

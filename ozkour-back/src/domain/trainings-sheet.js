@@ -1,10 +1,7 @@
 const dayjs = require('dayjs')
-const { logger } = require('../logger')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
 const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
-const { getIdOfTrainingFileByYear } = require('../infrastructure/googledrive/googleDriveRepository')
-const utils = require('../Utils/dateUtils')
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 dayjs.extend(customParseFormat)
@@ -24,7 +21,6 @@ async function getTrainingFromDate () { // a voir mais peut-etre des changement 
 const getTraining = async (start, end = dayjs()) => {
   const formatedDateStart = dayjs(start)
   const formatedDateEnd = dayjs(end)
-  // const param = { start: formatedDateStart, end: formatedDateEnd }
   const res = await getTrainingFromDate()
   return dateFilter(res, formatedDateStart, formatedDateEnd)
 }
@@ -41,8 +37,6 @@ function dateFilter (trainings, start, end) {
   trainings = trainings.filter(function ({ date }) {
     if (!date) return false
     const dateTraining = dayjs(date, 'DD-MM-YYYY')
-    console.log(dateTraining)
-    console.log(dateTraining.isSameOrAfter(formatedDateStart, 'day') && dateTraining.isSameOrBefore(formatedDateEnd, 'day'))
     return dateTraining.isSameOrAfter(formatedDateStart, 'day') && dateTraining.isSameOrBefore(formatedDateEnd, 'day')
   })
   return trainings

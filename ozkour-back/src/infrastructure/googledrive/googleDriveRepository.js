@@ -3,10 +3,12 @@ const driveWrapper = require('./driveWrapper')
 const dateUtils = require('../../Utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
-const folderTrainingsId = process.env.GOOGLE_FOLDER_TALK_ID
+const folderTalkEmailingId = process.env.GOOGLE_FOLDER_EMAILING_TALK_ID
+const templateTalkEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_TALK_ID
 
-const folderEmailingId = process.env.GOOGLE_FOLDER_EMAILING_ID
-const templateEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_ID
+const folderTrainingsId = process.env.GOOGLE_FOLDER_TRAINING_ID
+const folderTrainingEmailingId = process.env.GOOGLE_FOLDER_TRAINING_ID
+const templateTrainingEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_TRAINING_ID
 
 async function getListFileTalksBetween2Dates (start, end) {
   const files = await driveWrapper.listFileInFolder(folderTalksId)
@@ -49,9 +51,22 @@ function filterFilesBetween2Dates (start, end, files) {
   }
 }
 
-async function copyDocument (folder, name) {
-  const fileId = templateEmailingId
-  const parents = folderEmailingId
+async function copyDocument (type, name) {
+  let fileId
+  let parents
+  switch (type) {
+  case 'talk':
+    fileId = templateTalkEmailingId
+    parents = folderTalkEmailingId
+    break
+  case 'training':
+    fileId = templateTrainingEmailingId
+    parents = folderTrainingEmailingId
+    break
+  default:
+    break
+  }
+
   const idDocument = await driveWrapper.copyDocument(fileId, name, parents)
 
   return idDocument
