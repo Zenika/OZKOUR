@@ -7,7 +7,6 @@ export const useTrainingStore = defineStore({
   id: 'training',
   state: () => ({
     retrieved: [],
-    template: { name: '', frequency: '' },
     date: {},
     retreivingTrainings: false
   }),
@@ -29,12 +28,9 @@ export const useTrainingStore = defineStore({
       this.retrieved.find(training =>
         training.trainingTitle === selected.trainingTitle).checked = false
     },
-    pickedTemplate (chosenTemplate, freq) {
-      this.template = { name: chosenTemplate, frequency: freq }
-    },
     selectedDate (start, end) {
-      start = dateFormat(Date.parse(start.value), 'dd/mm/yyyy')
-      end = dateFormat(Date.parse(end.value), 'dd/mm/yyyy')
+      start = dateFormat(Date.parse(start), 'dd/mm/yyyy')
+      end = dateFormat(Date.parse(end), 'dd/mm/yyyy')
       this.date = { start, end }
     },
     async generateVisualForSelectedTrainings (templateName) {
@@ -51,7 +47,6 @@ export const useTrainingStore = defineStore({
     },
     async getTrainings (dateStart, dateEnd) {
       this.retreivingTrainings = true
-      console.log(dateStart, dateEnd)
       try {
         const { data } = await api
           .get('/training', {

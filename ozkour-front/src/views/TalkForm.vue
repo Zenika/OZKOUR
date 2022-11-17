@@ -7,6 +7,37 @@ import RecapModal from '@/components/RecapModal.vue'
 import { useTalkStore } from '@/stores/talks'
 import PopUp from '../components/PopUp.vue'
 
+const eventsTemplate = {
+  QUOI_DE_9: {
+    id: 'quoide9',
+    label: 'QUOI DE 9',
+    value: 'QuoiDeNeuf',
+    frequency: 'week',
+    validated: true
+  },
+  EMAILING: {
+    id: 'emailing',
+    label: 'E-MAILING',
+    value: 'E-mailing',
+    frequency: 'month',
+    validated: true
+  },
+  MEETUP: {
+    id: 'meetup',
+    label: 'MEET-UP',
+    value: 'Meet-up',
+    frequency: 'month',
+    validated: false
+  },
+  SLACK: {
+    id: 'slack',
+    label: 'SLACK',
+    value: 'Slack',
+    frequency: 'month',
+    validated: false
+  }
+}
+
 export default {
   components: {
     ChoosingTemplate,
@@ -17,56 +48,15 @@ export default {
     PopUp
   },
   data () {
-    const visuals = [
-      {
-        id: 'quoide9',
-        label: 'QUOI DE 9',
-        value: 'QuoiDeNeuf',
-        frequency: 'week',
-        validated: true
-      },
-      {
-        id: 'emailing',
-        label: 'E-MAILING',
-        value: 'E-mailing',
-        frequency: 'month',
-        validated: true
-      },
-      {
-        id: 'meetup',
-        label: 'MEET-UP',
-        value: 'Meet-up',
-        frequency: 'month',
-        validated: false
-      },
-      {
-        id: 'slack',
-        label: 'SLACK',
-        value: 'Slack',
-        frequency: 'month',
-        validated: false
-      }
-    ]
     return {
+      chosenTemplate: eventsTemplate.QUOI_DE_9,
       replyMessage: '',
       isPopUpVisible: false,
-      visuals,
+      visuals: Object.values(eventsTemplate),
       isModalVisible: false,
       isVisualGenerationFailed: false,
       isGetTalksFailed: false,
       talks: useTalkStore()
-    }
-  },
-  computed: {
-    chosenTemplate () {
-      if (this.talks.$state.template) {
-        return this.talks.$state.template
-      } else {
-        return {
-          name: '',
-          frequency: ''
-        }
-      }
     }
   },
   methods: {
@@ -105,8 +95,8 @@ export default {
     closeErrorMessage () {
       this.isVisualGenerationFailed = false
     },
-    changeTemplate (n) {
-      this.talks.pickedTemplate(this.visuals[n].value, this.visuals[n].frequency)
+    changeTemplate (newTemplate) {
+      this.chosenTemplate = newTemplate
     }
   }
 }
@@ -124,6 +114,7 @@ export default {
     <section class="container__section">
       <ChoosingTemplate
         :visuals="visuals"
+        :selected="chosenTemplate"
         @change-template="changeTemplate"
       />
       <ChoosingDate

@@ -1,12 +1,47 @@
 <script>
-import dateFormat from 'dateformat'
-import { ref } from 'vue'
-
 import Datepicker from '@vuepic/vue-datepicker'
+import DateInputContainer from './DateInputContainer.vue'
+
+const defaultPeriod = {
+  week: (period, date = new Date()) => {
+    const isNotMonday = date.getDay() !== 1
+    let start = period[0]
+    let end = period[1]
+    if (isNotMonday) {
+      start = new Date(date.getTime() + howManyDaysUntilNextMonday(date) * 24 * 60 * 60 * 1000)
+    } else {
+      start = date
+    }
+    end = new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000)
+
+    return [start, end]
+  },
+  month: (period, date = new Date()) => {
+    const isFirstWeekOfMonth = date.getDate() < 7
+    let start = period[0]
+    let end = period[1]
+    if (isFirstWeekOfMonth) {
+      start = date
+      end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+    } else {
+      start =
+          new Date(date.getFullYear(), date.getMonth() + 1, 1)
+      end =
+         new Date(date.getFullYear(), date.getMonth() + 2, 0)
+    }
+    return [start, end]
+  }
+}
+
+function howManyDaysUntilNextMonday (d = new Date()) {
+  const isSunday = d.getDay() === 0
+  return isSunday ? 1 : 7 - d.getDay() + 1
+}
 
 export default {
   components: {
-    Datepicker
+    Datepicker,
+    DateInputContainer
   },
   props: {
     chosenTemplate: {
@@ -16,120 +51,44 @@ export default {
   },
   emits: ['onSearchEvent'],
   data () {
-    const date = ref(new Date())
-    const dateStart = ref()
-    const dateEnd = ref()
-
-    date.value = [dateStart.value, dateEnd.value]
     return {
-      date,
-      dateStart,
-      dateEnd
+      period: [new Date(), new Date()] // changer l'init
     }
   },
   watch: {
     chosenTemplate: function (newTemplate) {
-      if (newTemplate.frequency === 'week') {
-        this.defaultDateNextWeek()
-      } else if (newTemplate.frequency === 'month') {
-        this.defaultDateNextMonth()
-      }
-      this.updateDateStartCalendar()
-      this.updateDateEndCalendar()
-      this.searchTalk()
-    },
-    date: function (newDate) {
-      this.dateStart = dateFormat(Date.parse(newDate[0]), 'yyyy-mm-dd')
-      this.dateEnd = dateFormat(Date.parse(newDate[1]), 'yyyy-mm-dd')
+      this.period = defaultPeriod[newTemplate.frequency](this.period)
       this.searchTalk()
     }
   },
+  beforeMount () {
+    this.period = defaultPeriod[this.chosenTemplate.frequency](this.period)
+    this.searchTalk()
+  },
   methods: {
-    defaultDateNextMonth (d = new Date()) {
-      if (d.getDate() < 7) {
-        this.dateStart = dateFormat(Date.parse(d), 'yyyy-mm-dd')
-        this.dateEnd = dateFormat(
-          Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 0)),
-          'yyyy-mm-dd'
-        )
-      } else {
-        this.dateStart = dateFormat(
-          Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 1)),
-          'yyyy-mm-dd'
-        )
-        this.dateEnd = dateFormat(
-          Date.parse(new Date(d.getFullYear(), d.getMonth() + 2, 0)),
-          'yyyy-mm-dd'
-        )
-      }
-    },
-    defaultDateNextWeek (d = new Date()) {
-      if (d.getDay() !== 1) {
-        this.dateStart = dateFormat(
-          Date.parse(
-            new Date(d.getTime() + this.howManyDaysUntilNextMonday(d) * 24 * 60 * 60 * 1000)
-          ),
-          'yyyy-mm-dd'
-        )
-      } else {
-        this.dateStart = dateFormat(Date.parse(d), 'yyyy-mm-dd')
-      }
-      this.dateEnd = dateFormat(
-        Date.parse(
-          new Date(
-            new Date(this.dateStart).getTime() + 6 * 24 * 60 * 60 * 1000
-          )
-        ),
-        'yyyy-mm-dd'
-      )
-    },
-    updateDateEndCalendar () {
-      if (this.dateEnd < this.dateStart && this.dateStart !== '') this.dateEnd = this.dateStart
-      this.date[1] = this.dateEnd
-    },
-    updateDateStartCalendar () {
-      if (this.dateEnd < this.dateStart && this.dateEnd !== '') this.dateStart = this.dateEnd
-      this.date[0] = this.dateStart
-    },
-    howManyDaysUntilNextMonday (d = new Date()) {
-      return d.getDay() === 0 ? 1 : 7 - d.getDay() + 1
-    },
     searchTalk () {
-      const dateStart = this.dateStart
-      const dateEnd = this.dateEnd
-      this.$emit('onSearchEvent', { dateStart, dateEnd })
+      this.$emit('onSearchEvent', { dateStart: this.period[0], dateEnd: this.period[1] })
+    },
+    onStartDateChange (date) {
+      this.period = [date, this.period[1]]
+    },
+    onEndDateChange (date) {
+      this.period = [this.period[0], date]
+    },
+    onChangePeriodInputs (newPeriod) {
+      this.period = newPeriod
     }
   }
 }
 </script>
 
 <template>
-  <div class="flex-column">
-    <div class="date">
-      <label for="start">Date de début</label>
-      <input
-        id="start"
-        v-model="dateStart"
-        type="date"
-        name="event-start"
-        @change="updateDateStartCalendar"
-      >
-    </div>
-
-    <div class="date">
-      <label for="end">Date de fin</label>
-      <input
-        id="end"
-        v-model="dateEnd"
-        type="date"
-        name="event-end"
-        :min="dateStart"
-        @change="updateDateEndCalendar"
-      >
-    </div>
-  </div>
+  <DateInputContainer
+    :period="period"
+    @change="onChangePeriodInputs"
+  />
   <Datepicker
-    v-model="date"
+    v-model="period"
     range
     inline
     auto-apply

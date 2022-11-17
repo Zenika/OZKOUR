@@ -7,7 +7,6 @@ export const useTalkStore = defineStore({
   id: 'talk',
   state: () => ({
     retrieved: [],
-    template: { name: '', frequency: '' },
     date: {},
     retreivingTalks: false
   }),
@@ -29,16 +28,13 @@ export const useTalkStore = defineStore({
       this.retrieved.find(talk =>
         talk.talkTitle === selected.talkTitle).checked = false
     },
-    pickedTemplate (chosenTemplate, freq) {
-      this.template = { name: chosenTemplate, frequency: freq }
-    },
     selectedDate (start, end) {
-      start = dateFormat(Date.parse(start.value), 'dd/mm/yyyy')
-      end = dateFormat(Date.parse(end.value), 'dd/mm/yyyy')
+      start = dateFormat(Date.parse(start), 'dd/mm/yyyy')
+      end = dateFormat(Date.parse(end), 'dd/mm/yyyy')
       this.date = { start, end }
     },
-    async generateVisualForSelectedTalks () {
-      switch (this.template.name) {
+    async generateVisualForSelectedTalks (templateName) {
+      switch (templateName) {
       case 'QuoiDeNeuf': {
         const { data } = await api
           .post('/talk/quoiDeNeuf', this.getSelectedTalks)
@@ -50,12 +46,11 @@ export const useTalkStore = defineStore({
         return { link: data.link, message: data.message }
       }
       default:
-        console.error('template :"', this.template.name, "\" n'est pas reconnu")
+        console.error('template :"', templateName, "\" n'est pas reconnu")
         return { link: '/', message: 'unknown template' }
       }
     },
     async getTalks (dateStart, dateEnd) {
-      console.log(dateStart, dateEnd)
       this.retreivingTalks = true
       try {
         const { data } = await api

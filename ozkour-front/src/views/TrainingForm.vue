@@ -7,6 +7,23 @@ import RecapModal from '@/components/RecapModal.vue'
 import { useTrainingStore } from '@/stores/trainings'
 import PopUp from '../components/PopUp.vue'
 
+const eventsTemplate = {
+  EMAILING: {
+    id: 'emailing',
+    label: 'E-MAILING',
+    value: 'E-mailing',
+    frequency: 'month',
+    validated: true
+  },
+  SLIDE:
+  {
+    id: 'slide',
+    label: 'SLIDE',
+    value: 'Slide',
+    frequency: 'month',
+    validated: false
+  }
+}
 export default {
   components: {
     ChoosingTemplate,
@@ -17,42 +34,15 @@ export default {
     PopUp
   },
   data () {
-    const visuals = [
-      {
-        id: 'emailing',
-        label: 'E-MAILING',
-        value: 'E-mailing',
-        frequency: 'month',
-        validated: true
-      },
-      {
-        id: 'slide',
-        label: 'SLIDE',
-        value: 'Slide',
-        frequency: 'month',
-        validated: false
-      }
-    ]
     return {
+      chosenTemplate: eventsTemplate.EMAILING,
       replyMessage: '',
       isPopUpVisible: false,
-      visuals,
+      visuals: Object.values(eventsTemplate),
       isModalVisible: false,
       isVisualGenerationFailed: false,
       isGetTrainigsFailed: false,
       trainings: useTrainingStore()
-    }
-  },
-  computed: {
-    chosenTemplate () {
-      if (this.trainings.$state.template) {
-        return this.trainings.$state.template
-      } else {
-        return {
-          name: '',
-          frequency: ''
-        }
-      }
     }
   },
   methods: {
@@ -89,8 +79,8 @@ export default {
     closeErrorMessage () {
       this.isVisualGenerationFailed = false
     },
-    changeTemplate (n) {
-      this.trainings.pickedTemplate(this.visuals[n].value, this.visuals[n].frequency)
+    changeTemplate (newTemplate) {
+      this.chosenTemplate = newTemplate
     }
   }
 }
@@ -108,6 +98,7 @@ export default {
     <section class="container__section">
       <ChoosingTemplate
         :visuals="visuals"
+        :selected="chosenTemplate"
         @change-template="changeTemplate"
       />
       <ChoosingDate
