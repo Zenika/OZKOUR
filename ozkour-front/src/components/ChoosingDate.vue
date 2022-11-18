@@ -1,41 +1,41 @@
 <script>
 import Datepicker from '@vuepic/vue-datepicker'
 import DateInputContainer from './DateInputContainer.vue'
+import { DateTime } from 'luxon'
 
 const defaultPeriod = {
-  week: (period, date = new Date()) => {
-    const isNotMonday = date.getDay() !== 1
+  week: (period, date = DateTime.now()) => {
+    const isNotMonday = date.weekday !== 1
     let start = period[0]
     let end = period[1]
     if (isNotMonday) {
-      start = new Date(date.getTime() + howManyDaysUntilNextMonday(date) * 24 * 60 * 60 * 1000)
+      start = date.plus({ days: howManyDaysUntilNextMonday(date) }).toJSDate()
     } else {
       start = date
     }
-    end = new Date(start.getTime() + 6 * 24 * 60 * 60 * 1000)
+    const startAsDateTime = DateTime.fromJSDate(start)
+    end = startAsDateTime.plus({ days: 6 }).toJSDate()
 
     return [start, end]
   },
-  month: (period, date = new Date()) => {
-    const isFirstWeekOfMonth = date.getDate() < 7
+  month: (period, date = DateTime.now()) => {
+    const isFirstWeekOfMonth = date.daysInMonth <= 7
     let start = period[0]
     let end = period[1]
     if (isFirstWeekOfMonth) {
-      start = date
-      end = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+      start = date.toJSDate()
+      end = date.endOf('month').toJSDate()
     } else {
-      start =
-          new Date(date.getFullYear(), date.getMonth() + 1, 1)
-      end =
-         new Date(date.getFullYear(), date.getMonth() + 2, 0)
+      start = date.plus({ month: 1 }).startOf('month').toJSDate()
+      end = date.plus({ month: 1 }).endOf('month').toJSDate()
     }
     return [start, end]
   }
 }
 
-function howManyDaysUntilNextMonday (d = new Date()) {
-  const isSunday = d.getDay() === 0
-  return isSunday ? 1 : 7 - d.getDay() + 1
+function howManyDaysUntilNextMonday (date = DateTime.now()) {
+  const isMonday = date.weekday === 1
+  return isMonday ? 0 : 7 - date.weekday + 1
 }
 
 export default {

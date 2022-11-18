@@ -17,19 +17,21 @@ watch(() => props.period, (newValue) => {
   tempPeriod.value = newValue
 })
 
-function onStartDateChange (date) {
-  if (date > tempPeriod.value[1]) {
-    tempPeriod.value[1] = date
+function onStartDateChange (newStartDate) {
+  const newStartDateIsAfterEndDate = newStartDate > tempPeriod.value[1]
+  if (newStartDateIsAfterEndDate) {
+    tempPeriod.value[1] = newStartDate
   }
-  tempPeriod.value[0] = date
+  tempPeriod.value[0] = newStartDate
   emits('change', tempPeriod)
 }
 
-function onEndDateChange (date) {
-  if (date < tempPeriod.value[0]) {
-    tempPeriod.value[0] = date
+function onEndDateChange (newEndDate) {
+  const newEndDateIsBeforeStartDate = newEndDate < tempPeriod.value[0]
+  if (newEndDateIsBeforeStartDate) {
+    tempPeriod.value[0] = newEndDate
   }
-  tempPeriod.value[1] = date
+  tempPeriod.value[1] = newEndDate
   emits('change', tempPeriod)
 }
 
