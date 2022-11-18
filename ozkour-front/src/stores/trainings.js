@@ -1,5 +1,4 @@
 import qs from 'qs'
-import dateFormat from 'dateformat'
 import { defineStore } from 'pinia'
 import { api } from '@/api/apiConfig'
 
@@ -7,7 +6,6 @@ export const useTrainingStore = defineStore({
   id: 'training',
   state: () => ({
     retrieved: [],
-    date: {},
     retreivingTrainings: false
   }),
   getters: {
@@ -27,11 +25,6 @@ export const useTrainingStore = defineStore({
     uncheckTraining (selected) {
       this.retrieved.find(training =>
         training.trainingTitle === selected.trainingTitle).checked = false
-    },
-    selectedDate (start, end) {
-      start = dateFormat(Date.parse(start), 'dd/mm/yyyy')
-      end = dateFormat(Date.parse(end), 'dd/mm/yyyy')
-      this.date = { start, end }
     },
     async generateVisualForSelectedTrainings (templateName) {
       switch (templateName) {
@@ -57,8 +50,6 @@ export const useTrainingStore = defineStore({
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
         this.updateTrainings(data)
-        this.selectedDate(dateStart, dateEnd)
-        console.log(this.retrieved)
       } finally {
         this.retreivingTrainings = false
       }

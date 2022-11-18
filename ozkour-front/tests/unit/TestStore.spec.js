@@ -85,14 +85,13 @@ describe('Talk Store', () => {
       const talk = useTalkStore()
 
       talk.updateTalks(talksRetrieved)
-      talk.pickedTemplate('QuoiDeNeuf', 'week')
 
       api.post.mockResolvedValueOnce({
         data: {
           link: 'https://monliendeslide.com'
         }
       })
-      const res = await talk.generateVisualForSelectedTalks()
+      const res = await talk.generateVisualForSelectedTalks('QuoiDeNeuf')
 
       expect(res.link).toBe('https://monliendeslide.com')
     })

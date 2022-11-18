@@ -1,5 +1,4 @@
 import qs from 'qs'
-import dateFormat from 'dateformat'
 import { defineStore } from 'pinia'
 import { api } from '@/api/apiConfig'
 
@@ -7,7 +6,6 @@ export const useTalkStore = defineStore({
   id: 'talk',
   state: () => ({
     retrieved: [],
-    date: {},
     retreivingTalks: false
   }),
   getters: {
@@ -27,11 +25,6 @@ export const useTalkStore = defineStore({
     uncheckTalk (selected) {
       this.retrieved.find(talk =>
         talk.talkTitle === selected.talkTitle).checked = false
-    },
-    selectedDate (start, end) {
-      start = dateFormat(Date.parse(start), 'dd/mm/yyyy')
-      end = dateFormat(Date.parse(end), 'dd/mm/yyyy')
-      this.date = { start, end }
     },
     async generateVisualForSelectedTalks (templateName) {
       switch (templateName) {
@@ -62,7 +55,6 @@ export const useTalkStore = defineStore({
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
         this.updateTalks(data)
-        this.selectedDate(dateStart, dateEnd)
       } finally {
         this.retreivingTalks = false
       }
