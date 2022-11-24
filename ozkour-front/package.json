@@ -45,6 +45,7 @@
     "jest-junit": "^13.2.0",
     "sass": "^1.50.1",
     "sass-loader": "^12.6.0",
+    "timekeeper": "^2.2.0",
     "vitest": "^0.10.0",
     "vue-eslint-parser": "^9.0.2"
   },
