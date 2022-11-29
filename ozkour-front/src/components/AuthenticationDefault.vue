@@ -4,6 +4,7 @@
     class="auth-container"
   >
     <img
+      id="user-picture"
       :src="user.picture"
       alt=""
       class="auth-container__img auth-container__img--profile"

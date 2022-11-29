@@ -6,8 +6,8 @@ export default {
     PrimaryBtn
   },
   props: {
-    message: {
-      type: String,
+    error: {
+      type: Boolean,
       required: true
     },
     title: {
@@ -34,9 +34,14 @@ export default {
     </div>
 
     <div class="message">
-      <div class="message-details" />
+      <img
+        v-if="error"
+        src="../assets/images/danger.png"
+        alt="error"
+        class="error-img"
+      >
       <p class="message-pop-up">
-        {{ message }}
+        <slot />
       </p>
     </div>
     <div class="validate">
@@ -64,17 +69,15 @@ export default {
   @include popup-close-button;
 }
 
-.recap {
-  color: black;
-  padding: 0px 20px;
+.error-img{
+  width: 30%;
 }
 
-.recap-details {
-  @include popup-summary;
-}
-
-.text-pop-up {
+.message{
   text-align: center;
+}
+.message-pop-up{
+  color:black;
 }
 
 .validate {

@@ -1,4 +1,5 @@
 // @ts-check
+const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
 const { logger } = require('../logger')
 const { getTalk } = require('../domain/talks-sheet')
 
@@ -49,6 +50,20 @@ module.exports = [
       const driveServiceRepository = googleDriveRepository
       const docService = new DocService(docServiceRepository, driveServiceRepository)
       const res = await docService.createEmailingDocs(talks)
+      return h.response(res)
+    }
+  },
+  {
+    method: 'POST',
+    path: '/talk/sort',
+    handler: async function (request, h) {
+      const order = request.query.orderIsAscending === 'true'
+      logger.info({
+        message: `request sort ${order ? 'ascending' : 'descending'} 
+        talks by ${request.query.key}(${request.path})`
+      })
+      const talks = request.payload
+      const res = sortArrayByKeyAndOrder(talks, request.query.key, order)
       return h.response(res)
     }
   }

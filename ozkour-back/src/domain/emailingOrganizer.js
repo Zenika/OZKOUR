@@ -66,8 +66,7 @@ function sortTrainingsEmailing (data) {
       universe: training.universe,
       duration: training.duration,
       price: training.price,
-      link: training.link,
-      checked: training.checked
+      link: training.link
     }
     if (!mapUniverse.has(training.universe)) {
       mapUniverse.set(training.universe, [newTraining])

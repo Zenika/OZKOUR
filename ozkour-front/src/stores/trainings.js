@@ -1,6 +1,7 @@
 import qs from 'qs'
 import { defineStore } from 'pinia'
 import { api } from '@/api/apiConfig'
+import { isEqual } from 'lodash'
 
 export const useTrainingStore = defineStore({
   id: 'training',
@@ -12,19 +13,13 @@ export const useTrainingStore = defineStore({
     getSelectedTrainings: (state) =>
       state.retrieved.filter((training) => {
         return training.checked
-      })
+      }),
+    getSelectedTrainingsTitle: (state) =>
+      state.getSelectedTrainings.map((training) => training.trainingTitle)
   },
   actions: {
     updateTrainings (newTrainings) {
       this.retrieved = newTrainings
-    },
-    checkTraining (selected) {
-      this.retrieved.find(training =>
-        training.trainingTitle === selected.trainingTitle).checked = true
-    },
-    uncheckTraining (selected) {
-      this.retrieved.find(training =>
-        training.trainingTitle === selected.trainingTitle).checked = false
     },
     async generateVisualForSelectedTrainings (templateName) {
       switch (templateName) {
@@ -35,8 +30,15 @@ export const useTrainingStore = defineStore({
       }
       default:
         console.error('template :"', templateName, "\" n'est pas reconnu")
-        return '/'
+        return null
       }
+    },
+    changeSelectionTraining (selected) {
+      const { checked, ...selectedTraining } = selected
+      this.retrieved.find(training => {
+        const { checked: tempTrainingChecked, ...tempSelectedTraining } = training
+        return isEqual(tempSelectedTraining, selectedTraining)
+      }).checked = !checked
     },
     async getTrainings (dateStart, dateEnd) {
       this.retreivingTrainings = true
@@ -49,10 +51,30 @@ export const useTrainingStore = defineStore({
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
-        this.updateTrainings(data)
+        const res = data.map((training) => {
+          return {
+            ...training,
+            checked: true
+          }
+        })
+        this.updateTrainings(res)
+        return res
       } finally {
         this.retreivingTrainings = false
       }
+    },
+    async sort (dataSort) {
+      const { data } = await api
+        .post('/training/sort', dataSort.events, {
+          params: {
+            key: dataSort.selectedColumnKey,
+            orderIsAscending: dataSort.orderIsAscending
+          },
+          paramsSerializer: (params) => qs.stringify(params, { encode: false })
+        })
+      const res = data
+      this.updateTrainings(res)
+      return res
     }
   }
 })

@@ -2,10 +2,10 @@
 import ChoosingTemplate from '@/components/ChoosingTemplate.vue'
 import ChoosingDate from '@/components/ChoosingDate.vue'
 import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
-import EventArray from '@/components/TalksArray.vue'
 import RecapModal from '@/components/RecapModal.vue'
 import { useTalkStore } from '@/stores/talks'
 import PopUp from '../components/PopUp.vue'
+import EventArray from '@/components/EventArray.vue'
 
 const eventsTemplate = {
   QUOI_DE_9: {
@@ -38,41 +38,55 @@ const eventsTemplate = {
   }
 }
 
+const columnsValues = [
+  { key: 'date', label: 'DATE' },
+  { key: 'universe', label: 'UNIVERS' },
+  { key: 'eventType', label: 'TYPE' },
+  { key: 'eventName', label: "NOM DE L'EVENEMENT" },
+  { key: 'talkTitle', label: 'TITRE DU TALK' },
+  { key: 'speakers', label: 'SPEAKERS' }
+]
+
 export default {
   components: {
     ChoosingTemplate,
     ChoosingDate,
     PrimaryBtn,
-    EventArray,
     RecapModal,
-    PopUp
+    PopUp,
+    EventArray
   },
   data () {
     return {
       chosenTemplate: eventsTemplate.QUOI_DE_9,
       replyMessage: '',
+      period: { start: '', end: '' },
       isPopUpVisible: false,
       visuals: Object.values(eventsTemplate),
       isModalVisible: false,
       isVisualGenerationFailed: false,
       isGetTalksFailed: false,
-      talks: useTalkStore()
+      talks: useTalkStore(),
+      columnsValues
     }
   },
   methods: {
     async onRecapSubmit () {
       try {
-        const { link, message } = await this.talks.generateVisualForSelectedTalks()
-        window.open(link, '_blank')
+        const { link, message } = await this.talks.generateVisualForSelectedTalks(this.chosenTemplate.value)
+        if (link) {
+          window.open(link, '_blank')
+        }
         this.replyMessage = message
-        this.showPopUp()
       } catch (e) {
         this.isVisualGenerationFailed = true
+      } finally {
+        this.closeModal()
+        this.showPopUp()
       }
-
-      this.closeModal()
     },
     async handleSearchTalk ({ dateStart, dateEnd }) {
+      this.period = { start: dateStart, end: dateEnd }
       try {
         await this.talks.getTalks(dateStart, dateEnd)
       } catch (e) {
@@ -91,12 +105,16 @@ export default {
     closePopUp () {
       this.replyMessage = ''
       this.isPopUpVisible = false
-    },
-    closeErrorMessage () {
       this.isVisualGenerationFailed = false
     },
     changeTemplate (newTemplate) {
       this.chosenTemplate = newTemplate
+    },
+    sort (sortData) {
+      this.talks.sort(sortData)
+    },
+    changeSelectionTalk (changedSelectionTalk) {
+      this.talks.changeSelectionTalk(changedSelectionTalk)
     }
   }
 }
@@ -124,7 +142,15 @@ export default {
     </section>
 
     <section class="container__eventList">
-      <EventArray />
+      <EventArray
+        :events="talks.retrieved"
+        :retrieving="talks.retreivingTalks"
+        :columns="columnsValues"
+        @new-sort="sort"
+        @new-selection-change="changeSelectionTalk"
+      >
+        talks
+      </EventArray>
     </section>
 
     <PrimaryBtn
@@ -134,42 +160,35 @@ export default {
       Générer un visuel
     </PrimaryBtn>
 
-    <div
-      v-if="isVisualGenerationFailed"
-      class="errorMsg"
+    <PopUp
+      v-if="isPopUpVisible"
+      id="talk-popup-modal"
+      :class="'non-blurable'"
+      :error="isVisualGenerationFailed"
+      :title="(isVisualGenerationFailed?'Erreur'
+        :'Résultat')"
+      @close="closePopUp"
     >
-      <img
-        src="../assets/images/danger.png"
-        alt="error"
-        class="error-img"
-      >
-      <p>Désolée, une erreur est survenue ! <br> Le visuel n'a pas pu être généré :(</p>
-      <PrimaryBtn
-        @click="closeErrorMessage"
-      >
-        X
-      </PrimaryBtn>
-    </div>
+      <p v-if="isVisualGenerationFailed">
+        Désolée, une erreur est survenue ! <br> Le visuel n'a pas pu être généré :(
+      </p>
+      <p v-else>
+        {{ replyMessage }}
+      </p>
+    </PopUp>
 
     <RecapModal
       v-if="isModalVisible"
       id="talk-recap-modal"
       class="non-blurable"
-      :events="talks.getSelectedTalks"
-      :template="chosenTemplate.name"
-      :dates="talks.date"
-      :is-event-type-talk="true"
+      :events-title="talks.getSelectedTalksTitle"
+      :template="chosenTemplate.label"
+      :dates="period"
       @submit="onRecapSubmit"
       @close="closeModal"
-    />
-    <PopUp
-      v-if="isPopUpVisible"
-      id="talk-popup-modal"
-      class="non-blurable"
-      :message="replyMessage"
-      :title="'Résultat'"
-      @close="closePopUp"
-    />
+    >
+      Liste des talks :
+    </RecapModal>
   </main>
 </template>
 
@@ -199,22 +218,5 @@ export default {
     @include title-1;
     font-size: 48px;
   }
-}
-.errorMsg{
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(242, 242, 242, 1);
-  color: black;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 20px;
-  box-shadow: 5px 5px 5px 5px black;
-  z-index: 10;
-}
-
-.error-img{
-  width: 30%;
 }
 </style>

@@ -2,7 +2,7 @@
 import ChoosingTemplate from '@/components/ChoosingTemplate.vue'
 import ChoosingDate from '@/components/ChoosingDate.vue'
 import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
-import EventArray from '@/components/TrainingArray.vue'
+import EventArray from '@/components/EventArray.vue'
 import RecapModal from '@/components/RecapModal.vue'
 import { useTrainingStore } from '@/stores/trainings'
 import PopUp from '../components/PopUp.vue'
@@ -24,6 +24,15 @@ const eventsTemplate = {
     validated: false
   }
 }
+
+const columnsValues = [
+  { key: 'date', label: 'DATE' },
+  { key: 'trainingTitle', label: 'TITRE' },
+  { key: 'universe', label: 'UNIVERS' },
+  { key: 'duration', label: 'DURÉE' },
+  { key: 'price', label: 'PRIX' }
+]
+
 export default {
   components: {
     ChoosingTemplate,
@@ -37,9 +46,11 @@ export default {
     return {
       chosenTemplate: eventsTemplate.EMAILING,
       replyMessage: '',
+      period: { start: '', end: '' },
       isPopUpVisible: false,
       visuals: Object.values(eventsTemplate),
       isModalVisible: false,
+      columnsValues,
       isVisualGenerationFailed: false,
       isGetTrainigsFailed: false,
       trainings: useTrainingStore()
@@ -48,15 +59,20 @@ export default {
   methods: {
     async onRecapSubmit () {
       try {
-        const link = await this.trainings.generateVisualForSelectedTrainings()
-        window.open(link, '_blank')
+        const { link, message } = await this.trainings.generateVisualForSelectedTrainings(this.chosenTemplate.value)
+        if (link) {
+          window.open(link, '_blank')
+        }
+        this.replyMessage = message
       } catch (e) {
         this.isVisualGenerationFailed = true
+      } finally {
+        this.closeModal()
+        this.showPopUp()
       }
-
-      this.closeModal()
     },
     async handleSearchTraining ({ dateStart, dateEnd }) {
+      this.period = { start: dateStart, end: dateEnd }
       try {
         await this.trainings.getTrainings(dateStart, dateEnd)
       } catch (e) {
@@ -75,12 +91,16 @@ export default {
     closePopUp () {
       this.replyMessage = ''
       this.isPopUpVisible = false
-    },
-    closeErrorMessage () {
       this.isVisualGenerationFailed = false
     },
     changeTemplate (newTemplate) {
       this.chosenTemplate = newTemplate
+    },
+    sort (sortData) {
+      this.trainings.sort(sortData)
+    },
+    changeSelectionTraining (changedSelectionTraining) {
+      this.trainings.changeSelectionTraining(changedSelectionTraining)
     }
   }
 }
@@ -88,7 +108,7 @@ export default {
 
 <template>
   <main
-    :class="{ 'container--blured': isModalVisible }"
+    :class="{ 'container--blured': isModalVisible || isPopUpVisible}"
     class="container"
   >
     <h1 class="container__title">
@@ -108,7 +128,15 @@ export default {
     </section>
 
     <section class="container__eventList">
-      <EventArray />
+      <EventArray
+        :events="trainings.retrieved"
+        :retrieving="trainings.retreivingTrainings"
+        :columns="columnsValues"
+        @new-sort="sort"
+        @new-selection-change="changeSelectionTraining"
+      >
+        trainings
+      </EventArray>
     </section>
 
     <PrimaryBtn
@@ -118,42 +146,34 @@ export default {
       Générer un visuel
     </PrimaryBtn>
 
-    <div
-      v-if="isVisualGenerationFailed"
-      class="errorMsg"
+    <PopUp
+      v-if="isPopUpVisible"
+      id="training-popup-modal"
+      :class="'non-blurable'"
+      :error="isVisualGenerationFailed"
+      :title="(isVisualGenerationFailed?'Erreur'
+        :'Résultat')"
+      @close="closePopUp"
     >
-      <img
-        src="../assets/images/danger.png"
-        alt="error"
-        class="error-img"
-      >
-      <p>Désolée, une erreur est survenue ! <br> Le visuel n'a pas pu être généré :(</p>
-      <PrimaryBtn
-        @click="closeErrorMessage"
-      >
-        X
-      </PrimaryBtn>
-    </div>
-
+      <p v-if="isVisualGenerationFailed">
+        Désolée, une erreur est survenue ! <br> Le visuel n'a pas pu être généré :(
+      </p>
+      <p v-else>
+        {{ replyMessage }}
+      </p>
+    </PopUp>
     <RecapModal
       v-if="isModalVisible"
       id="trainings-recap-modal"
       class="non-blurable"
-      :events="trainings.getSelectedTrainings"
-      :template="chosenTemplate.name"
-      :dates="trainings.date"
-      :is-event-type-training="true"
+      :events-title="trainings.getSelectedTrainingsTitle"
+      :template="chosenTemplate.label"
+      :dates="period"
       @submit="onRecapSubmit"
       @close="closeModal"
-    />
-    <PopUp
-      v-if="isPopUpVisible"
-      id="trainings-popup-modal"
-      class="non-blurable"
-      :message="replyMessage"
-      :title="'Résultat'"
-      @close="closePopUp"
-    />
+    >
+      Liste des trainings :
+    </RecapModal>
   </main>
 </template>
 
@@ -162,7 +182,7 @@ export default {
 .container {
   @include form-container;
 
-  &--blured > :not(#trainings-recap-modal) {
+  &--blured > :not(.non-blurable) {
     filter: blur(5px);
   }
 
@@ -183,22 +203,5 @@ export default {
     @include title-1;
     font-size: 48px;
   }
-}
-.errorMsg{
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(242, 242, 242, 1);
-  color: black;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 20px;
-  box-shadow: 5px 5px 5px 5px black;
-  z-index: 10;
-}
-
-.error-img{
-  width: 30%;
 }
 </style>

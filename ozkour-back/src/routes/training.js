@@ -4,6 +4,7 @@ const { getTraining } = require('../domain/trainings-sheet')
 const { DocService } = require('../domain/docsService')
 const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
+const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
 
 module.exports = [
   {
@@ -30,6 +31,19 @@ module.exports = [
       const driveServiceRepository = googleDriveRepository
       const docService = new DocService(docServiceRepository, driveServiceRepository)
       const res = await docService.createEmailingTrainingDocs(trainings)
+      return h.response(res)
+    }
+  },
+  {
+    method: 'POST',
+    path: '/training/sort',
+    handler: async function (request, h) {
+      const order = request.query.orderIsAscending === 'true'
+      logger.info({
+        message: `request sort ${order ? 'ascending' : 'descending'} training by ${request.query.key}(${request.path})`
+      })
+      const trainings = request.payload
+      const res = sortArrayByKeyAndOrder(trainings, request.query.key, order)
       return h.response(res)
     }
   }

@@ -1,27 +1,15 @@
 <script>
 import PrimaryBtn from '@/components/Buttons/PrimaryBtn.vue'
-import RecapTalks from '@/components/RecapTalks.vue'
-import RecapTrainings from '@/components/RecapTrainings.vue'
 import { ref } from 'vue'
 
 export default {
   components: {
-    PrimaryBtn,
-    RecapTalks,
-    RecapTrainings
+    PrimaryBtn
   },
   props: {
-    events: {
+    eventsTitle: {
       type: Array,
       required: true
-    },
-    isEventTypeTalk: {
-      type: Boolean,
-      default: false
-    },
-    isEventTypeTraining: {
-      type: Boolean,
-      default: false
     },
     dates: {
       type: Object,
@@ -65,7 +53,7 @@ export default {
         <div class="icon-bg">
           <img
             src="../assets/images/gallery.png"
-            alt="calendar"
+            alt="template"
             class="icon"
           >
         </div>
@@ -85,14 +73,28 @@ export default {
           <b>Dates : </b>{{ dates.start }} au {{ dates.end }}
         </p>
       </div>
-      <RecapTalks
-        v-if="isEventTypeTalk"
-        :talks="events"
-      />
-      <RecapTrainings
-        v-if="isEventTypeTraining"
-        :trainings="events"
-      />
+      <div class="recap-details">
+        <div class="icon-bg">
+          <img
+            src="../assets/images/microphone.png"
+            alt="microphone"
+            class="icon"
+          >
+        </div>
+        <p>
+          <b>
+            <slot />
+          </b>
+        </p>
+      </div>
+      <ul class="events">
+        <li
+          v-for="eventTitle in eventsTitle"
+          :key="eventTitle"
+        >
+          {{ eventTitle?eventTitle:"non renseigné" }}
+        </li>
+      </ul>
     </div>
 
     <div
@@ -158,5 +160,45 @@ export default {
   display: flex;
   justify-content: center;
   padding: 30px 0px;
+}
+
+loading-container {
+  display:grid;
+  justify-content:center;
+  position:fixed;
+  left:48.5%;
+  top:50%;
+}
+.loading {
+  margin-left: auto;
+  margin-right: auto;
+  border-radius:50%;
+  width:2.5em;
+  height:2.5em;
+  transform-origin:center;
+  animation: rotate 1s linear infinite;
+}
+.spinner {
+  width: 7em;
+  height: 7em;
+  left: -2.8em;
+  top: -2.8em;
+  border-top: 1em solid #C21E65;
+  position:relative;
+  border-right: 1em solid transparent;
+  border-radius: 50%;
+}
+.head {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  margin-left: 5.9em;
+  margin-top: -0.05em;
+  background: linear-gradient(-25deg, #EE2238 0%, #C21E65 100%);
+}
+@keyframes rotate{
+  to{
+    transform:rotate(360deg);
+  }
 }
 </style>

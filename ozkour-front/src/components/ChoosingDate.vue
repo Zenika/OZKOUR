@@ -1,6 +1,6 @@
 <script>
 import Datepicker from '@vuepic/vue-datepicker'
-import DateInputContainer from './DateInputContainer.vue'
+import PeriodInput from './PeriodInput.vue'
 import { DateTime } from 'luxon'
 
 const defaultPeriod = {
@@ -11,15 +11,14 @@ const defaultPeriod = {
     if (isNotMonday) {
       start = date.plus({ days: howManyDaysUntilNextMonday(date) }).toJSDate()
     } else {
-      start = date
+      start = date.toJSDate()
     }
-    const startAsDateTime = DateTime.fromJSDate(start)
-    end = startAsDateTime.plus({ days: 6 }).toJSDate()
+    end = DateTime.fromJSDate(start).plus({ days: 6 }).toJSDate()
 
     return [start, end]
   },
   month: (period, date = DateTime.now()) => {
-    const isFirstWeekOfMonth = date.daysInMonth <= 7
+    const isFirstWeekOfMonth = date.day <= 7
     let start = period[0]
     let end = period[1]
     if (isFirstWeekOfMonth) {
@@ -41,7 +40,7 @@ function howManyDaysUntilNextMonday (date = DateTime.now()) {
 export default {
   components: {
     Datepicker,
-    DateInputContainer
+    PeriodInput
   },
   props: {
     chosenTemplate: {
@@ -52,28 +51,25 @@ export default {
   emits: ['onSearchEvent'],
   data () {
     return {
-      period: [new Date(), new Date()] // changer l'init
+      period: [new Date(), new Date()]
     }
   },
   watch: {
     chosenTemplate: function (newTemplate) {
       this.period = defaultPeriod[newTemplate.frequency](this.period)
+    },
+    period: function () {
       this.searchTalk()
     }
   },
   beforeMount () {
     this.period = defaultPeriod[this.chosenTemplate.frequency](this.period)
-    this.searchTalk()
   },
   methods: {
     searchTalk () {
-      this.$emit('onSearchEvent', { dateStart: this.period[0], dateEnd: this.period[1] })
-    },
-    onStartDateChange (date) {
-      this.period = [date, this.period[1]]
-    },
-    onEndDateChange (date) {
-      this.period = [this.period[0], date]
+      const formatedDateStart = DateTime.fromJSDate(this.period[0]).toFormat('yyyy-MM-dd')
+      const formatedDateEnd = DateTime.fromJSDate(this.period[1]).toFormat('yyyy-MM-dd')
+      this.$emit('onSearchEvent', { dateStart: formatedDateStart, dateEnd: formatedDateEnd })
     },
     onChangePeriodInputs (newPeriod) {
       this.period = newPeriod
@@ -83,7 +79,7 @@ export default {
 </script>
 
 <template>
-  <DateInputContainer
+  <PeriodInput
     :period="period"
     @change="onChangePeriodInputs"
   />

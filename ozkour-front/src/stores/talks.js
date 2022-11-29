@@ -1,6 +1,7 @@
 import qs from 'qs'
 import { defineStore } from 'pinia'
 import { api } from '@/api/apiConfig'
+import { isEqual } from 'lodash'
 
 export const useTalkStore = defineStore({
   id: 'talk',
@@ -12,19 +13,13 @@ export const useTalkStore = defineStore({
     getSelectedTalks: (state) =>
       state.retrieved.filter((talk) => {
         return talk.checked
-      })
+      }),
+    getSelectedTalksTitle: (state) =>
+      state.getSelectedTalks.map((talk) => talk.talkTitle)
   },
   actions: {
     updateTalks (newTalks) {
       this.retrieved = newTalks
-    },
-    checkTalk (selected) {
-      this.retrieved.find(talk =>
-        talk.talkTitle === selected.talkTitle).checked = true
-    },
-    uncheckTalk (selected) {
-      this.retrieved.find(talk =>
-        talk.talkTitle === selected.talkTitle).checked = false
     },
     async generateVisualForSelectedTalks (templateName) {
       switch (templateName) {
@@ -40,8 +35,15 @@ export const useTalkStore = defineStore({
       }
       default:
         console.error('template :"', templateName, "\" n'est pas reconnu")
-        return { link: '/', message: 'unknown template' }
+        return { link: null, message: 'unknown template' }
       }
+    },
+    changeSelectionTalk (selected) {
+      const { checked, ...selectedTalk } = selected
+      this.retrieved.find(talk => {
+        const { checked: tempTalkChecked, ...tempSelectedTalk } = talk
+        return isEqual(tempSelectedTalk, selectedTalk)
+      }).checked = !checked
     },
     async getTalks (dateStart, dateEnd) {
       this.retreivingTalks = true
@@ -54,10 +56,30 @@ export const useTalkStore = defineStore({
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
-        this.updateTalks(data)
+        const res = data.map((talk) => {
+          return {
+            ...talk,
+            checked: true
+          }
+        })
+        this.updateTalks(res)
+        return res
       } finally {
         this.retreivingTalks = false
       }
+    },
+    async sort (dataSort) {
+      const { data } = await api
+        .post('/talk/sort', dataSort.events, {
+          params: {
+            key: dataSort.selectedColumnKey,
+            orderIsAscending: dataSort.orderIsAscending
+          },
+          paramsSerializer: (params) => qs.stringify(params, { encode: false })
+        })
+      const res = data
+      this.updateTalks(res)
+      return res
     }
   }
 })

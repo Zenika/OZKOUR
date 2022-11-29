@@ -9,13 +9,25 @@ const props = defineProps({
   }
 })
 
-const tempPeriod = ref(props.period)
+const tempPeriod = ref(makePeriodValid(props.period))
 
 const emits = defineEmits(['change'])
 
 watch(() => props.period, (newValue) => {
-  tempPeriod.value = newValue
+  tempPeriod.value = makePeriodValid(newValue)
 })
+
+function makePeriodValid (period) {
+  const startDateIsBeforeEndDate = period[0] < period[1]
+  const validPeriod = period
+  if (startDateIsBeforeEndDate) {
+    return validPeriod
+  } else {
+    validPeriod[0] = period[1]
+    validPeriod[1] = period[0]
+    return validPeriod
+  }
+}
 
 function onStartDateChange (newStartDate) {
   const newStartDateIsAfterEndDate = newStartDate > tempPeriod.value[1]
