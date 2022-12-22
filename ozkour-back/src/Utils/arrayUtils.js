@@ -14,5 +14,6 @@ function compareByKey (a, b, key) {
 }
 
 module.exports = {
-  sortArrayByKeyAndOrder
+  sortArrayByKeyAndOrder,
+  compareByKey
 }

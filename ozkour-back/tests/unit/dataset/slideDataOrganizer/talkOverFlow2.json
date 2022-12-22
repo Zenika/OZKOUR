@@ -5,8 +5,7 @@
         "eventType": "Meetup",
         "eventName": "GraalVM Night",
         "talkTitle": "GraalVM for Sustainable Software Development?",
-        "speakers": "Anne Imal",
-        "checked": true
+        "speakers": "Anne Imal"
     },
     {
         "date": "19/01/2021",
@@ -14,8 +13,7 @@
         "eventType": "NightClazz",
         "eventName": "NightCdlass",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Yves Rogne",
-        "checked": true
+        "speakers": "Yves Rogne"
     },
     {
         "date": "19/01/2021",
@@ -23,8 +21,7 @@
         "eventType": "Meetup",
         "eventName": "Nantes JS #55",
         "talkTitle": "Nuxt 2021",
-        "speakers": "Guy Tarenbois",
-        "checked": true
+        "speakers": "Guy Tarenbois"
     },
     {
         "date": "19/01/2021",
@@ -32,8 +29,7 @@
         "eventType": "NightClazz",
         "eventName": "RemoteCdlazz Nodejs",
         "talkTitle": "Techniques minimalistes pour Node.js",
-        "speakers": "Sophie Stiqué",
-        "checked": true
+        "speakers": "Sophie Stiqué"
     },
     {
         "date": "19/01/2021",
@@ -41,8 +37,7 @@
         "eventType": "Webinar",
         "eventName": "Webdinar",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Anna Logue ",
-        "checked": true
+        "speakers": "Anna Logue "
     },
     {
         "date": "19/01/2021",
@@ -50,8 +45,7 @@
         "eventType": "Webinar",
         "eventName": "Webinar",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Thibault Lognaise ",
-        "checked": true
+        "speakers": "Thibault Lognaise "
     },
     {
         "date": "19/01/2021",
@@ -59,8 +53,7 @@
         "eventType": "Meetup",
         "eventName": "GdraalVM Night",
         "talkTitle": "GraalVM for Sustainable Software Development?",
-        "speakers": "Anne Imal",
-        "checked": true
+        "speakers": "Anne Imal"
     },
     {
         "date": "19/01/2021",
@@ -68,8 +61,7 @@
         "eventType": "NightClazz",
         "eventName": "NightdClass",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Yves Rogne",
-        "checked": true
+        "speakers": "Yves Rogne"
     },
     {
         "date": "19/01/2021",
@@ -77,8 +69,7 @@
         "eventType": "Meetup",
         "eventName": "Nandtes JS #55",
         "talkTitle": "Nuxt 2021",
-        "speakers": "Guy Tarenbois",
-        "checked": true
+        "speakers": "Guy Tarenbois"
     },
     {
         "date": "19/01/2021",
@@ -86,8 +77,7 @@
         "eventType": "NightClazz",
         "eventName": "RemdoteClazz Nodejs",
         "talkTitle": "Techniques minimalistes pour Node.js",
-        "speakers": "Sophie Stiqué",
-        "checked": true
+        "speakers": "Sophie Stiqué"
     },
     {
         "date": "19/01/2021",
@@ -95,8 +85,7 @@
         "eventType": "Webinar",
         "eventName": "Webdinar",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Anna Logue ",
-        "checked": true
+        "speakers": "Anna Logue "
     },
     {
         "date": "19/01/2021",
@@ -104,7 +93,6 @@
         "eventType": "Webinar",
         "eventName": "Webinar",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Thibault Lognaise ",
-        "checked": true
+        "speakers": "Thibault Lognaise "
     }
 ]
