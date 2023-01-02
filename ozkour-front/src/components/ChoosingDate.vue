@@ -1,143 +1,90 @@
 <script>
-import dateFormat from 'dateformat'
-import { ref, watch } from 'vue'
-import { useTalkStore } from '../stores/talks'
-
 import Datepicker from '@vuepic/vue-datepicker'
+import PeriodInput from './PeriodInput.vue'
+import { DateTime } from 'luxon'
+
+const defaultPeriod = {
+  week: (period, date = DateTime.now()) => {
+    const isNotMonday = date.weekday !== 1
+    let start = period[0]
+    let end = period[1]
+    if (isNotMonday) {
+      start = date.plus({ days: howManyDaysUntilNextMonday(date) }).toJSDate()
+    } else {
+      start = date.toJSDate()
+    }
+    end = DateTime.fromJSDate(start).plus({ days: 6 }).toJSDate()
+
+    return [start, end]
+  },
+  month: (period, date = DateTime.now()) => {
+    const isFirstWeekOfMonth = date.day <= 7
+    let start = period[0]
+    let end = period[1]
+    if (isFirstWeekOfMonth) {
+      start = date.toJSDate()
+      end = date.endOf('month').toJSDate()
+    } else {
+      start = date.plus({ month: 1 }).startOf('month').toJSDate()
+      end = date.plus({ month: 1 }).endOf('month').toJSDate()
+    }
+    return [start, end]
+  }
+}
+
+function howManyDaysUntilNextMonday (date = DateTime.now()) {
+  const isMonday = date.weekday === 1
+  return isMonday ? 0 : 7 - date.weekday + 1
+}
 
 export default {
   components: {
-    Datepicker
+    Datepicker,
+    PeriodInput
   },
-  emits: ['onSearchTalk'],
-  setup (props, context) {
-    const date = ref(new Date())
-    const dateStart = ref('')
-    const dateEnd = ref('')
-
-    const talks = useTalkStore()
-
-    date.value = [dateStart.value, dateEnd.value]
-
-    let currentTemplateName = ''
-    talks.$subscribe((_mutation, state) => {
-      if (state.template.name !== currentTemplateName) {
-        currentTemplateName = state.template.name
-        if (state.template.frequency === 'week') {
-          defaultDateNextWeek()
-        } else if (state.template.frequency === 'month') {
-          defaultDateNextMonth()
-        }
-        updateDateStartCalendar()
-        updateDateEndCalendar()
-        searchTalk()
-      }
-    })
-
-    function defaultDateNextMonth (d = new Date()) {
-      if (d.getDate() < 7) {
-        dateStart.value = dateFormat(Date.parse(d), 'yyyy-mm-dd')
-        dateEnd.value = dateFormat(
-          Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 0)),
-          'yyyy-mm-dd'
-        )
-      } else {
-        dateStart.value = dateFormat(
-          Date.parse(new Date(d.getFullYear(), d.getMonth() + 1, 1)),
-          'yyyy-mm-dd'
-        )
-        dateEnd.value = dateFormat(
-          Date.parse(new Date(d.getFullYear(), d.getMonth() + 2, 0)),
-          'yyyy-mm-dd'
-        )
-      }
+  props: {
+    chosenTemplate: {
+      type: Object,
+      required: true
     }
-
-    function defaultDateNextWeek (d = new Date()) {
-      if (d.getDay() !== 1) {
-        dateStart.value = dateFormat(
-          Date.parse(
-            new Date(d.getTime() + howManyDaysUntilNextMonday(d) * 24 * 60 * 60 * 1000)
-          ),
-          'yyyy-mm-dd'
-        )
-      } else {
-        dateStart.value = dateFormat(Date.parse(d), 'yyyy-mm-dd')
-      }
-      dateEnd.value = dateFormat(
-        Date.parse(
-          new Date(
-            new Date(dateStart.value).getTime() + 6 * 24 * 60 * 60 * 1000
-          )
-        ),
-        'yyyy-mm-dd'
-      )
-    }
-
-    function howManyDaysUntilNextMonday (d = new Date()) {
-      return d.getDay() === 0 ? 1 : 7 - d.getDay() + 1
-    }
-
-    function updateDateStartCalendar () {
-      if (dateEnd.value < dateStart.value && dateEnd.value !== '') dateStart.value = dateEnd.value
-      date.value[0] = dateStart.value
-    }
-
-    function updateDateEndCalendar () {
-      if (dateEnd.value < dateStart.value && dateStart.value !== '') dateEnd.value = dateStart.value
-      date.value[1] = dateEnd.value
-    }
-
-    function searchTalk () {
-      context.emit('onSearchTalk', { dateStart, dateEnd })
-    }
-
-    watch(date, async (newDate) => {
-      dateStart.value = dateFormat(Date.parse(newDate[0]), 'yyyy-mm-dd')
-      dateEnd.value = dateFormat(Date.parse(newDate[1]), 'yyyy-mm-dd')
-      searchTalk()
-    })
-
+  },
+  emits: ['onSearchEvent'],
+  data () {
     return {
-      date,
-      talks,
-      dateStart,
-      dateEnd,
-      howManyDaysUntilNextMonday,
-      updateDateStartCalendar,
-      updateDateEndCalendar
+      period: [new Date(), new Date()]
+    }
+  },
+  watch: {
+    chosenTemplate: function (newTemplate) {
+      this.period = defaultPeriod[newTemplate.frequency](this.period)
+    },
+    period: function () {
+      this.searchTalk()
+    }
+  },
+  beforeMount () {
+    this.period = defaultPeriod[this.chosenTemplate.frequency](this.period)
+  },
+  methods: {
+    searchTalk () {
+      const formatedDateStart = DateTime.fromJSDate(this.period[0]).toFormat('yyyy-MM-dd')
+      const formatedDateEnd = DateTime.fromJSDate(this.period[1]).toFormat('yyyy-MM-dd')
+      this.$emit('onSearchEvent', { dateStart: formatedDateStart, dateEnd: formatedDateEnd })
+    },
+    onChangePeriodInputs (newPeriod) {
+      this.period = newPeriod
     }
   }
 }
 </script>
 
 <template>
-  <div class="flex-column">
-    <div class="date">
-      <label for="start">Date de début</label>
-      <input
-        id="start"
-        v-model="dateStart"
-        type="date"
-        name="talk-start"
-        @change="updateDateStartCalendar"
-      >
-    </div>
-
-    <div class="date">
-      <label for="end">Date de fin</label>
-      <input
-        id="end"
-        v-model="dateEnd"
-        type="date"
-        name="talk-end"
-        :min="dateStart"
-        @change="updateDateEndCalendar"
-      >
-    </div>
-  </div>
+  <PeriodInput
+    :period="period"
+    @change="onChangePeriodInputs"
+  />
   <Datepicker
-    v-model="date"
+    v-model="period"
     range
     inline
     auto-apply

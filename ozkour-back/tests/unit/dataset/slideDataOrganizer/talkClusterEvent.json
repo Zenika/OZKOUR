@@ -5,8 +5,7 @@
         "eventType": "Meetup",
         "eventName": "GraalVM Night",
         "talkTitle": "GraalVM for Sustainable Software Development?",
-        "speakers": "Anne Imal",
-        "checked": true
+        "speakers": "Anne Imal"
     },
     {
         "date": "19/01/2021",
@@ -14,7 +13,6 @@
         "eventType": "Meetup",
         "eventName": "GraalVM Night",
         "talkTitle": "Migration JS vers TS sur du react",
-        "speakers": "Yves Rogne",
-        "checked": true
+        "speakers": "Yves Rogne"
     }
 ]

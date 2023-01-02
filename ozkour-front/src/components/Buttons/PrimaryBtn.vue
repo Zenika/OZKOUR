@@ -9,7 +9,7 @@ defineProps({
   <button
     :disabled="disabled"
     type="button"
-    :class="{ 'primary-btn': !disabled, 'primary-btn__disabled': disabled }"
+    :class="(disabled?'primary-btn__disabled':'primary-btn')"
   >
     <slot />
   </button>
