@@ -11,6 +11,7 @@
     "test:integration": "jest tests/integration",
     "dev": "node ./src",
     "dev:watch": "nodemon ./src",
+    "start" : "node ./src/index.js",
     "lint": "eslint --ext .js .",
     "lint:fix": "npm run lint -- --fix"
   },
