@@ -1,6 +1,7 @@
 const { google } = require('googleapis')
 const connect = require('../connect')
 const { Talk } = require('../../domain/model/talk')
+const { Training } = require('../../domain/model/training')
 const { logger } = require('../../logger')
 
 async function getTalks (month, year, spreadsheetId) {
@@ -32,6 +33,38 @@ async function getTalks (month, year, spreadsheetId) {
   }
 }
 
+async function getTrainings () {
+  const auth = await connect.getAuthentication()
+  const sheets = google.sheets({ version: 'v4', auth })
+
+  const spreadsheetId = '12_8zEfeeAo6WaQNkmjVLxrI39h3EDtmfThhYyMc3qC0'
+  const sheetName = 'Promotion training'
+  try {
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: `${sheetName}!A2:F`
+    })
+    const trainingArray = []
+    res.data.values.forEach(([trainingTitle, universe, duration, price, link, date]) => {
+      const newTraining = {
+        date,
+        trainingTitle,
+        universe,
+        duration,
+        price,
+        link
+      }
+      trainingArray.push(new Training(newTraining))
+    })
+    return trainingArray
+  } catch (e) {
+    logger.error({
+      message: `error while trying to retrieved trainings for ${sheetName} on file ${spreadsheetId} (${e})`
+    })
+  }
+}
+
 module.exports = {
-  getTalks
+  getTalks,
+  getTrainings
 }

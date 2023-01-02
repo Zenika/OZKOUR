@@ -1,51 +1,24 @@
 <script setup>
-const { useTalkStore } = require('@/stores/talks')
-const { watch, ref } = require('@vue/runtime-core')
+import { watch, ref } from 'vue'
 
-const talk = useTalkStore()
-
-const selected = ref('')
-
-const visuals = [
-  {
-    id: 'quoide9',
-    label: 'QUOI DE 9',
-    value: 'QuoiDeNeuf',
-    frequency: 'week',
-    validated: true
+const props = defineProps({
+  visuals: {
+    type: Array,
+    required: true
   },
-  {
-    id: 'emailing',
-    label: 'E-MAILING',
-    value: 'E-mailing',
-    frequency: 'month',
-    validated: true
-  },
-  {
-    id: 'meetup',
-    label: 'MEET-UP',
-    value: 'Meet-up',
-    frequency: 'month',
-    validated: false
-  },
-  {
-    id: 'slack',
-    label: 'SLACK',
-    value: 'Slack',
-    frequency: 'month',
-    validated: false
+  selected: {
+    type: Object,
+    required: true
   }
-]
-
-talk.pickedTemplate(visuals[0].value, visuals[0].frequency, visuals[0].validated)
-
-watch(selected, async (newSelect) => {
-  let n = 0
-  while (visuals[n].value !== newSelect) {
-    n++
-  }
-  talk.pickedTemplate(newSelect, visuals[n].frequency)
 })
+const selectedId = ref(props.selected.id)
+const emit = defineEmits(['changeTemplate'])
+
+watch(selectedId, (newSelectedId) => {
+  const newSelected = props.visuals.find(visual => visual.id === newSelectedId)
+  emit('changeTemplate', newSelected)
+}
+)
 
 </script>
 
@@ -60,11 +33,10 @@ watch(selected, async (newSelect) => {
         >
           <input
             :id="visual.id"
-            v-model="selected"
+            v-model="selectedId"
             type="radio"
             name="template"
-            :value="visual.value"
-            :checked="visual.id == 'quoide9'"
+            :value="visual.id"
             :disabled="visual.validated ? false : true"
             class="radio-btn"
           >

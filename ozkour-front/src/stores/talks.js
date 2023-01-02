@@ -1,44 +1,28 @@
 import qs from 'qs'
-import dateFormat from 'dateformat'
 import { defineStore } from 'pinia'
 import { api } from '@/api/apiConfig'
+import { isEqual } from 'lodash'
 
 export const useTalkStore = defineStore({
   id: 'talk',
   state: () => ({
     retrieved: [],
-    template: { name: '', frequency: '' },
-    date: {},
     retreivingTalks: false
   }),
   getters: {
     getSelectedTalks: (state) =>
       state.retrieved.filter((talk) => {
         return talk.checked
-      })
+      }),
+    getSelectedTalksTitle: (state) =>
+      state.getSelectedTalks.map((talk) => talk.talkTitle)
   },
   actions: {
     updateTalks (newTalks) {
       this.retrieved = newTalks
     },
-    checkTalk (selected) {
-      this.retrieved.find(talk =>
-        talk.talkTitle === selected.talkTitle).checked = true
-    },
-    uncheckTalk (selected) {
-      this.retrieved.find(talk =>
-        talk.talkTitle === selected.talkTitle).checked = false
-    },
-    pickedTemplate (chosenTemplate, freq) {
-      this.template = { name: chosenTemplate, frequency: freq }
-    },
-    selectedDate (start, end) {
-      start = dateFormat(Date.parse(start.value), 'dd/mm/yyyy')
-      end = dateFormat(Date.parse(end.value), 'dd/mm/yyyy')
-      this.date = { start, end }
-    },
-    async generateSlidesForSelectedTalks () {
-      switch (this.template.name) {
+    async generateVisualForSelectedTalks (templateName) {
+      switch (templateName) {
       case 'QuoiDeNeuf': {
         const { data } = await api
           .post('/talk/quoiDeNeuf', this.getSelectedTalks)
@@ -50,9 +34,16 @@ export const useTalkStore = defineStore({
         return { link: data.link, message: data.message }
       }
       default:
-        console.error('template :"', this.template.name, "\" n'est pas reconnu")
-        return { link: '/', message: 'unknown template' }
+        console.error('template :"', templateName, "\" n'est pas reconnu")
+        return { link: null, message: 'unknown template' }
       }
+    },
+    changeSelectionTalk (selected) {
+      const { checked, ...selectedTalk } = selected
+      this.retrieved.find(talk => {
+        const { checked: tempTalkChecked, ...tempSelectedTalk } = talk
+        return isEqual(tempSelectedTalk, selectedTalk)
+      }).checked = !checked
     },
     async getTalks (dateStart, dateEnd) {
       this.retreivingTalks = true
@@ -60,16 +51,35 @@ export const useTalkStore = defineStore({
         const { data } = await api
           .get('/talk', {
             params: {
-              start: dateStart.value,
-              end: dateEnd.value
+              start: dateStart,
+              end: dateEnd
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
-        this.updateTalks(data)
-        this.selectedDate(dateStart, dateEnd)
+        const res = data.map((talk) => {
+          return {
+            ...talk,
+            checked: true
+          }
+        })
+        this.updateTalks(res)
+        return res
       } finally {
         this.retreivingTalks = false
       }
+    },
+    async sort (dataSort) {
+      const { data } = await api
+        .post('/talk/sort', dataSort.events, {
+          params: {
+            key: dataSort.selectedColumnKey,
+            orderIsAscending: dataSort.orderIsAscending
+          },
+          paramsSerializer: (params) => qs.stringify(params, { encode: false })
+        })
+      const res = data
+      this.updateTalks(res)
+      return res
     }
   }
 })

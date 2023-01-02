@@ -140,7 +140,6 @@ function _createValidTalk () {
     eventType: 'Conférence',
     eventName: 'Devoxx',
     talkTitle: 'GraalVM for Sustainable Software Development?',
-    speakers: 'Anne Imal',
-    checked: true
+    speakers: 'Anne Imal'
   }
 }
