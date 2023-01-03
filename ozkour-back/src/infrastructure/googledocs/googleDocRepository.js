@@ -59,6 +59,7 @@ function addTitle (title, index) {
 
 function addTalkInEmailing (index, talk) {
   const { talkTitle, speakers, date, eventName, url } = talk
+  console.log(talk)
   const line = `${talkTitle}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
   const end = index + (line.length)
   const request = [
@@ -223,7 +224,7 @@ function addTrainingsInUniverse (index, trainings) {
       }
     })
     index += 1 // '\n'
-    requests.push(addStyleToTraining(index, training.link, training.trainingTitle))
+    requests.push(addStyleToTraining(index, training.url, training.trainingTitle))
     index += writtenTraining.length
   })
   requests.push({
