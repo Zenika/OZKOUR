@@ -59,7 +59,6 @@ function addTitle (title, index) {
 
 function addTalkInEmailing (index, talk) {
   const { talkTitle, speakers, date, eventName, url } = talk
-  console.log(talk)
   const line = `${talkTitle}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
   const end = index + (line.length)
   const request = [
@@ -147,20 +146,22 @@ function removeTemplateTextEmailingTraining (documentId) {
 
 function addMonth (mapUniverse) {
   const [firstValue] = mapUniverse.values()
-  const requests = [
+  const monthInLetter = convDateToMonthInLetterWithDeterminer(firstValue[0].date)
+  const request = [
     {
       insertText: {
-        text: convDateToMonthInLetterWithDeterminer(firstValue[0].date),
+        text: monthInLetter,
         location: {
           index: 54
         }
       }
     }
   ]
-  return requests
+  return { request, numberLetterMonth: monthInLetter.length }
 }
 
 function addUniverseTraining (index, universe, trainings) {
+  console.log(index)
   const startIndex = index
   const requests = [
     {
@@ -173,6 +174,27 @@ function addUniverseTraining (index, universe, trainings) {
       }
     }
   ]
+  //   updateTableCellStyle: {
+  //     tableCellStyle: {
+  //       borderLeft: {
+  //         color: {
+  //           color: {
+  //             rgbColor: {
+  //               red: 1,
+  //               green: 1,
+  //               blue: 1
+  //             }
+  //           }
+  //         },
+  //         dashStyle: 'SOLID'
+  //       }
+  //     },
+  //     fields: 'borderLeft',
+  //     tableStartLocation: {
+  //       index
+  //     }
+  //   }
+  // }
   index += 4 // get the index in the table
   requests.push(addTitleUniverseTraining(index, universe))
   index += (universe).length + 1
@@ -269,9 +291,12 @@ function addStyleToTraining (index, url, trainingTitle) {
 
 async function addTextForTrainingEmailing (documentId, mapUniverse) {
   const requests = []
-  let indexFirstColumn = 309
-  let indexSecondColumn = 311
-  requests.push(addMonth(mapUniverse))
+  let indexFirstColumn = 298
+  let indexSecondColumn = 300
+  const { request, numberLetterMonth } = addMonth(mapUniverse)
+  requests.push(request)
+  indexFirstColumn += numberLetterMonth
+  indexSecondColumn += numberLetterMonth
   let n = 1
   mapUniverse.forEach((trainingsForUniverse, universe) => {
     if (n % 2 !== 0) {
