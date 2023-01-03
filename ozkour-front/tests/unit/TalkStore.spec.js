@@ -49,20 +49,6 @@ describe('Talk Store', () => {
           link: 'https://monliendeslide.com'
         }
       })
-      const res = await talk.generateVisualForSelectedTalks('QuoiDeNeuf')
-
-      expect(res.link).toBe('https://monliendeslide.com')
-    })
-    it('should return the slide\'s link given status code to be 200', async () => {
-      const talk = useTalkStore()
-
-      talk.updateTalks(talksDataSet.allTalks)
-
-      api.post.mockResolvedValueOnce({
-        data: {
-          link: 'https://monliendeslide.com'
-        }
-      })
       const res = await talk.generateVisualForSelectedTalks('E-mailing')
 
       expect(res.link).toBe('https://monliendeslide.com')
@@ -78,7 +64,7 @@ describe('Talk Store', () => {
     })
   })
   describe('getTalks action', () => {
-    it('should return the slide\'s link given status code to be 200', async () => {
+    it('should return the retrieved talks', async () => {
       const talk = useTalkStore()
 
       api.get.mockResolvedValueOnce({
