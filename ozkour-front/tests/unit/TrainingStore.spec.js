@@ -38,33 +38,20 @@ describe('Training Store', () => {
   })
 
   describe('generateSlidesForSelectedTrainings action', () => {
-    it('should return the slide\'s link given status code to be 200', async () => {
+    it('should return the doc\'s link given status code to be 200', async () => {
       const training = useTrainingStore()
 
       training.updateTrainings(trainingsDataSet.allTrainings)
 
       api.post.mockResolvedValueOnce({
         data: {
-          link: 'https://monliendeslide.com'
+          link: 'https://monliendedoc.com',
+          message: 'Created !'
         }
       })
       const res = await training.generateVisualForSelectedTrainings('E-mailing')
 
-      expect(res).toBe('https://monliendeslide.com')
-    })
-    it('should return the slide\'s link given status code to be 200', async () => {
-      const training = useTrainingStore()
-
-      training.updateTrainings(trainingsDataSet.allTrainings)
-
-      api.post.mockResolvedValueOnce({
-        data: {
-          link: 'https://monliendeslide.com'
-        }
-      })
-      const res = await training.generateVisualForSelectedTrainings('E-mailing')
-
-      expect(res).toBe('https://monliendeslide.com')
+      expect(res).toEqual({ link: 'https://monliendedoc.com', message: 'Created !' })
     })
     it('should return null when the visual is unknown', async () => {
       const training = useTrainingStore()
@@ -77,7 +64,7 @@ describe('Training Store', () => {
     })
   })
   describe('getTrainings action', () => {
-    it('should return the slide\'s link given status code to be 200', async () => {
+    it('should return the retrieved trainings', async () => {
       const training = useTrainingStore()
 
       api.get.mockResolvedValueOnce({

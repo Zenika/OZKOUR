@@ -13,7 +13,7 @@ async function getTalks (month, year, spreadsheetId) {
       range: `${month} ${year}!A2:I`
     })
     const talkArray = []
-    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, link]) => {
+    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, url]) => {
       const newTalk = {
         date,
         universe,
@@ -21,7 +21,7 @@ async function getTalks (month, year, spreadsheetId) {
         eventName,
         talkTitle,
         speakers,
-        link
+        url
       }
       talkArray.push(new Talk(newTalk))
     })
@@ -45,14 +45,14 @@ async function getTrainings () {
       range: `${sheetName}!A2:F`
     })
     const trainingArray = []
-    res.data.values.forEach(([trainingTitle, universe, duration, price, link, date]) => {
+    res.data.values.forEach(([trainingTitle, universe, duration, price, url, date]) => {
       const newTraining = {
         date,
         trainingTitle,
         universe,
         duration,
         price,
-        link
+        url
       }
       trainingArray.push(new Training(newTraining))
     })
