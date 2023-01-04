@@ -161,7 +161,22 @@ function addMonth (mapUniverse) {
 }
 
 function addUniverseTraining (index, universe, trainings) {
-  console.log(index)
+  const borderColorWhite = {
+    color: {
+      color: {
+        rgbColor: {
+          red: 1,
+          green: 1,
+          blue: 1
+        }
+      }
+    },
+    width: {
+      magnitude: 1,
+      unit: 'PT'
+    },
+    dashStyle: 'SOLID'
+  }
   const startIndex = index
   const requests = [
     {
@@ -172,29 +187,22 @@ function addUniverseTraining (index, universe, trainings) {
           index
         }
       }
+    },
+    {
+      updateTableCellStyle: {
+        tableCellStyle: {
+          borderLeft: borderColorWhite,
+          borderRight: borderColorWhite,
+          borderTop: borderColorWhite,
+          borderBottom: borderColorWhite
+        },
+        fields: 'borderLeft, borderRight, borderTop, borderBottom',
+        tableStartLocation: {
+          index: index + 1
+        }
+      }
     }
   ]
-  //   updateTableCellStyle: {
-  //     tableCellStyle: {
-  //       borderLeft: {
-  //         color: {
-  //           color: {
-  //             rgbColor: {
-  //               red: 1,
-  //               green: 1,
-  //               blue: 1
-  //             }
-  //           }
-  //         },
-  //         dashStyle: 'SOLID'
-  //       }
-  //     },
-  //     fields: 'borderLeft',
-  //     tableStartLocation: {
-  //       index
-  //     }
-  //   }
-  // }
   index += 4 // get the index in the table
   requests.push(addTitleUniverseTraining(index, universe))
   index += (universe).length + 1
