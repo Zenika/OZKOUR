@@ -12,7 +12,7 @@ type mapUniverse = {
             universe:string,
             date:Date
             eventName:string,
-            link: string
+            url: string
         }]
     ]>
 }
@@ -30,7 +30,7 @@ type getSuccessMessage = (
     documentId: string,
 ) => {
     message: string;
-    link: string;
+    url: string;
 }
 
     

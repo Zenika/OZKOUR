@@ -26,7 +26,8 @@ export const useTrainingStore = defineStore({
       case 'E-mailing': {
         const { data } = await api
           .post('/training/emailing', this.getSelectedTrainings)
-        return data.link
+        console.log(data)
+        return { link: data.link, message: data.message }
       }
       default:
         console.error('template :"', templateName, "\" n'est pas reconnu")

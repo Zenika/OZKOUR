@@ -8,9 +8,9 @@ describe('Talks', () => {
       eventName: 'Le Meetup',
       talkTitle: 'Pourquoi les Meetups c est cool?',
       speakers: 'c moi',
-      link: 'https://www.youtube.com/watch?v=Duh2Er1n9qs'
+      url: 'https://www.youtube.com/watch?v=Duh2Er1n9qs'
     }
     const talk = new Talk(newTalk)
-    expect(talk.toString()).toBe(`date : ${newTalk.date},universe : ${newTalk.universe},eventType : ${newTalk.eventType},eventName : ${newTalk.eventName},talkTitle : ${newTalk.talkTitle},speakers : ${newTalk.speakers},link : ${newTalk.link}`)
+    expect(talk.toString()).toBe(`date : ${newTalk.date},universe : ${newTalk.universe},eventType : ${newTalk.eventType},eventName : ${newTalk.eventName},talkTitle : ${newTalk.talkTitle},speakers : ${newTalk.speakers},url : ${newTalk.url}`)
   })
 })

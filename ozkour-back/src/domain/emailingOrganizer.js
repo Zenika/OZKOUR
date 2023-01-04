@@ -22,7 +22,7 @@ function sortTalksEmailing (data) {
       eventName: talk.eventName,
       talkTitle: talk.talkTitle,
       speakers: talk.speakers,
-      link: talk.link,
+      url: talk.url,
       complete: (allTalkComplete || thisTalkIsComplete)
     }
     if (!mapUniverse.has(talk.universe)) {
@@ -66,7 +66,7 @@ function sortTrainingsEmailing (data) {
       universe: training.universe,
       duration: training.duration,
       price: training.price,
-      link: training.link
+      url: training.url
     }
     if (!mapUniverse.has(training.universe)) {
       mapUniverse.set(training.universe, [newTraining])
@@ -83,12 +83,12 @@ function verifyTrainingEmailing (trainings) {
     throw new Error('Can\'t create visual without trainings')
   }
   return trainings.every(
-    ({ date, universe, trainingTitle, duration, link }) =>
+    ({ date, universe, trainingTitle, duration, url }) =>
       Boolean(date) &&
       Boolean(universe) &&
       Boolean(trainingTitle) &&
       Boolean(duration) &&
-      Boolean(link)
+      Boolean(url)
   )
 }
 

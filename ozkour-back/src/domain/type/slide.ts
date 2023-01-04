@@ -38,7 +38,7 @@ type fillSlideWithData = (
 type getSuccessMessage = (
 ) => {
     message: string;
-    link: string;
+    url: string;
 }
 
 type deleteLastSlide = (
