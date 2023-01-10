@@ -37,7 +37,7 @@ async function getTrainings () {
   const auth = await connect.getAuthentication()
   const sheets = google.sheets({ version: 'v4', auth })
 
-  const spreadsheetId = '12_8zEfeeAo6WaQNkmjVLxrI39h3EDtmfThhYyMc3qC0'
+  const spreadsheetId = process.env.GOOGLE_TRAINING_FILE_ID
   const sheetName = 'Promotion training'
   try {
     const res = await sheets.spreadsheets.values.get({
