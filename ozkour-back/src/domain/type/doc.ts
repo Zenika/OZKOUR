@@ -30,7 +30,7 @@ type getSuccessMessage = (
     documentId: string,
 ) => {
     message: string;
-    url: string;
+    link: string;
 }
 
     
