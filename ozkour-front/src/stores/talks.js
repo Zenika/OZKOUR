@@ -21,16 +21,26 @@ export const useTalkStore = defineStore({
     updateTalks (newTalks) {
       this.retrieved = newTalks
     },
-    async generateVisualForSelectedTalks (templateName) {
+    async generateVisualForSelectedTalks (templateName, token) {
       switch (templateName) {
       case 'QuoiDeNeuf': {
         const { data } = await api
-          .post('/talk/quoiDeNeuf', this.getSelectedTalks)
+          .post('/talk/quoiDeNeuf', this.getSelectedTalks,
+            {
+              headers: {
+                Authorization: 'Bearer ' + token
+              }
+            })
         return { link: data.link, message: data.message }
       }
       case 'E-mailing': {
         const { data } = await api
-          .post('/talk/emailing', this.getSelectedTalks)
+          .post('/talk/emailing', this.getSelectedTalks,
+            {
+              headers: {
+                Authorization: 'Bearer ' + token
+              }
+            })
         return { link: data.link, message: data.message }
       }
       default:
@@ -45,7 +55,7 @@ export const useTalkStore = defineStore({
         return isEqual(tempSelectedTalk, selectedTalk)
       }).checked = !checked
     },
-    async getTalks (dateStart, dateEnd) {
+    async getTalks (dateStart, dateEnd, token) {
       this.retreivingTalks = true
       try {
         const { data } = await api
@@ -53,6 +63,9 @@ export const useTalkStore = defineStore({
             params: {
               start: dateStart,
               end: dateEnd
+            },
+            headers: {
+              Authorization: 'Bearer ' + token
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
@@ -68,12 +81,15 @@ export const useTalkStore = defineStore({
         this.retreivingTalks = false
       }
     },
-    async sort (dataSort) {
+    async sort (dataSort, token) {
       const { data } = await api
         .post('/talk/sort', dataSort.events, {
           params: {
             key: dataSort.selectedColumnKey,
             orderIsAscending: dataSort.orderIsAscending
+          },
+          headers: {
+            Authorization: 'Bearer ' + token
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })

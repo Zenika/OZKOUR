@@ -59,7 +59,8 @@ export default {
   methods: {
     async onRecapSubmit () {
       try {
-        const { link, message } = await this.trainings.generateVisualForSelectedTrainings(this.chosenTemplate.value)
+        const token = await this.$auth0.getAccessTokenSilently()
+        const { link, message } = await this.trainings.generateVisualForSelectedTrainings(this.chosenTemplate.value, token)
         if (link) {
           window.open(link, '_blank')
         }
@@ -74,7 +75,8 @@ export default {
     async handleSearchTraining ({ dateStart, dateEnd }) {
       this.period = { start: dateStart, end: dateEnd }
       try {
-        await this.trainings.getTrainings(dateStart, dateEnd)
+        const token = await this.$auth0.getAccessTokenSilently()
+        await this.trainings.getTrainings(dateStart, dateEnd, token)
       } catch (e) {
         this.isGetTrainingsFailed = true
       }
@@ -96,8 +98,9 @@ export default {
     changeTemplate (newTemplate) {
       this.chosenTemplate = newTemplate
     },
-    sort (sortData) {
-      this.trainings.sort(sortData)
+    async sort (sortData) {
+      const token = await this.$auth0.getAccessTokenSilently()
+      this.trainings.sort(sortData, token)
     },
     changeSelectionTraining (changedSelectionTraining) {
       this.trainings.changeSelectionTraining(changedSelectionTraining)

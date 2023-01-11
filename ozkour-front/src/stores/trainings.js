@@ -21,12 +21,16 @@ export const useTrainingStore = defineStore({
     updateTrainings (newTrainings) {
       this.retrieved = newTrainings
     },
-    async generateVisualForSelectedTrainings (templateName) {
+    async generateVisualForSelectedTrainings (templateName, token) {
       switch (templateName) {
       case 'E-mailing': {
         const { data } = await api
-          .post('/training/emailing', this.getSelectedTrainings)
-        console.log(data)
+          .post('/training/emailing', this.getSelectedTrainings,
+            {
+              headers: {
+                Authorization: 'Bearer ' + token
+              }
+            })
         return { link: data.link, message: data.message }
       }
       default:
@@ -41,7 +45,7 @@ export const useTrainingStore = defineStore({
         return isEqual(tempSelectedTraining, selectedTraining)
       }).checked = !checked
     },
-    async getTrainings (dateStart, dateEnd) {
+    async getTrainings (dateStart, dateEnd, token) {
       this.retreivingTrainings = true
       try {
         const { data } = await api
@@ -49,6 +53,9 @@ export const useTrainingStore = defineStore({
             params: {
               start: dateStart,
               end: dateEnd
+            },
+            headers: {
+              Authorization: 'Bearer ' + token
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
@@ -64,12 +71,16 @@ export const useTrainingStore = defineStore({
         this.retreivingTrainings = false
       }
     },
-    async sort (dataSort) {
+    async sort (dataSort, token) {
       const { data } = await api
         .post('/training/sort', dataSort.events, {
           params: {
             key: dataSort.selectedColumnKey,
             orderIsAscending: dataSort.orderIsAscending
+          },
+
+          headers: {
+            Authorization: 'Bearer ' + token
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
