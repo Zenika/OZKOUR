@@ -73,8 +73,7 @@ export default {
   methods: {
     async onRecapSubmit () {
       try {
-        const token = await this.$auth0.getAccessTokenSilently()
-        const { link, message } = await this.talks.generateVisualForSelectedTalks(this.chosenTemplate.value, token)
+        const { link, message } = await this.talks.generateVisualForSelectedTalks(this.chosenTemplate.value)
         if (link) {
           window.open(link, '_blank')
         }
@@ -89,8 +88,7 @@ export default {
     async handleSearchTalk ({ dateStart, dateEnd }) {
       this.period = { start: dateStart, end: dateEnd }
       try {
-        const token = await this.$auth0.getAccessTokenSilently()
-        await this.talks.getTalks(dateStart, dateEnd, token)
+        await this.talks.getTalks(dateStart, dateEnd)
       } catch (e) {
         this.isGetTalksFailed = true
       }
@@ -113,8 +111,7 @@ export default {
       this.chosenTemplate = newTemplate
     },
     async sort (sortData) {
-      const token = await this.$auth0.getAccessTokenSilently()
-      this.talks.sort(sortData, token)
+      this.talks.sort(sortData)
     },
     changeSelectionTalk (changedSelectionTalk) {
       this.talks.changeSelectionTalk(changedSelectionTalk)

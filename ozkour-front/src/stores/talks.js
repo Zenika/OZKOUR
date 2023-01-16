@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { defineStore } from 'pinia'
-import { api } from '@/api/apiConfig'
+import { useApi } from '@/api/apiConfig'
 import { isEqual } from 'lodash'
 
 export const useTalkStore = defineStore({
@@ -21,26 +21,17 @@ export const useTalkStore = defineStore({
     updateTalks (newTalks) {
       this.retrieved = newTalks
     },
-    async generateVisualForSelectedTalks (templateName, token) {
+    async generateVisualForSelectedTalks (templateName) {
+      const instanceAxios = await useApi()
       switch (templateName) {
       case 'QuoiDeNeuf': {
-        const { data } = await api
-          .post('/talk/quoiDeNeuf', this.getSelectedTalks,
-            {
-              headers: {
-                Authorization: 'Bearer ' + token
-              }
-            })
+        const { data } = await instanceAxios
+          .post('/talk/quoiDeNeuf', this.getSelectedTalks)
         return { link: data.link, message: data.message }
       }
       case 'E-mailing': {
-        const { data } = await api
-          .post('/talk/emailing', this.getSelectedTalks,
-            {
-              headers: {
-                Authorization: 'Bearer ' + token
-              }
-            })
+        const { data } = await instanceAxios
+          .post('/talk/emailing', this.getSelectedTalks)
         return { link: data.link, message: data.message }
       }
       default:
@@ -55,17 +46,15 @@ export const useTalkStore = defineStore({
         return isEqual(tempSelectedTalk, selectedTalk)
       }).checked = !checked
     },
-    async getTalks (dateStart, dateEnd, token) {
+    async getTalks (dateStart, dateEnd) {
       this.retreivingTalks = true
       try {
-        const { data } = await api
+        const instanceAxios = await useApi()
+        const { data } = await instanceAxios
           .get('/talk', {
             params: {
               start: dateStart,
               end: dateEnd
-            },
-            headers: {
-              Authorization: 'Bearer ' + token
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
@@ -81,15 +70,13 @@ export const useTalkStore = defineStore({
         this.retreivingTalks = false
       }
     },
-    async sort (dataSort, token) {
-      const { data } = await api
+    async sort (dataSort) {
+      const instanceAxios = await useApi()
+      const { data } = await instanceAxios
         .post('/talk/sort', dataSort.events, {
           params: {
             key: dataSort.selectedColumnKey,
             orderIsAscending: dataSort.orderIsAscending
-          },
-          headers: {
-            Authorization: 'Bearer ' + token
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })

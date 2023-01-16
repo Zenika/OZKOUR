@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { defineStore } from 'pinia'
-import { api } from '@/api/apiConfig'
+import { useApi } from '@/api/apiConfig'
 import { isEqual } from 'lodash'
 
 export const useTrainingStore = defineStore({
@@ -21,16 +21,12 @@ export const useTrainingStore = defineStore({
     updateTrainings (newTrainings) {
       this.retrieved = newTrainings
     },
-    async generateVisualForSelectedTrainings (templateName, token) {
+    async generateVisualForSelectedTrainings (templateName) {
+      const instanceAxios = await useApi()
       switch (templateName) {
       case 'E-mailing': {
-        const { data } = await api
-          .post('/training/emailing', this.getSelectedTrainings,
-            {
-              headers: {
-                Authorization: 'Bearer ' + token
-              }
-            })
+        const { data } = await instanceAxios
+          .post('/training/emailing', this.getSelectedTrainings)
         return { link: data.link, message: data.message }
       }
       default:
@@ -45,17 +41,15 @@ export const useTrainingStore = defineStore({
         return isEqual(tempSelectedTraining, selectedTraining)
       }).checked = !checked
     },
-    async getTrainings (dateStart, dateEnd, token) {
+    async getTrainings (dateStart, dateEnd) {
       this.retreivingTrainings = true
       try {
-        const { data } = await api
+        const instanceAxios = await useApi()
+        const { data } = await instanceAxios
           .get('/training', {
             params: {
               start: dateStart,
               end: dateEnd
-            },
-            headers: {
-              Authorization: 'Bearer ' + token
             },
             paramsSerializer: (params) => qs.stringify(params, { encode: false })
           })
@@ -71,16 +65,13 @@ export const useTrainingStore = defineStore({
         this.retreivingTrainings = false
       }
     },
-    async sort (dataSort, token) {
-      const { data } = await api
+    async sort (dataSort) {
+      const instanceAxios = await useApi()
+      const { data } = await instanceAxios
         .post('/training/sort', dataSort.events, {
           params: {
             key: dataSort.selectedColumnKey,
             orderIsAscending: dataSort.orderIsAscending
-          },
-
-          headers: {
-            Authorization: 'Bearer ' + token
           },
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
