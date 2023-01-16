@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { defineStore } from 'pinia'
-import { api } from '@/api/apiConfig'
+import { useApi } from '@/api/apiConfig'
 import { isEqual } from 'lodash'
 
 export const useTrainingStore = defineStore({
@@ -22,9 +22,10 @@ export const useTrainingStore = defineStore({
       this.retrieved = newTrainings
     },
     async generateVisualForSelectedTrainings (templateName) {
+      const instanceAxios = await useApi()
       switch (templateName) {
       case 'E-mailing': {
-        const { data } = await api
+        const { data } = await instanceAxios
           .post('/training/emailing', this.getSelectedTrainings)
         return { link: data.link, message: data.message }
       }
@@ -43,7 +44,7 @@ export const useTrainingStore = defineStore({
     async getTrainings (dateStart, dateEnd) {
       this.retreivingTrainings = true
       try {
-        const instanceAxios = await api
+        const instanceAxios = await useApi()
         const { data } = await instanceAxios
           .get('/training', {
             params: {
@@ -65,7 +66,7 @@ export const useTrainingStore = defineStore({
       }
     },
     async sort (dataSort) {
-      const instanceAxios = await api
+      const instanceAxios = await useApi()
       const { data } = await instanceAxios
         .post('/training/sort', dataSort.events, {
           params: {
