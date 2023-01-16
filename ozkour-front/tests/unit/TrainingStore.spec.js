@@ -1,4 +1,4 @@
-import { useApi, apiWithoutToken } from '@/api/apiConfig'
+import { api } from '@/api/apiConfig'
 import { setActivePinia, createPinia } from 'pinia'
 import { dataSetFactory } from './dataset/trainings.dataset'
 import { useTrainingStore } from '@/stores/trainings'
@@ -43,9 +43,7 @@ describe('Training Store', () => {
 
       training.updateTrainings(trainingsDataSet.allTrainings)
 
-      useApi.mockResolvedValueOnce(apiWithoutToken)
-
-      apiWithoutToken.post.mockResolvedValueOnce({
+      api.post.mockResolvedValueOnce({
         data: {
           link: 'https://monliendedoc.com',
           message: 'Created !'
@@ -69,9 +67,7 @@ describe('Training Store', () => {
     it('should return the retrieved trainings', async () => {
       const training = useTrainingStore()
 
-      useApi.mockResolvedValueOnce(apiWithoutToken)
-
-      apiWithoutToken.get.mockResolvedValueOnce({
+      api.get.mockResolvedValueOnce({
         data: trainingsDataSet.allTrainings.map((el) => {
           return {
             date: el.date,
@@ -104,9 +100,7 @@ describe('Training Store', () => {
       const valueEmitted = { selectedColumnKey: 'trainingTitle', orderIsAscending: true, events: trainingsDataSet.allTrainings }
 
       const trainingsOrdered = trainingsDataSet.allTrainings
-      useApi.mockResolvedValueOnce(apiWithoutToken)
-
-      apiWithoutToken.post.mockResolvedValueOnce({
+      api.post.mockResolvedValueOnce({
         data: trainingsOrdered
       })
       await training.sort(valueEmitted)

@@ -1,4 +1,4 @@
-import { useApi, apiWithoutToken } from '@/api/apiConfig'
+import { api } from '@/api/apiConfig'
 import { setActivePinia, createPinia } from 'pinia'
 import { dataSetFactory } from './dataset/talks.dataset.js'
 
@@ -44,9 +44,7 @@ describe('Talk Store', () => {
 
       talk.updateTalks(talksDataSet.allTalks)
 
-      useApi.mockResolvedValueOnce(apiWithoutToken)
-
-      apiWithoutToken.post.mockResolvedValueOnce({
+      api.post.mockResolvedValueOnce({
         data: {
           link: 'https://monliendeslide.com'
         }
@@ -69,9 +67,7 @@ describe('Talk Store', () => {
     it('should return the retrieved talks', async () => {
       const talk = useTalkStore()
 
-      useApi.mockResolvedValueOnce(apiWithoutToken)
-
-      apiWithoutToken.get.mockResolvedValueOnce({
+      api.get.mockResolvedValueOnce({
         data: talksDataSet.allTalks.map((el) => {
           return {
             date: el.date,
@@ -104,9 +100,8 @@ describe('Talk Store', () => {
       const valueEmitted = { selectedColumnKey: 'talkTitle', orderIsAscending: true, events: talksDataSet.allTalks }
 
       const talksOrdered = talksDataSet.allTalks
-      useApi.mockResolvedValueOnce(apiWithoutToken)
 
-      apiWithoutToken.post.mockResolvedValueOnce({
+      api.post.mockResolvedValueOnce({
         data: talksOrdered
       })
       await talk.sort(valueEmitted)
