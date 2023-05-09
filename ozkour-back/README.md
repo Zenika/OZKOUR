@@ -1,87 +1,148 @@
 # READ ME
-The server of Ozkour will create and send the requests to the google api
-## Environment variable
+
+Welcome to the Ozkour project backend, in order to successfully launch our project, you will need to follow all of the following steps to the letter.
+
+## ENVIRONNEMET VARIABLE
 At the root of the ozkour-back folder, create a ```.env``` file.
 
-### Server Setup
-First, put the ports and the domain link :
+## I) SERVER SETUP
+First, In your .env file put the ports and the domain link :
 ```
 PORT=3000
 ALLOWED_DOMAIN=http://localhost:8080
 ```
 
-### Google credentials
-To get your google Credentials, follow the link https://console.cloud.google.com/apis/credentials.
-Then create your project
+## II) GOOGLE CLOUD
 
-The next step is to create the service account.
- * Go to "APIs & Services"
- * Click on "create credentials"
- * Select service account
- * Fill the form (only the service account ID is mandatory). It will create an email address, <id>@projet-ozkour.iam.gserviceaccount.com. It will be useful later.
- * Click on the service account you just created
- * Click on 'KEYS' > 'ADD KEY' > 'Create new key' > "JSON" (a private key will be dowloaded)
+Our backend service uses google cloud services to connect to google api and interact with them (edit slide, read google sheets, etc). 
+To use these services, google will ask you to authenticate yourself through a service account. This account will allow you to interact with Google Cloud resources, such as APIs in our case. To do this, you need to follow these steps: 
 
- > **_WARNING:_**  It is recommended to keep your private key for yourself and to not share it 
+#### Step 1: CREATE A PROJECT
 
-Once you have your credentials you can fill your .env file with the data in the downloaded json file
+* Log in to: https://console.cloud.google.com/getting-started 
+* In the menu on the left, click on "APIs and Services" > "Login"  
+* Click on "CREATE A PROJECT"
+* Fill in the form (project name: project-ozkour)
+* Click on the "create" button
+
+#### Step 2: CREATE A SERVICE ACCOUNT
+
+Google cloud generates a new page.
+
+* Click on "CREATE IDENTIFIERS" (menu under the search bar at the top of the page)
+* Select "Service account"
+* Fill out the form (only the service account ID is required). This will create an email address, @projet-ozkour.iam.gserviceaccount.com. 
+* Click on "Ok". 
+
+#### Step 3: GENERATE YOUR CREDENTIALS 
+
+These are the credentials that you will be asked for when you access google services. 
+
+* Click on your service account that you just created (bottom of the page).
+* Select "KEYS" in the menu at the top of the page
+* Click on "ADD A KEY" > "CREATE A KEY" > "JSON"
+
+In the project's Config folder, you can drag and rename your downloaded json file. 
+
+In your ```.env``` file, create the following key: 
 
 ```
-type=service_account
-project_id= *your_project_id*
-private_key_id= *your_private_key_id*
-private_key= *your_private_key*
-client_email= *your_client_email*
-client_id= *your_client_id*
-auth_uri=https://accounts.google.com/o/oauth2/auth
-token_uri=https://oauth2.googleapis.com/token
-auth_provider_x509_cert_url=https://www.googleapis.com/oauth2/v1/certs
-client_x509_cert_url= *your_certificate_url*
+GOOGLE_APPLICATION_CREDENTIALS=/Path/to/your/JsonFile
 ```
 
-### Google API
-In this part you will have to add multiple id to your google documents/folders/drive.
-The id have to be extracted from the document URL. 
-For example: 
-https://docs.google.com/presentation/d/**1kjfeliHJJds3djks5IhflapD94i5ucfn3**/edit#slide=id.g13615588f61_0_16
-The id is"1kjfeliHJJds3djks5IhflapD94i5ucfn3"
+## III) SHARED DRIVE
 
-Add the id of the google slide file "Quoi de 9". This will be where all the visuals created by the application will appear, when the template "Quoi de 9" is selected.
+To access the Zenika shared drive, you can contact the marketing department via slack.
+
+You will find in this drive two folders (talks and trainings) containing the different files that will be read and edited by our application. To allow google to access these files, you must respect the following steps: 
+
+#### Step 1: MANAGE ACCESS
+
+You will need to repeat the following substeps as many times as there are files and folders.  
+
+* Click on a file or folder
+* Click on the "Manage Access" button on the right side of your screen (You must be the file editor)
+* Fill in the text field with your Zenika email address
+* Repeat the same action with the email address of your google service account (ex : exemple@ozkour.iam.gserviceaccount.com) 
+
+## IV) GOOGLE API
+
+In your backend service, you will have to add all the id of the files and folders of the drive to your ```.env``` file to allow the google api to access them. These ids are present in each of the urls of the files and folders of the drive. For example : https://docs.google.com/presentation/d/1kjfeliHJJds3djks5IhflapD94i5ucfn3/edit#slide=id.g13615588f61_0_16
+
+the id is 1kjfeliHJJds3djks5IhflapD94i5ucfn3"
+
+#### Step 1: SHARED DRIVE 
+
+For the shared drive use the id below.
+
+```
+DRIVE_ID_SHARED_DRIVE=0AGdSbEOfEoGwUk9PVA
+```
+
+#### Step 2: TALKS 
+
+For this application, all talks are in a shared folder:
+
+```
+GOOGLE_FOLDER_TALK_ID= *id_to_your_google_folder*
+```
+For this application, all selected talks will be edited in a google slide. 
+
 ```
 GOOGLE_SLIDE_LINK= *id_to_your_google_slide_document*
 ```
 
-All your google sheets files and google docs files must be in a shared drive. 
-Once your shared drive is created, you have to add the email address to the shared drive in editor mode.
-Then you can add the id of the drive.
+#### Step 3: TRAINING
+
 ```
-DRIVE_ID_SHARED_DRIVE= *id_to_your_google_shared_drive*
+GOOGLE_FOLDER_TRAINING_ID= *id_to_your_google_folder*
+```
+For this application, all selected training will be edited in a google slide. 
+
+```
+GOOGLE_SLIDE_TRAINING_LINK= *id_to_your_google_slide_document*
 ```
 
-For this app, all the talks are in google sheet files and all these files are located in one folder.
-```
-GOOGLE_FOLDER_TALK_ID= *id_to_your_google_folder*
-```
+#### Step 4: EMAILS
 
-For this app, all the google doc visuals are in different folders. In these folder you have one template.
+Same process as the last 3 steps: 
+
 ```
 GOOGLE_FOLDER_EMAILING_ID= *id_to_your_google_folder_for the_emailings*
 GOOGLE_TEMPLATE_EMAILING_ID= *id_to_your_google_doc_file_for the_emailings*
 ```
 
-## Manage your google files
-### Talk files
-Each google sheet talk files must begin by a year followed by " - Les Evénements et talks Zenika  (Zenika talks and events)". (It can be changed in the file ozkour-back>infrastructure>googledrive>drive.js)
+In summary your ```.env``` should look like this: 
+
+```
+PORT=3000
+ALLOWED_DOMAIN=http://localhost:8080
+
+GOOGLE_APPLICATION_CREDENTIALS=/Path/to/your/JsonFile
+
+DRIVE_ID_SHARED_DRIVE=0AGdSbEOfEoGwUk9PVA
+GOOGLE_FOLDER_TALK_ID= *id_to_your_google_folder*
+GOOGLE_SLIDE_LINK= *id_to_your_google_slide_document*
+GOOGLE_FOLDER_TRAINING_ID= *id_to_your_google_folder*
+GOOGLE_SLIDE_TRAINING_LINK=*id_to_your_google_slide_document*
+GOOGLE_FOLDER_EMAILING_ID= *id_to_your_google_folder_for the_emailings*
+GOOGLE_TEMPLATE_EMAILING_ID= *id_to_your_google_doc_file_for the_emailings*
+```
+
+## V) MANAGE YOUR GOOGLE FILE
+
+#### V.a) Talk files
+Each google sheet talk files must begin by a year followed by " - Les Evénements et talks Zenika  (Zenika talks and events)". (It can be changed in the file ozkour-back>infrastructure>googledrive>googleDriveRepository.js)
 
 Each talk file have a sheet for each month.
 Each sheet is named <month> stating with an uppercase in french followed by the year
 
-### Shared drive
+#### V.b) Shared drive
 Each file created by the application will be owned the service account you provided. It implies that the owner of these files will be the service account. If the files were not in a shared drive, they may not be accessible.
 
 Don't forget to add the service account in the shared drive as an editor.
 
-## Launch Server
+## VI) LAUNCH SERVER
 
 With npm installed (comes with [node](https://nodejs.org/en/)), run the following commands into a terminal:
 ```
@@ -90,8 +151,9 @@ npm run dev
 ```
 The server will run at http://localhost:3000
 
-## Add routes
-If you want to add routes, it will be in the folder ozkour-back>config>routes:
+## VII) ADD ROUTES
+
+If you want to add routes, it will be in the folder ozkour-back>src>routes:
 * if the prefix of the route you want to create exists:
     * find the file that has the name equal to the prefix
     * add your route to this file.
@@ -100,7 +162,7 @@ If you want to add routes, it will be in the folder ozkour-back>config>routes:
     * create a file with the prefix as a name (e.g., routes GET 'localhost/user/1' et POST 'localhost/user/1' will be in the file 'user.js').
     * add your route to this file.
 
-## Tests
+## VIII) TESTS
 
 Unit tests and one integration test have been done on server and client. 
 To make sure everything is working correctly run the following command :
