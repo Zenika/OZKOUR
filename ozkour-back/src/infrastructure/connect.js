@@ -1,45 +1,20 @@
 require('dotenv').config()
 const { logger } = require('../logger')
 const { GoogleAuth } = require('google-auth-library')
-const serviceAccount = require('../config/auth/service_account.js')
-const path = require('path')
-const fs = require('fs')
 
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations', 'https://www.googleapis.com/auth/drive']
 
-function createAuth () {
-  const serviceAccountParsed = JSON.stringify(serviceAccount)
-    .replace('{"serviceAccount":{', '{')
-    .replace('}}', '}')
-    .replaceAll('\\\\', '\\')
-  fs.writeFileSync(path.join(__dirname, '../config/auth/service_account.json'), serviceAccountParsed)
-  logger.debug({
-    message: 'authentication file created'
-  })
-}
-
 async function getAuthentication () {
-  const file = path.join(__dirname, '../config/auth/service_account.json')
-
-  try {
-    await fs.promises.stat(file)
-  } catch (e) {
-    createAuth()
-    console.error('file service account is missing, we tried to recreate one')
-  }
-
   const auth = new GoogleAuth({
-    keyFile: file,
+    keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
     scopes: SCOPES
   })
-  logger.debug({
+  logger.info({
     message: 'authentication granted'
   })
-  // Auth client Object
   return auth.getClient()
 }
 
 module.exports = {
   getAuthentication,
-  createAuth
 }
