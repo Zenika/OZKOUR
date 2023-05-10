@@ -16,5 +16,5 @@ async function getAuthentication () {
 }
 
 module.exports = {
-  getAuthentication,
+  getAuthentication
 }
