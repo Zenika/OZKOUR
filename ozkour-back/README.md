@@ -17,30 +17,21 @@ ALLOWED_DOMAIN=http://localhost:8080
 Our backend service uses google cloud services to connect to google api and interact with them (edit slide, read google sheets, etc). 
 To use these services, google will ask you to authenticate yourself through a service account. This account will allow you to interact with Google Cloud resources, such as APIs in our case. To do this, you need to follow these steps: 
 
-#### Step 1: CREATE A PROJECT
 
-* Log in to: https://console.cloud.google.com/getting-started 
-* In the menu on the left, click on "APIs and Services" > "Login"  
-* Click on "CREATE A PROJECT"
-* Fill in the form (project name: project-ozkour)
-* Click on the "create" button
+#### Step 1: GET ACCESS TO THE PROJECT
 
-#### Step 2: CREATE A SERVICE ACCOUNT
+* Ask the DSI to give you the access to the ozkour-project in Google Cloud Plateform 
+* Log in to: https://console.cloud.google.com/apis/credentials
 
-Google cloud generates a new page.
-
-* Click on "CREATE IDENTIFIERS" (menu under the search bar at the top of the page)
-* Select "Service account"
-* Fill out the form (only the service account ID is required). This will create an email address, @projet-ozkour.iam.gserviceaccount.com. 
-* Click on "Ok". 
-
-#### Step 3: GENERATE YOUR CREDENTIALS 
+#### Step 2: GENERATE YOUR CREDENTIALS 
 
 These are the credentials that you will be asked for when you access google services. 
 
-* Click on your service account that you just created (bottom of the page).
+* Click on the service account named ozkour-bot@projet-ozkour.iam.gserviceaccount.com (bottom of the page).
 * Select "KEYS" in the menu at the top of the page
 * Click on "ADD A KEY" > "CREATE A KEY" > "JSON"
+
+As you can see, there is now a new active key for the service account (Bottom of the page). There will be a specific key for each contributor to the project. All these keys are linked to a single service account. 
 
 In the project's Config folder, you can drag and rename your downloaded json file. 
 
@@ -56,6 +47,8 @@ To access the Zenika shared drive, you can contact the marketing department via 
 
 You will find in this drive two folders (talks and trainings) containing the different files that will be read and edited by our application. To allow google to access these files, you must respect the following steps: 
 
+NOTE: The accesses to the files and folders of the project are already managed. The steps below simply explain the process in case you need to manage new ones. 
+
 #### Step 1: MANAGE ACCESS
 
 You will need to repeat the following substeps as many times as there are files and folders.  
@@ -63,7 +56,7 @@ You will need to repeat the following substeps as many times as there are files 
 * Click on a file or folder
 * Click on the "Manage Access" button on the right side of your screen (You must be the file editor)
 * Fill in the text field with your Zenika email address
-* Repeat the same action with the email address of your google service account (ex : exemple@ozkour.iam.gserviceaccount.com) 
+* Repeat the same action with the email address of our google service account (ex : ozkour-bot@projet-ozkour.iam.gserviceaccount.com) 
 
 ## IV) GOOGLE API
 
@@ -177,3 +170,42 @@ if you want to update the snapshot, you can use the command:
 ```
 npm run test:unit -- -u
 ```
+   
+## IX) IN THE CASE YOU WANT CREATE YOUR OWN PROJECT
+
+#### Step 1: CREATE A YOUR OWN PROJECT
+
+* Log in to: https://console.cloud.google.com/getting-started 
+* In the menu on the left, click on "APIs and Services" > "Login"  
+* Click on "CREATE A PROJECT"
+* Fill in the form (project name: project-ozkour)
+* Click on the "create" button
+
+#### Step 2: CREATE A SERVICE ACCOUNT
+
+Google cloud generates a new page.
+
+* Click on "CREATE IDENTIFIERS" (menu under the search bar at the top of the page)
+* Select "Service account"
+* Fill out the form (only the service account ID is required). This will create an email address, @projet-ozkour.iam.gserviceaccount.com. 
+* Click on "Ok". 
+
+#### Step 3: GENERATE YOUR CREDENTIALS 
+
+These are the credentials that you will be asked for when you access google services. 
+
+* Click on your service account that you just created (bottom of the page).
+* Select "KEYS" in the menu at the top of the page
+* Click on "ADD A KEY" > "CREATE A KEY" > "JSON"
+
+In the project's Config folder, you can drag and rename your downloaded json file. 
+
+In your ```.env``` file, create the following key: 
+
+```
+GOOGLE_APPLICATION_CREDENTIALS=/Path/to/your/JsonFile
+```
+
+   
+   
+   
