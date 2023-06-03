@@ -4,17 +4,34 @@ const { getTraining } = require('../domain/trainings-sheet')
 const { DocService } = require('../domain/docsService')
 const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
+const googleSheetDriveRepository = require("../infrastructure/googlesheets/sheetWrapper")
 const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
+const { SheetService } = require('../domain/sheetService')
+const { CustomeError, sendCustomError } = require('../Error/customeError')
+// const connect = require('../')
+const dayjs = require('dayjs')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
+
 
 module.exports = [
   {
     method: 'GET',
     path: '/training',
-    handler: function (request, h) {
+    handler: async function (request, h) {
       logger.info({
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return getTraining(request.query.start, request.query.end)
+    try {
+      const {start,end}=request.query
+      validateDates(start, end)
+      logger.verbose({message : 'dates validées'})
+      const sheetService = new SheetService(googleSheetDriveRepository)
+      const res = await sheetService.getDataSheets(start, end)
+      return h.response(res).code(200)
+    } catch (error) {
+      return sendCustomError(error, h)
+    }
     }
   },
   {
@@ -48,3 +65,17 @@ module.exports = [
     }
   }
 ]
+
+const validateDates =(start, end)=>{
+
+if (!start && end) throw new CustomeError('La date de début n\'est pas définie',400);
+
+if (!end && start) throw new CustomeError('La date de fin n\'est pas définie',400);
+
+if (!start && !end) throw new CustomeError('Les dates de début et de fin ne sont pas défininies ',400);
+
+if (!dayjs(start,'YYYY-MM-DD').isValid()) throw new CustomeError('Le format de la date de début est incorrect',400);
+
+if (!dayjs(end,'YYYY-MM-DD').isValid()) throw new CustomeError('Le format de la date de fin est incorrect',400);
+
+}
