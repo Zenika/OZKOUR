@@ -32,7 +32,10 @@ const sendCustomError = (error, h)=>{
 		 message : error.message
 	   }).code(status)
 	 default :
-	 logger.verbose({message : "erreur"});
+	 return  h.response({
+		status : status,
+		message : error.message
+	  }).code(500)
 	}
 }
 

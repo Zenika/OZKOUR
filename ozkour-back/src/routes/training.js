@@ -8,11 +8,15 @@ const googleSheetDriveRepository = require("../infrastructure/googlesheets/sheet
 const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
 const { SheetService } = require('../domain/sheetService')
 const { CustomeError, sendCustomError } = require('../Error/customeError')
-// const connect = require('../')
+const connect = require('../infrastructure/connect')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
+const {
+  TRAINING_SHEET
+} = require("../constantes/constantes");
 
+const INDEX_INCOMPLETE_DATA = 1;
 
 module.exports = [
   {
@@ -23,12 +27,21 @@ module.exports = [
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
     try {
+      const auth = await connect.getAuthentication()
+      if(!auth) {
+      logger.error({message : "connexion échouée!"})
+      throw new CustomeError("Vous n\'êtes pas autorisés à vous connecter, veuillez contacter le service support!", 401)
+      } else {
+      logger.info({message : "connexion réussite!"})
       const {start,end}=request.query
       validateDates(start, end)
       logger.verbose({message : 'dates validées'})
       const sheetService = new SheetService(googleSheetDriveRepository)
-      const res = await sheetService.getDataSheets(start, end)
-      return h.response(res).code(200)
+      const res = await sheetService.getDataSheets(start, end, auth, TRAINING_SHEET)
+      if(res[INDEX_INCOMPLETE_DATA].length > 0) {
+      return h.response(res).code(206)}
+      else {
+      return h.response(res).code(200)}}
     } catch (error) {
       return sendCustomError(error, h)
     }

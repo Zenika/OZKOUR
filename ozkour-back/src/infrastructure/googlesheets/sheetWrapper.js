@@ -33,34 +33,35 @@ async function getTalks (month, year, spreadsheetId) {
   }
 }
 
-async function getTrainings () {
-  const auth = await connect.getAuthentication()
+async function getTrainings (auth) {
   const sheets = google.sheets({ version: 'v4', auth })
-
-  const spreadsheetId = process.env.GOOGLE_TRAINING_FILE_ID
-  const sheetName = 'Promotion training'
+  const spreadsheetId = process.env.GOOGLE_TRAINING_FILE_SHEET_ID
+  const sheetName = 'Training'
   try {
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${sheetName}!A2:F`
+      range: `${sheetName}!A7:F`
     })
     const trainingArray = []
-    res.data.values.forEach(([trainingTitle, universe, duration, price, url, date]) => {
+    const findFirstIndex  = parseInt(res.data.range.match(/\d+/)[0])
+    res.data.values.forEach(([trainingTitle, universe, duration, price, link, date], index) => {
       const newTraining = {
-        date,
         trainingTitle,
         universe,
-        duration,
+        duration, 
         price,
-        url
+        link,
+        date,
+        indexLine : findFirstIndex + index 
       }
-      trainingArray.push(new Training(newTraining))
+     if( date !== undefined) trainingArray.push(new Training(newTraining))
     })
     return trainingArray
-  } catch (e) {
+  } catch (error) {
     logger.error({
-      message: `error while trying to retrieved trainings for ${sheetName} on file ${spreadsheetId} (${e})`
+      message: `error while trying to retrieved trainings for ${sheetName} on file ${spreadsheetId} (${error})`
     })
+    throw error
   }
 }
 
