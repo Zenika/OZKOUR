@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Docs creation should return a JSON request to add a talk to the doc in red when the talk is incomplete 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "location": Object {
+        "index": 10,
+      },
+      "text": "Title, animé par , le 11/03/2021 | eventName
+
+",
+    },
+  },
+  Object {
+    "updateParagraphStyle": Object {
+      "fields": "namedStyleType",
+      "paragraphStyle": Object {
+        "namedStyleType": "SUBTITLE",
+      },
+      "range": Object {
+        "endIndex": 56,
+        "startIndex": 10,
+      },
+    },
+  },
+  Object {
+    "updateTextStyle": Object {
+      "fields": "link",
+      "range": Object {
+        "endIndex": 15,
+        "startIndex": 10,
+      },
+      "textStyle": Object {
+        "link": Object {
+          "url": "https://example.com",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`Docs creation should return a JSON request to add a talk to the doc with url 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "location": Object {
+        "index": 10,
+      },
+      "text": "Title, animé par speaker, le 11/03/2021 | eventName
+
+",
+    },
+  },
+  Object {
+    "updateParagraphStyle": Object {
+      "fields": "namedStyleType",
+      "paragraphStyle": Object {
+        "namedStyleType": "NORMAL_TEXT",
+      },
+      "range": Object {
+        "endIndex": 63,
+        "startIndex": 10,
+      },
+    },
+  },
+  Object {
+    "updateTextStyle": Object {
+      "fields": "link",
+      "range": Object {
+        "endIndex": 15,
+        "startIndex": 10,
+      },
+      "textStyle": Object {
+        "link": Object {
+          "url": "https://example.com",
+        },
+      },
+    },
+  },
+]
+`;
+
+exports[`Docs creation should return a JSON request to add a talk to the doc without url 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "location": Object {
+        "index": 10,
+      },
+      "text": "Title, animé par speaker, le 11/03/2021 | eventName
+
+",
+    },
+  },
+  Object {
+    "updateParagraphStyle": Object {
+      "fields": "namedStyleType",
+      "paragraphStyle": Object {
+        "namedStyleType": "NORMAL_TEXT",
+      },
+      "range": Object {
+        "endIndex": 63,
+        "startIndex": 10,
+      },
+    },
+  },
+]
+`;
+
+exports[`Docs creation should return a JSON request to add a title in red to a document when the title is "Sans Univers" 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "location": Object {
+        "index": 1,
+      },
+      "text": "Sans Univers
+",
+    },
+  },
+  Object {
+    "updateParagraphStyle": Object {
+      "fields": "namedStyleType",
+      "paragraphStyle": Object {
+        "namedStyleType": "HEADING_2",
+      },
+      "range": Object {
+        "endIndex": 13,
+        "startIndex": 1,
+      },
+    },
+  },
+]
+`;
+
+exports[`Docs creation should return a JSON request to add a title to a document 1`] = `
+Array [
+  Object {
+    "insertText": Object {
+      "location": Object {
+        "index": 1,
+      },
+      "text": "Title
+",
+    },
+  },
+  Object {
+    "updateParagraphStyle": Object {
+      "fields": "namedStyleType",
+      "paragraphStyle": Object {
+        "namedStyleType": "HEADING_1",
+      },
+      "range": Object {
+        "endIndex": 6,
+        "startIndex": 1,
+      },
+    },
+  },
+]
+`;

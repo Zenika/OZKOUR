@@ -1,6 +1,5 @@
 // @ts-check
 const { logger } = require('../logger')
-const { getTraining } = require('../domain/trainings-sheet')
 const { DocService } = require('../domain/docsService')
 const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
@@ -9,9 +8,7 @@ const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
 const { SheetService } = require('../domain/sheetService')
 const { CustomeError, sendCustomError } = require('../Error/customeError')
 const connect = require('../infrastructure/connect')
-const dayjs = require('dayjs')
-const customParseFormat = require('dayjs/plugin/customParseFormat')
-dayjs.extend(customParseFormat)
+const {validateDates} = require("../Utils/validateDates")
 const {
   TRAINING_SHEET
 } = require("../constantes/constantes");
@@ -77,18 +74,5 @@ module.exports = [
       return h.response(res)
     }
   }
+
 ]
-
-const validateDates =(start, end)=>{
-
-if (!start && end) throw new CustomeError('La date de début n\'est pas définie',400);
-
-if (!end && start) throw new CustomeError('La date de fin n\'est pas définie',400);
-
-if (!start && !end) throw new CustomeError('Les dates de début et de fin ne sont pas défininies ',400);
-
-if (!dayjs(start,'YYYY-MM-DD').isValid()) throw new CustomeError('Le format de la date de début est incorrect',400);
-
-if (!dayjs(end,'YYYY-MM-DD').isValid()) throw new CustomeError('Le format de la date de fin est incorrect',400);
-
-}
