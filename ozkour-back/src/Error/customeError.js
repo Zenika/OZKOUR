@@ -33,8 +33,8 @@ const sendCustomError = (error, h)=>{
 	   }).code(status)
 	 default :
 	 return  h.response({
-		status : status,
-		message : error.message
+		status : 500,
+		message : "BAD request, erreur serveur!"
 	  }).code(500)
 	}
 }
