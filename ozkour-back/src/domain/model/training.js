@@ -1,20 +1,20 @@
 class Training {
-  constructor ({ trainingTitle, universe, duration, price, link,date, indexLine }) {
-    this.trainingTitle = trainingTitle,
+  constructor ({ title, universe, duration, price, url,date, indexLine }) {
+    this.title = title,
     this.universe = universe,
     this.duration = duration, 
     this.price = price,
-    this.link = link,
-    this.date= date
+    this.url = url,
+    this.date= date,
     this.indexLine = indexLine
   }
 
   toString () {
-    return `trainingTitle : ${this.trainingTitle},
+    return `title : ${this.title},
     universe : ${this.universe},
     duration : ${this.duration},
     price : ${this.price},
-    link : ${this.link},
+    url : ${this.url},
     date : ${this.date},
     indexLine : ${this.indexLine},
     `

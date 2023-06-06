@@ -1,6 +1,6 @@
 
 const driveWrapper = require('./driveWrapper')
-const dateUtils = require('../../Utils/dateUtils')
+const dateUtils = require('../../utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
 const folderTalkEmailingId = process.env.GOOGLE_FOLDER_EMAILING_TALK_ID
@@ -15,13 +15,11 @@ async function getListFileTalksBetween2Dates (start, end) {
   const res = filterFilesBetween2Dates(start, end, files)
   return res
 }
-
-async function getIdOfTalkFileByYear (year) {
-  const Filename = year + ' - Les Evénements et talks Zenika  (Zenika talks and events)'
-  const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTalksId, Filename)
-  if (res === undefined) {
-    throw (new Error('no file named :"' + Filename + '" found'))
-  }
+async function getIdOfTalkFileByYear (year, auth) {
+  const Filename = year + " - Les Evénements et talks Zenika  (Zenika talks and events)"
+  
+  const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTalksId, Filename, auth)
+  if (res.name === undefined || res.id === undefined ) throw (new Error('no file named :"' + Filename + '" found'))
   return res.id
 }
 

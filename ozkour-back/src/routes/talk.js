@@ -1,26 +1,39 @@
-// @ts-check
-const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
+const { sortArrayByKeyAndOrder } = require('../utils/arrayUtils')
 const { logger } = require('../logger')
-const { getTalk } = require('../domain/talks-sheet')
-
-const { SlideService } = require('../domain/slideService')
-const { DocService } = require('../domain/docsService')
+const { SlideService } = require('../services/slideService')
+const { DocService } = require('../services/docsService')
+const { sendCustomError } = require('../Error/customeError')
 const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
 const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
+const commun  = require('../controller/common')
+
+const {
+  TALK_SHEET
+} = require("../constantes/constantes");
+
+const INDEX_INCOMPLETE_DATA = 1;
 
 module.exports = [
   {
     method: 'GET',
     path: '/talk',
-    handler: function (request, h) {
+    handler: async function (request, h) {
       logger.info({
         message: `request get Talks (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return getTalk(request.query.start, request.query.end)
+      try {
+        const {start,end}=request.query
+        const res = await commun.getTalkOrTraining(start, end, TALK_SHEET)
+        if(res[INDEX_INCOMPLETE_DATA].length > 0) {
+        return h.response(res).code(206)}
+        else {
+        return h.response(res).code(200)}
+        } catch (error) {
+        return sendCustomError(error, h)
+        }
     }
   },
-
   {
     method: 'POST',
     path: '/talk/quoiDeNeuf',

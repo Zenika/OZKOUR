@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require('uuid')
-const dateUtils = require('../../Utils/dateUtils')
+const dateUtils = require('../../utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 const slideDataOrganizer = require('../../domain/quoiDe9Organizer')
@@ -87,7 +87,6 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
         }
       }
     },
-
     {
       insertText: {
         // add date to the text

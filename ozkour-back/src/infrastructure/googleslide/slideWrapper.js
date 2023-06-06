@@ -12,6 +12,8 @@ async function getSlides () {
   return data.slides
 }
 
+
+
 async function sendRequest (requests) {
   const auth = await connect.getAuthentication()
   const slides = google.slides({ version: 'v1', auth })

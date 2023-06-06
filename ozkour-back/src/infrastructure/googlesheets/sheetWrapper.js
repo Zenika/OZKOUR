@@ -1,11 +1,9 @@
 const { google } = require('googleapis')
-const connect = require('../connect')
 const { Talk } = require('../../domain/model/talk')
 const { Training } = require('../../domain/model/training')
 const { logger } = require('../../logger')
 
-async function getTalks (month, year, spreadsheetId) {
-  const auth = await connect.getAuthentication()
+async function getTalks (month, year, spreadsheetId, auth) {
   const sheets = google.sheets({ version: 'v4', auth })
   try {
     const res = await sheets.spreadsheets.values.get({
@@ -13,7 +11,8 @@ async function getTalks (month, year, spreadsheetId) {
       range: `${month} ${year}!A2:I`
     })
     const talkArray = []
-    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, url]) => {
+    const findFirstIndex  = parseInt(res.data.range.match(/\d+/)[0])
+    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, url], index) => {
       const newTalk = {
         date,
         universe,
@@ -21,7 +20,8 @@ async function getTalks (month, year, spreadsheetId) {
         eventName,
         talkTitle,
         speakers,
-        url
+        url,
+        indexLine : findFirstIndex + index 
       }
       talkArray.push(new Talk(newTalk))
     })
@@ -30,6 +30,7 @@ async function getTalks (month, year, spreadsheetId) {
     logger.error({
       message: `error while trying to retrieved talks for ${month} ${year} on file ${spreadsheetId} (${e})`
     })
+    throw e
   }
 }
 
@@ -44,13 +45,13 @@ async function getTrainings (auth) {
     })
     const trainingArray = []
     const findFirstIndex  = parseInt(res.data.range.match(/\d+/)[0])
-    res.data.values.forEach(([trainingTitle, universe, duration, price, link, date], index) => {
+    res.data.values.forEach(([title, universe, duration, price, url, date], index) => {
       const newTraining = {
-        trainingTitle,
+        title,
         universe,
         duration, 
         price,
-        link,
+        url,
         date,
         indexLine : findFirstIndex + index 
       }
