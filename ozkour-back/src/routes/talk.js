@@ -1,18 +1,15 @@
-const { sortArrayByKeyAndOrder } = require('../utils/arrayUtils')
 const { logger } = require('../logger')
 const { SlideService } = require('../services/slideService')
 const { DocService } = require('../services/docsService')
+const { sortArrayByKeyAndOrder } = require('../utils/arrayUtils')
 const { sendCustomError } = require('../Error/customeError')
 const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
 const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
-const commun  = require('../controller/common')
+const commun = require('../controller/common')
+const { TALK_SHEET } = require('../constantes/constantes')
 
-const {
-  TALK_SHEET
-} = require("../constantes/constantes");
-
-const INDEX_INCOMPLETE_DATA = 1;
+const INDEX_INCOMPLETE_DATA = 1
 
 module.exports = [
   {
@@ -23,15 +20,16 @@ module.exports = [
         message: `request get Talks (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
       try {
-        const {start,end}=request.query
+        const { start, end } = request.query
         const res = await commun.getTalkOrTraining(start, end, TALK_SHEET)
-        if(res[INDEX_INCOMPLETE_DATA].length > 0) {
-        return h.response(res).code(206)}
-        else {
-        return h.response(res).code(200)}
-        } catch (error) {
-        return sendCustomError(error, h)
+        if (res[INDEX_INCOMPLETE_DATA].length > 0) {
+          return h.response(res).code(206)
+        } else {
+          return h.response(res).code(200)
         }
+      } catch (error) {
+        return sendCustomError(error, h)
+      }
     }
   },
   {
@@ -61,7 +59,10 @@ module.exports = [
       const docServiceRepository = googleDocRepository
       /** @type {import ("../domain/type/drive").DriveRepository} */
       const driveServiceRepository = googleDriveRepository
-      const docService = new DocService(docServiceRepository, driveServiceRepository)
+      const docService = new DocService(
+        docServiceRepository,
+        driveServiceRepository
+      )
       const res = await docService.createEmailingDocs(talks)
       return h.response(res)
     }

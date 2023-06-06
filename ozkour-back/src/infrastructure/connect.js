@@ -1,7 +1,11 @@
 require('dotenv').config()
 const { GoogleAuth } = require('google-auth-library')
 
-const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly', 'https://www.googleapis.com/auth/presentations', 'https://www.googleapis.com/auth/drive']
+const SCOPES = [
+  'https://www.googleapis.com/auth/spreadsheets.readonly',
+  'https://www.googleapis.com/auth/presentations',
+  'https://www.googleapis.com/auth/drive'
+]
 
 async function getAuthentication () {
   const auth = new GoogleAuth({

@@ -11,20 +11,35 @@ async function getTalks (month, year, spreadsheetId, auth) {
       range: `${month} ${year}!A2:I`
     })
     const talkArray = []
-    const findFirstIndex  = parseInt(res.data.range.match(/\d+/)[0])
-    res.data.values.forEach(([_agency, universe, eventType, eventName, date, _hour, speakers, talkTitle, url], index) => {
-      const newTalk = {
-        date,
-        universe,
-        eventType,
-        eventName,
-        talkTitle,
-        speakers,
-        url,
-        indexLine : findFirstIndex + index 
+    const findFirstIndex = parseInt(res.data.range.match(/\d+/)[0])
+    res.data.values.forEach(
+      (
+        [
+          _agency,
+          universe,
+          eventType,
+          eventName,
+          date,
+          _hour,
+          speakers,
+          talkTitle,
+          url
+        ],
+        index
+      ) => {
+        const newTalk = {
+          date,
+          universe,
+          eventType,
+          eventName,
+          talkTitle,
+          speakers,
+          url,
+          indexLine: findFirstIndex + index
+        }
+        talkArray.push(new Talk(newTalk))
       }
-      talkArray.push(new Talk(newTalk))
-    })
+    )
     return talkArray
   } catch (e) {
     logger.error({
@@ -44,19 +59,21 @@ async function getTrainings (auth) {
       range: `${sheetName}!A7:F`
     })
     const trainingArray = []
-    const findFirstIndex  = parseInt(res.data.range.match(/\d+/)[0])
-    res.data.values.forEach(([title, universe, duration, price, url, date], index) => {
-      const newTraining = {
-        title,
-        universe,
-        duration, 
-        price,
-        url,
-        date,
-        indexLine : findFirstIndex + index 
+    const findFirstIndex = parseInt(res.data.range.match(/\d+/)[0])
+    res.data.values.forEach(
+      ([title, universe, duration, price, url, date], index) => {
+        const newTraining = {
+          title,
+          universe,
+          duration,
+          price,
+          url,
+          date,
+          indexLine: findFirstIndex + index
+        }
+        if (date !== undefined) trainingArray.push(new Training(newTraining))
       }
-     if( date !== undefined) trainingArray.push(new Training(newTraining))
-    })
+    )
     return trainingArray
   } catch (error) {
     logger.error({

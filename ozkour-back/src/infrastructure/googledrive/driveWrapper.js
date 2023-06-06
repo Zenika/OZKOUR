@@ -23,19 +23,18 @@ async function listFileInFolder (folderId) {
 
 async function findIdOfFileByNameAndFolder (folderId, name, auth) {
   try {
-  const driveService = google.drive({ version: 'v3', auth })
-  const {data} = await driveService.files.list({
-  q: `'${folderId}' in parents and trashed = false`,
-  ...queryParametersSharedDrive
-})
-  logger.info({message : 'succed' })
-  const res = data.files.find(file => file.name === name)
-  return { name: res.name, id: res.id }
+    const driveService = google.drive({ version: 'v3', auth })
+    const { data } = await driveService.files.list({
+      q: `'${folderId}' in parents and trashed = false`,
+      ...queryParametersSharedDrive
+    })
+    logger.info({ message: 'succed' })
+    const res = data.files.find((file) => file.name === name)
+    return { name: res.name, id: res.id }
   } catch (error) {
-  logger.error({message : "Erreur pendant la récupértion des données"})
-  throw error
+    logger.error({ message: 'Erreur pendant la récupértion des données' })
+    throw error
   }
-  
 }
 
 async function copyDocument (fileId, name, parents) {

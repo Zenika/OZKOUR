@@ -2,14 +2,13 @@
 const { logger } = require('../logger')
 const { DocService } = require('../services/docsService')
 const { sortArrayByKeyAndOrder } = require('../utils/arrayUtils')
-const commun  = require('../controller/common')
+const { sendCustomError } = require('../Error/customeError')
 const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
-const { sendCustomError } = require('../Error/customeError')
-const {
-    TRAINING_SHEET
-    } = require("../constantes/constantes");
-const INDEX_INCOMPLETE_DATA = 1;
+const commun = require('../controller/common')
+const { TRAINING_SHEET } = require('../constantes/constantes')
+
+const INDEX_INCOMPLETE_DATA = 1
 
 module.exports = [
   {
@@ -20,15 +19,16 @@ module.exports = [
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
       try {
-        const {start,end}=request.query
+        const { start, end } = request.query
         const res = await commun.getTalkOrTraining(start, end, TRAINING_SHEET)
-        if(res[INDEX_INCOMPLETE_DATA].length > 0) {
-        return h.response(res).code(206)}
-        else {
-        return h.response(res).code(200)}
-        } catch (error) {
-        return sendCustomError(error, h)
+        if (res[INDEX_INCOMPLETE_DATA].length > 0) {
+          return h.response(res).code(206)
+        } else {
+          return h.response(res).code(200)
         }
+      } catch (error) {
+        return sendCustomError(error, h)
+      }
     }
   },
   {
@@ -43,7 +43,10 @@ module.exports = [
       /** @type {import ("../domain/type/drive").DriveRepository} */
       const docServiceRepository = googleDocRepository
       const driveServiceRepository = googleDriveRepository
-      const docService = new DocService(docServiceRepository, driveServiceRepository)
+      const docService = new DocService(
+        docServiceRepository,
+        driveServiceRepository
+      )
       const res = await docService.createEmailingTrainingDocs(trainings)
       return h.response(res)
     }
@@ -54,12 +57,13 @@ module.exports = [
     handler: async function (request, h) {
       const order = request.query.orderIsAscending === 'true'
       logger.info({
-        message: `request sort ${order ? 'ascending' : 'descending'} training by ${request.query.key}(${request.path})`
+        message: `request sort ${
+          order ? 'ascending' : 'descending'
+        } training by ${request.query.key}(${request.path})`
       })
       const trainings = request.payload
       const res = sortArrayByKeyAndOrder(trainings, request.query.key, order)
       return h.response(res)
     }
   }
-
 ]

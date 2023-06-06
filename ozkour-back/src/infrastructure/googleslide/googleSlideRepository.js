@@ -8,11 +8,26 @@ dayjs.extend(customParseFormat)
 const { logger } = require('../../logger')
 
 const pictogram = new Map()
-pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+pictogram.set(
+  'Conférence',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png'
+)
+pictogram.set(
+  'Matinale',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png'
+)
+pictogram.set(
+  'Meetup',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png'
+)
+pictogram.set(
+  'NightClazz',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png'
+)
+pictogram.set(
+  'Webinar',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png'
+)
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -41,10 +56,7 @@ const greyForegroundColor = {
 function getSuccessMessage () {
   return {
     message: 'Created !',
-    link:
-      'https://docs.google.com/presentation/d/' +
-      presentationId +
-      '/'
+    link: 'https://docs.google.com/presentation/d/' + presentationId + '/'
   }
 }
 
@@ -387,8 +399,7 @@ function fillSlideWithData (idPage, dataOrganized) {
   dataOrganized.forEach((events, date) => {
     // add date
     const dateId = uuidv4()
-    const dateFormated =
-    dateUtils.displayFullDateWithWords(date)
+    const dateFormated = dateUtils.displayFullDateWithWords(date)
     requests.push(
       addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
     )
@@ -396,12 +407,7 @@ function fillSlideWithData (idPage, dataOrganized) {
     // create table
     yNextElmt += slideDataOrganizer.slideSpacing.DATE
     requests.push(
-      createTableWithStyleForAllEventsInDate(
-        idPage,
-        dateId,
-        yNextElmt,
-        events
-      )
+      createTableWithStyleForAllEventsInDate(idPage, dateId, yNextElmt, events)
     )
 
     // fill table
@@ -417,7 +423,9 @@ function fillSlideWithData (idPage, dataOrganized) {
           IndexRowInTableToInsert
         )
       )
-      ImagePromiseList.push(createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt))
+      ImagePromiseList.push(
+        createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
+      )
       IndexRowInTableToInsert++
       yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
@@ -447,11 +455,11 @@ function fillSlideWithData (idPage, dataOrganized) {
  */
 async function deleteTemplateInfo (idPage) {
   const res = await getSlides()
-  const slide = await res.find(
-    (slide) => slide.objectId === idPage
-  )
+  const slide = await res.find((slide) => slide.objectId === idPage)
   if (!slide) {
-    throw (new Error('cannot find the slide on which we want to delete the template info'))
+    throw new Error(
+      'cannot find the slide on which we want to delete the template info'
+    )
   }
   // if the page is the one we're looking for
   const pageElements = slide.pageElements
@@ -478,7 +486,7 @@ async function deleteTemplateInfo (idPage) {
     })
     return sendRequest(requests)
   } catch (e) {
-    throw (new Error(`missing element(s) on template slide (${e})`))
+    throw new Error(`missing element(s) on template slide (${e})`)
   }
 }
 

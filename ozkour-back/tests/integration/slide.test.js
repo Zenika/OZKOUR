@@ -12,7 +12,7 @@ describe('Integration test slides', () => {
       await slideService.deleteLastSlide()
     })
 
-   it('should generate expected Google Slide file', async () => {
+    it('should generate expected Google Slide file', async () => {
     // given
       const talks = [_createValidTalk()]
       try {

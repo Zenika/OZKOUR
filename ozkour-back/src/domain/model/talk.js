@@ -1,5 +1,15 @@
 class Talk {
-  constructor ({ date, universe, eventType, eventName, talkTitle, speakers, url, complete = false, indexLine }) {
+  constructor ({
+    date,
+    universe,
+    eventType,
+    eventName,
+    talkTitle,
+    speakers,
+    url,
+    complete = false,
+    indexLine
+  }) {
     this.date = date
     this.universe = universe
     this.eventType = eventType
@@ -13,7 +23,6 @@ class Talk {
 
   toString () {
     return `date : ${this.date},universe : ${this.universe},eventType : ${this.eventType},eventName : ${this.eventName},talkTitle : ${this.talkTitle},speakers : ${this.speakers},url : ${this.url}, indexLine : ${this.indexLine} `
-
   }
 }
 
