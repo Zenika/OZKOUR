@@ -1,13 +1,13 @@
-const { convDateToMonthInLetterWithDeterminer, convDateAndDurationToDateIntervalInLetter } = require('../../utils/dateUtils')
+const {
+  convDateToMonthInLetterWithDeterminer,
+  convDateAndDurationToDateIntervalInLetter
+} = require('../../utils/dateUtils')
 const wrapper = require('./docsWrapper')
 
 function getSuccessMessage (documentId, message) {
   return {
     message,
-    link:
-        'https://docs.google.com/document/d/' +
-        documentId +
-        '/'
+    link: 'https://docs.google.com/document/d/' + documentId + '/'
   }
 }
 
@@ -26,12 +26,14 @@ function removeTemplateTextEmailingTalk (documentId) {
   try {
     return wrapper.updateDocument(documentId, requests)
   } catch (e) {
-    throw new Error(`error while trying to remove tempate text on document : ${documentId} (${e})`)
+    throw new Error(
+      `error while trying to remove tempate text on document : ${documentId} (${e})`
+    )
   }
 }
 
 function addTitle (title, index) {
-  const end = index + (title.length)
+  const end = index + title.length
   const requests = [
     {
       insertText: {
@@ -59,8 +61,9 @@ function addTitle (title, index) {
 
 function addTalkInEmailing (index, talk) {
   const { talkTitle, speakers, date, eventName, url } = talk
-  const line = `${talkTitle}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
-  const end = index + (line.length)
+  const line =
+    `${talkTitle}, animé par ${speakers}, le ${date} | ${eventName}` + '\n\n'
+  const end = index + line.length
   const request = [
     {
       insertText: {
@@ -107,21 +110,25 @@ async function addTextForTalkEmailing (documentId, mapUniverse) {
   const requests = []
   let index = 1
   mapUniverse.forEach((talksForUniverse, universe) => {
-    if (universe === '') { universe = 'Sans Univers' }
+    if (universe === '') {
+      universe = 'Sans Univers'
+    }
     requests.push(addTitle(universe, index))
     index += universe.length + 1
-    talksForUniverse.forEach(talk => {
-      requests.push(addTalkInEmailing(index,
-        talk
-      ))
-      const line = `${talk.talkTitle}, animé par ${talk.speakers}, le ${talk.date} | ${talk.eventName}` + '\n'
+    talksForUniverse.forEach((talk) => {
+      requests.push(addTalkInEmailing(index, talk))
+      const line =
+        `${talk.talkTitle}, animé par ${talk.speakers}, le ${talk.date} | ${talk.eventName}` +
+        '\n'
       index += line.length + 1
     })
   })
   try {
     return wrapper.updateDocument(documentId, requests)
   } catch (e) {
-    throw new Error(`error while trying to add text for emaling on document : ${documentId} (${e})`)
+    throw new Error(
+      `error while trying to add text for emaling on document : ${documentId} (${e})`
+    )
   }
 }
 
@@ -140,13 +147,17 @@ function removeTemplateTextEmailingTraining (documentId) {
   try {
     return wrapper.updateDocument(documentId, requests)
   } catch (e) {
-    throw new Error(`error while trying to remove tempate text on document : ${documentId} (${e})`)
+    throw new Error(
+      `error while trying to remove tempate text on document : ${documentId} (${e})`
+    )
   }
 }
 
 function addMonth (mapUniverse) {
   const [firstValue] = mapUniverse.values()
-  const monthInLetter = convDateToMonthInLetterWithDeterminer(firstValue[0].date)
+  const monthInLetter = convDateToMonthInLetterWithDeterminer(
+    firstValue[0].date
+  )
   const request = [
     {
       insertText: {
@@ -205,7 +216,7 @@ function addUniverseTraining (index, universe, trainings) {
   ]
   index += 4 // get the index in the table
   requests.push(addTitleUniverseTraining(index, universe))
-  index += (universe).length + 1
+  index += universe.length + 1
   const [newRequest, newIndex] = addTrainingsInUniverse(index, trainings)
   requests.push(newRequest)
   index = newIndex
@@ -242,9 +253,14 @@ function addTitleUniverseTraining (index, universe) {
 function addTrainingsInUniverse (index, trainings) {
   const requests = []
   const startIndex = index
-  trainings.forEach(training => {
-    const writtenTraining = training.trainingTitle + ' : ' +
-    convDateAndDurationToDateIntervalInLetter(training.date, training.duration)
+  trainings.forEach((training) => {
+    const writtenTraining =
+      training.trainingTitle +
+      ' : ' +
+      convDateAndDurationToDateIntervalInLetter(
+        training.date,
+        training.duration
+      )
     requests.push({
       insertText: {
         text: '\n' + writtenTraining,
@@ -254,7 +270,9 @@ function addTrainingsInUniverse (index, trainings) {
       }
     })
     index += 1 // '\n'
-    requests.push(addStyleToTraining(index, training.url, training.trainingTitle))
+    requests.push(
+      addStyleToTraining(index, training.url, training.trainingTitle)
+    )
     index += writtenTraining.length
   })
   requests.push({
@@ -279,12 +297,11 @@ function addStyleToTraining (index, url, trainingTitle) {
         },
         foregroundColor: {
           color: {
-            rgbColor:
-              {
-                red: 0.33,
-                green: 0.33,
-                blue: 0.33
-              }
+            rgbColor: {
+              red: 0.33,
+              green: 0.33,
+              blue: 0.33
+            }
           }
         }
       },
@@ -308,12 +325,20 @@ async function addTextForTrainingEmailing (documentId, mapUniverse) {
   let n = 1
   mapUniverse.forEach((trainingsForUniverse, universe) => {
     if (n % 2 !== 0) {
-      const [requestAdded, indexAdded] = addUniverseTraining(indexFirstColumn, universe, trainingsForUniverse)
+      const [requestAdded, indexAdded] = addUniverseTraining(
+        indexFirstColumn,
+        universe,
+        trainingsForUniverse
+      )
       requests.push(requestAdded)
       indexFirstColumn += indexAdded
       indexSecondColumn += indexAdded
     } else {
-      const [requestAdded, indexAdded] = addUniverseTraining(indexSecondColumn, universe, trainingsForUniverse)
+      const [requestAdded, indexAdded] = addUniverseTraining(
+        indexSecondColumn,
+        universe,
+        trainingsForUniverse
+      )
       requests.push(requestAdded)
       indexSecondColumn += indexAdded
     }
@@ -322,7 +347,9 @@ async function addTextForTrainingEmailing (documentId, mapUniverse) {
   try {
     return wrapper.updateDocument(documentId, requests)
   } catch (e) {
-    throw new Error(`error while trying to add text for training emaling on document : ${documentId} (${e})`)
+    throw new Error(
+      `error while trying to add text for training emaling on document : ${documentId} (${e})`
+    )
   }
 }
 

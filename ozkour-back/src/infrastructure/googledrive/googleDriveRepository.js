@@ -1,4 +1,3 @@
-
 const driveWrapper = require('./driveWrapper')
 const dateUtils = require('../../utils/dateUtils')
 
@@ -8,7 +7,8 @@ const templateTalkEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_TALK_ID
 
 const folderTrainingsId = process.env.GOOGLE_FOLDER_TRAINING_ID
 const folderTrainingEmailingId = process.env.GOOGLE_FOLDER_TRAINING_ID
-const templateTrainingEmailingId = process.env.GOOGLE_TEMPLATE_EMAILING_TRAINING_ID
+const templateTrainingEmailingId =
+  process.env.GOOGLE_TEMPLATE_EMAILING_TRAINING_ID
 
 async function getListFileTalksBetween2Dates (start, end) {
   const files = await driveWrapper.listFileInFolder(folderTalksId)
@@ -16,26 +16,37 @@ async function getListFileTalksBetween2Dates (start, end) {
   return res
 }
 async function getIdOfTalkFileByYear (year, auth) {
-  const Filename = year + " - Les Evénements et talks Zenika  (Zenika talks and events)"
-  
-  const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTalksId, Filename, auth)
-  if (res.name === undefined || res.id === undefined ) throw (new Error('no file named :"' + Filename + '" found'))
+  const Filename =
+    year + ' - Les Evénements et talks Zenika  (Zenika talks and events)'
+
+  const res = await driveWrapper.findIdOfFileByNameAndFolder(
+    folderTalksId,
+    Filename,
+    auth
+  )
+  if (res.name === undefined || res.id === undefined) { throw new Error('no file named :"' + Filename + '" found') }
   return res.id
 }
 
 async function getIdOfTrainingFileByYear (year) {
   const Filename = year + ' - Les formations Zenika (Zenika trainings)'
-  const res = await driveWrapper.findIdOfFileByNameAndFolder(folderTrainingsId, Filename)
+  const res = await driveWrapper.findIdOfFileByNameAndFolder(
+    folderTrainingsId,
+    Filename
+  )
   if (res === undefined) {
-    throw (new Error('no file named :"' + Filename + '" found'))
+    throw new Error('no file named :"' + Filename + '" found')
   }
   return res.id
 }
 
 function filterFilesBetween2Dates (start, end, files) {
-  const res = files.filter(file => {
+  const res = files.filter((file) => {
     const fileNameWithoutYear = file.name.substring(4)
-    if (fileNameWithoutYear === ' - Les Evénements et talks Zenika  (Zenika talks and events)') {
+    if (
+      fileNameWithoutYear ===
+      ' - Les Evénements et talks Zenika  (Zenika talks and events)'
+    ) {
       const year = file.name.substring(0, 4)
       return dateUtils.isYearBetweenDates(year, start, end)
     } else {
@@ -45,7 +56,7 @@ function filterFilesBetween2Dates (start, end, files) {
   if (res?.length > 0) {
     return res
   } else {
-    throw (new Error('no talk file for those dates in the folder'))
+    throw new Error('no talk file for those dates in the folder')
   }
 }
 
