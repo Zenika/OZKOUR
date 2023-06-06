@@ -22,7 +22,7 @@ class Talk {
   }
 
   toString () {
-    return `date : ${this.date},universe : ${this.universe},eventType : ${this.eventType},eventName : ${this.eventName},talkTitle : ${this.talkTitle},speakers : ${this.speakers},url : ${this.url}, indexLine : ${this.indexLine} `
+    return `date : ${this.date},universe : ${this.universe},eventType : ${this.eventType},eventName : ${this.eventName},talkTitle : ${this.talkTitle},speakers : ${this.speakers},url : ${this.url},indexLine : ${this.indexLine}`
   }
 }
 

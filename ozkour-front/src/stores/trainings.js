@@ -26,7 +26,6 @@ export const useTrainingStore = defineStore({
       case 'E-mailing': {
         const { data } = await api
           .post('/training/emailing', this.getSelectedTrainings)
-        console.log(data)
         return { link: data.link, message: data.message }
       }
       default:

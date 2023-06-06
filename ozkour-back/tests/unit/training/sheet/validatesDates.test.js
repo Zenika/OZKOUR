@@ -1,5 +1,5 @@
 const { CustomeError } = require('../../../../src/Error/customeError')
-const date = require('../../../../src/Utils/validateDates')
+const date = require('../../../../src/utils/validateDatesUtils')
 
 describe('validates date Format', () => {
   it('should render true', () => {

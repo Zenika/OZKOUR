@@ -2,9 +2,11 @@ const { logger } = require('../logger')
 const { Talk } = require('./model/talk')
 const { Training } = require('./model/training')
 function sortTalksEmailing (data) {
-  const talks = data.map(talk => new Talk(talk))
+  const talks = data.map((talk) => new Talk(talk))
   logger.debug({
-    message: `talks recieved : \n${talks.map(talk => ' ' + talk.toString()).join('\n')}`
+    message: `talks recieved : \n${talks
+      .map((talk) => ' ' + talk.toString())
+      .join('\n')}`
   })
 
   const allTalkComplete = verifyTalkEmailing(data)
@@ -14,8 +16,13 @@ function sortTalksEmailing (data) {
     })
   }
   const mapUniverse = new Map()
-  talks.forEach(talk => {
-    const thisTalkIsComplete = (!!talk.date && !!talk.eventType && !!talk.eventName && !!talk.talkTitle && !!talk.speakers)
+  talks.forEach((talk) => {
+    const thisTalkIsComplete =
+      !!talk.date &&
+      !!talk.eventType &&
+      !!talk.eventName &&
+      !!talk.talkTitle &&
+      !!talk.speakers
     const newTalk = {
       date: talk.date,
       eventType: talk.eventType,
@@ -23,7 +30,7 @@ function sortTalksEmailing (data) {
       talkTitle: talk.talkTitle,
       speakers: talk.speakers,
       url: talk.url,
-      complete: (allTalkComplete || thisTalkIsComplete)
+      complete: allTalkComplete || thisTalkIsComplete
     }
     if (!mapUniverse.has(talk.universe)) {
       mapUniverse.set(talk.universe, [newTalk])
@@ -37,7 +44,7 @@ function sortTalksEmailing (data) {
 
 function verifyTalkEmailing (talks) {
   if (!Array.isArray(talks) || talks.length <= 0) {
-    throw new Error('Can\'t create visual without talks')
+    throw new Error("Can't create visual without talks")
   }
   return talks.every(
     ({ date, universe, eventName, talkTitle, speakers }) =>
@@ -51,15 +58,17 @@ function verifyTalkEmailing (talks) {
 
 function sortTrainingsEmailing (data) {
   if (!verifyTrainingEmailing(data)) {
-    throw (new Error('wrong format of training for Emailing'))
+    throw new Error('wrong format of training for Emailing')
   }
 
-  const trainings = data.map(training => new Training(training))
+  const trainings = data.map((training) => new Training(training))
   logger.debug({
-    message: `trainings recieved : \n${trainings.map(training => ' ' + training.toString()).join('\n')}`
+    message: `trainings recieved : \n${trainings
+      .map((training) => ' ' + training.toString())
+      .join('\n')}`
   })
   const mapUniverse = new Map()
-  trainings.forEach(training => {
+  trainings.forEach((training) => {
     const newTraining = {
       date: training.date,
       trainingTitle: training.trainingTitle,
@@ -80,7 +89,7 @@ function sortTrainingsEmailing (data) {
 
 function verifyTrainingEmailing (trainings) {
   if (!Array.isArray(trainings) || trainings.length <= 0) {
-    throw new Error('Can\'t create visual without trainings')
+    throw new Error("Can't create visual without trainings")
   }
   return trainings.every(
     ({ date, universe, trainingTitle, duration, url }) =>

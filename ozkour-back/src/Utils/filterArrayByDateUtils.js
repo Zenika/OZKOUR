@@ -19,21 +19,16 @@ function dateFilter (
   const completarrayOfTrainingOrTlaksgNotFiltered =
     arrayOfTrainingOrTlaks[INDEX_COMPLET_TALK_OR_FORMATION]
 
-  const completTrainingOrTlaksFiltered =
+  const talkfOrFormationFiltered =
     completarrayOfTrainingOrTlaksgNotFiltered.filter((el) => {
-      console.log(el.date)
       const formationDate = dayjs(el.date, 'DD/MM/YYYY')
-      console.log(
-        formationDate.isSameOrAfter(startDate, 'day') &&
-          formationDate.isSameOrBefore(endDate, 'day')
-      )
       return (
         formationDate.isSameOrAfter(startDate, 'day') &&
         formationDate.isSameOrBefore(endDate, 'day')
       )
     })
 
-  return [completTrainingOrTlaksFiltered, arrayOfTrainingOrTlaks[1]]
+  return [talkfOrFormationFiltered, arrayOfTrainingOrTlaks[1]]
 }
 
 module.exports = {
