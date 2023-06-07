@@ -5,39 +5,43 @@ function verifyedCompletetData (array, variables) {
   const completArrayOfData = []
   const arrayReceived = array
 
-  if (variables === TRAINING_SHEET_CONST) {
-    arrayReceived.forEach(function (el) {
-      completArrayOfData.push(el)
-      if (
-        !el.title ||
-        !el.universe ||
-        !el.duration ||
-        !el.price ||
-        !el.url ||
-        !el.date
-      ) {
-        incompletArrayOfData.push(el.indexLine)
-      }
-    })
-  }
-  if (variables === TALK_SHEET_CONST) {
-    arrayReceived.forEach(function (el) {
-      completArrayOfData.push(el)
-      if (
-        !el.date ||
-        !el.universe ||
-        !el.eventType ||
-        !el.eventName ||
-        !el.talkTitle ||
-        !el.speakers ||
-        !el.url
-      ) {
-        incompletArrayOfData.push(el.indexLine)
-      }
-    })
-  }
+  if (Array.isArray(array) && array.length > 0) {
+    if (variables === TRAINING_SHEET_CONST) {
+      arrayReceived.forEach(function (el) {
+        completArrayOfData.push(el)
+        if (
+          !el.title ||
+          !el.universe ||
+          !el.duration ||
+          !el.price ||
+          !el.url ||
+          !el.date
+        ) {
+          incompletArrayOfData.push(el.indexLine)
+        }
+      })
+    }
+    if (variables === TALK_SHEET_CONST) {
+      arrayReceived.forEach(function (el) {
+        completArrayOfData.push(el)
+        if (
+          !el.date ||
+          !el.universe ||
+          !el.eventType ||
+          !el.eventName ||
+          !el.talkTitle ||
+          !el.speakers ||
+          !el.url
+        ) {
+          incompletArrayOfData.push(el.indexLine)
+        }
+      })
+    }
 
-  return [completArrayOfData, incompletArrayOfData]
+    if (incompletArrayOfData.length > 0) { return [completArrayOfData, incompletArrayOfData] }
+    return [completArrayOfData]
+  }
+  return []
 }
 
 module.exports = {

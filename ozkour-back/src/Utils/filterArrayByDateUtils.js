@@ -11,24 +11,55 @@ function dateFilter (
   formatedDateStart,
   formatedDateEnd
 ) {
-  const INDEX_COMPLET_TALK_OR_FORMATION = 0
-
   const startDate = dayjs(formatedDateStart, 'DD/MM/YYYY')
   const endDate = dayjs(formatedDateEnd, 'DD/MM/YYYY')
 
-  const completarrayOfTrainingOrTlaksgNotFiltered =
-    arrayOfTrainingOrTlaks[INDEX_COMPLET_TALK_OR_FORMATION]
+  const INDEX_COMPLET_TALK_OR_FORMATION = 0
+  const INDEX_GOOGLE_SHEET = 1
+  let completArrayOfTrainingOrTalksNotFiltered
 
-  const talkfOrFormationFiltered =
-    completarrayOfTrainingOrTlaksgNotFiltered.filter((el) => {
-      const formationDate = dayjs(el.date, 'DD/MM/YYYY')
-      return (
-        formationDate.isSameOrAfter(startDate, 'day') &&
-        formationDate.isSameOrBefore(endDate, 'day')
-      )
-    })
+  arrayOfTrainingOrTlaks
+    ? (completArrayOfTrainingOrTalksNotFiltered =
+        arrayOfTrainingOrTlaks[INDEX_COMPLET_TALK_OR_FORMATION])
+    : (completArrayOfTrainingOrTalksNotFiltered = null)
 
-  return [talkfOrFormationFiltered, arrayOfTrainingOrTlaks[1]]
+  if (
+    Array.isArray(arrayOfTrainingOrTlaks) &&
+    arrayOfTrainingOrTlaks.length === 1
+  ) {
+    const talkfOrFormationFiltered = TalkOrFormationFiltered(
+      completArrayOfTrainingOrTalksNotFiltered,
+      startDate,
+      endDate
+    )
+    return talkfOrFormationFiltered
+  }
+  if (
+    Array.isArray(arrayOfTrainingOrTlaks) &&
+    arrayOfTrainingOrTlaks.length > 1
+  ) {
+    const talkfOrFormationFiltered = TalkOrFormationFiltered(
+      completArrayOfTrainingOrTalksNotFiltered,
+      startDate,
+      endDate
+    )
+    return [
+      talkfOrFormationFiltered,
+      arrayOfTrainingOrTlaks[INDEX_GOOGLE_SHEET]
+    ]
+  }
+  return []
+}
+
+function TalkOrFormationFiltered (array, startDate, endDate) {
+  const arrayFilter = array.filter((el) => {
+    const formationDate = dayjs(el.date, 'DD/MM/YYYY')
+    return (
+      formationDate.isSameOrAfter(startDate, 'day') &&
+      formationDate.isSameOrBefore(endDate, 'day')
+    )
+  })
+  return arrayFilter
 }
 
 module.exports = {

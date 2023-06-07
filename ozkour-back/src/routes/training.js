@@ -21,7 +21,7 @@ module.exports = [
       try {
         const { start, end } = request.query
         const res = await commun.getTalkOrTraining(start, end, TRAINING_SHEET)
-        if (res[INDEX_INCOMPLETE_DATA].length > 0) {
+        if (res[INDEX_INCOMPLETE_DATA] || res.length === 0) {
           return h.response(res).code(206)
         } else {
           return h.response(res).code(200)
