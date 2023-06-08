@@ -56,6 +56,11 @@ export default {
       trainings: useTrainingStore()
     }
   },
+  computed: {
+    isSelectionEmpty () {
+      return this.trainings.getSelectedTrainings.length === 0
+    }
+  },
   methods: {
     async onRecapSubmit () {
       try {
@@ -141,6 +146,7 @@ export default {
 
     <PrimaryBtn
       class="container__section container__lastSection"
+      :disabled="isSelectionEmpty"
       @click="showModal"
     >
       Générer un visuel
