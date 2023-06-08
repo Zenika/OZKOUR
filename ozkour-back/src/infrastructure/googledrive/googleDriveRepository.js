@@ -1,5 +1,5 @@
 const driveWrapper = require('./driveWrapper')
-const dateUtils = require('../../utils/dateUtils')
+const { isYearBetweenDates } = require('@/utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
 const folderTalkEmailingId = process.env.GOOGLE_FOLDER_EMAILING_TALK_ID
@@ -24,7 +24,9 @@ async function getIdOfTalkFileByYear (year, auth) {
     Filename,
     auth
   )
-  if (res.name === undefined || res.id === undefined) { throw new Error('no file named :"' + Filename + '" found') }
+  if (res.name === undefined || res.id === undefined) {
+    throw new Error('no file named :"' + Filename + '" found')
+  }
   return res.id
 }
 
@@ -48,7 +50,7 @@ function filterFilesBetween2Dates (start, end, files) {
       ' - Les Evénements et talks Zenika  (Zenika talks and events)'
     ) {
       const year = file.name.substring(0, 4)
-      return dateUtils.isYearBetweenDates(year, start, end)
+      return isYearBetweenDates(year, start, end)
     } else {
       return false
     }
