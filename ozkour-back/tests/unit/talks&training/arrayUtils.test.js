@@ -9,7 +9,11 @@ function isArrayDescending (arr) {
   })
 }
 
-const arrayUtils = require('../../../src/utils/arrayUtils')
+const {
+  sortArrayByKeyAndOrder,
+  compareByKey
+} = require('../../../src/utils/arrayUtils')
+
 describe('arrayUtils', () => {
   describe('compareByKey', () => {
     const a = { key1: 10, key2: 2, key3: 3 }
@@ -20,7 +24,7 @@ describe('arrayUtils', () => {
         key = 'key1'
       })
       it('should return 1', () => {
-        const res = arrayUtils.compareByKey(a, b, key)
+        const res = compareByKey(a, b, key)
         expect(res).toBe(1)
       })
     })
@@ -29,7 +33,7 @@ describe('arrayUtils', () => {
         key = 'key2'
       })
       it('should return 1', () => {
-        const res = arrayUtils.compareByKey(a, b, key)
+        const res = compareByKey(a, b, key)
         expect(res).toBe(-1)
       })
     })
@@ -38,7 +42,7 @@ describe('arrayUtils', () => {
         key = 'key3'
       })
       it('should return 1', () => {
-        const res = arrayUtils.compareByKey(a, b, key)
+        const res = compareByKey(a, b, key)
         expect(res).toBe(0)
       })
     })
@@ -58,7 +62,7 @@ describe('arrayUtils', () => {
         isAscending = true
       })
       it('should return an array ordered ascendingly by a key', () => {
-        const res = arrayUtils.sortArrayByKeyAndOrder(arrayToOrder, key, isAscending)
+        const res = sortArrayByKeyAndOrder(arrayToOrder, key, isAscending)
         const keyResArray = res.map((element) => element.key)
         expect(isArrayAscending(keyResArray)).toBe(true)
       })
@@ -68,7 +72,7 @@ describe('arrayUtils', () => {
         isAscending = false
       })
       it('should return an array ordered descendingly by a key', () => {
-        const res = arrayUtils.sortArrayByKeyAndOrder(arrayToOrder, key, isAscending)
+        const res = sortArrayByKeyAndOrder(arrayToOrder, key, isAscending)
         const keyResArray = res.map((element) => element.key)
         expect(isArrayDescending(keyResArray)).toBe(true)
       })
