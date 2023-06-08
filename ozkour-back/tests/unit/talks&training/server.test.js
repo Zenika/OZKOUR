@@ -1,4 +1,4 @@
-const { init } = require('../../../src/server')
+const { init } = require('@/server')
 
 describe('server', () => {
   describe('GET /', () => {

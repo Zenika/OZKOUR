@@ -1,4 +1,4 @@
-const date = require('../../../src/utils/filterArrayByDateUtils')
+const { dateFilter } = require('@/utils/filterArrayByDateUtils')
 
 const talks = [
   [
@@ -145,15 +145,15 @@ const talksWithUndefinedValue = [
 
 describe('date filter', () => {
   it('should return an empty array', () => {
-    const result = date.dateFilter()
+    const result = dateFilter()
     expect(result).toHaveLength(0)
   })
   it('should return only talk between 19-01-2021 and 25-012021', () => {
-    const result = date.dateFilter(talks, '19-01-2021', '25-01-2021')
+    const result = dateFilter(talks, '19-01-2021', '25-01-2021')
     expect(result).toMatchSnapshot()
   })
   it('should return an array with a length of 2', () => {
-    const result = date.dateFilter(
+    const result = dateFilter(
       talksWithUndefinedValue,
       '19-01-2021',
       '25-01-2021'

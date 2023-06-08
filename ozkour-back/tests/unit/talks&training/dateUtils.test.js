@@ -1,4 +1,4 @@
-const dateUtils = require('../../../src/Utils/dateUtils')
+const dateUtils = require('../../../src/utils/dateUtils')
 describe('dateUtils', () => {
   describe('Test on date', () => {
     it('should return true when the year is between two dates', () => {

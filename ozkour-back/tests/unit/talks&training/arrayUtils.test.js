@@ -9,7 +9,7 @@ function isArrayDescending (arr) {
   })
 }
 
-const arrayUtils = require('../../../src/Utils/arrayUtils')
+const arrayUtils = require('../../../src/utils/arrayUtils')
 describe('arrayUtils', () => {
   describe('compareByKey', () => {
     const a = { key1: 10, key2: 2, key3: 3 }

@@ -1,6 +1,9 @@
-const googleDocRepository = require('../../../src/infrastructure/googledocs/googleDocRepository')
+const {
+  addTitle,
+  addTalkInEmailing
+} = require('@/infrastructure/googledocs/googleDocRepository')
 
-const emailingOrganizer = require('../../../src/domain/emailingOrganizer')
+const { verifyTalkEmailing } = require('@/domain/emailingOrganizer')
 
 describe('Verify data emailing', () => {
   describe('undefined value', () => {
@@ -9,7 +12,8 @@ describe('Verify data emailing', () => {
       { property: 'eventName' },
       { property: 'talkTitle' },
       { property: 'speakers' }
-    ])('should return false when $property of an element is undefined',
+    ])(
+      'should return false when $property of an element is undefined',
       ({ property }) => {
         const docTalks = [
           {
@@ -17,7 +21,7 @@ describe('Verify data emailing', () => {
             [property]: undefined
           }
         ]
-        expect(emailingOrganizer.verifyTalkEmailing(docTalks)).toBe(false)
+        expect(verifyTalkEmailing(docTalks)).toBe(false)
       }
     )
   })
@@ -27,7 +31,8 @@ describe('Verify data emailing', () => {
       { property: 'eventName' },
       { property: 'talkTitle' },
       { property: 'speakers' }
-    ])('should return false when $property of an element is an empty string',
+    ])(
+      'should return false when $property of an element is an empty string',
       ({ property }) => {
         const docTalks = [
           {
@@ -35,7 +40,7 @@ describe('Verify data emailing', () => {
             [property]: ''
           }
         ]
-        expect(emailingOrganizer.verifyTalkEmailing(docTalks)).toBe(false)
+        expect(verifyTalkEmailing(docTalks)).toBe(false)
       }
     )
   })
@@ -43,22 +48,22 @@ describe('Verify data emailing', () => {
     it('should return true if parameter is an array with one element', () => {
       const array = [_createValidTalk()]
       // then
-      expect(emailingOrganizer.verifyTalkEmailing(array)).toBe(true)
+      expect(verifyTalkEmailing(array)).toBe(true)
     })
   })
   describe('the talks are not in a valid array', () => {
     it('should return an error if parameter is an array with zero element', () => {
       const array = []
       // then
-      const error = () => emailingOrganizer.verifyTalkEmailing(array)
-      expect(error).toThrow('Can\'t create visual without talks')
+      const error = () => verifyTalkEmailing(array)
+      expect(error).toThrow("Can't create visual without talks")
     })
     it('should return false if the talks are undefined', () => {
       const notArray = undefined
       // when
-      const error = () => emailingOrganizer.verifyTalkEmailing(notArray)
+      const error = () => verifyTalkEmailing(notArray)
       // then
-      expect(error).toThrow('Can\'t create visual without talks')
+      expect(error).toThrow("Can't create visual without talks")
     })
   })
 })
@@ -69,7 +74,7 @@ describe('Docs creation', () => {
     const title = 'Title'
     const index = 1
     // when
-    const addTitleRequest = googleDocRepository.addTitle(title, index)
+    const addTitleRequest = addTitle(title, index)
     // then
     expect(addTitleRequest).toMatchSnapshot()
   })
@@ -84,7 +89,7 @@ describe('Docs creation', () => {
       complete: true
     }
     // when
-    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
+    const addTalksRequest = addTalkInEmailing(index, newTalk)
     // then
     expect(addTalksRequest).toMatchSnapshot()
   })
@@ -101,7 +106,7 @@ describe('Docs creation', () => {
     }
 
     // when
-    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
+    const addTalksRequest = addTalkInEmailing(index, newTalk)
     // then
     expect(addTalksRequest).toMatchSnapshot()
   })
@@ -110,7 +115,7 @@ describe('Docs creation', () => {
     const title = 'Sans Univers'
     const index = 1
     // when
-    const addTitleRequest = googleDocRepository.addTitle(title, index)
+    const addTitleRequest = addTitle(title, index)
     // then
     expect(addTitleRequest).toMatchSnapshot()
   })
@@ -127,7 +132,7 @@ describe('Docs creation', () => {
     }
 
     // when
-    const addTalksRequest = googleDocRepository.addTalkInEmailing(index, newTalk)
+    const addTalksRequest = addTalkInEmailing(index, newTalk)
     // then
     expect(addTalksRequest).toMatchSnapshot()
   })

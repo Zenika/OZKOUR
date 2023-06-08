@@ -6,12 +6,12 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run test:all && npm run lint",
-    "test:all": "jest",
+    "test:all": "jest --updateSnapshot",
     "test:unit": "jest tests/unit",
     "test:integration": "jest tests/integration",
     "dev": "node ./src",
     "dev:watch": "nodemon ./src",
-    "start" : "node ./src/index.js",
+    "start": "node ./src/index.js",
     "lint": "eslint --ext .js .",
     "lint:fix": "npm run lint -- --fix"
   },
@@ -22,6 +22,7 @@
     "dayjs": "^1.11.0",
     "dotenv": "^16.0.0",
     "googleapis": "^39.2.0",
+    "module-alias": "^2.2.3",
     "nodemon": "^2.0.20",
     "uuid": "^8.3.2",
     "winston": "^3.8.2"
@@ -34,5 +35,10 @@
     "eslint-plugin-promise": "^6.0.0",
     "jest": "^28.1.0",
     "jest-junit": "^13.2.0"
+  },
+  "_moduleAliases": {
+    "@my_module" : "lib/some-file.js",
+    "something"  : "src/foo",
+    "@": "src"
   }
 }

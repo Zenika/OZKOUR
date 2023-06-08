@@ -1,5 +1,5 @@
-const complet = require('../../../src/utils/veryfiedCompletData')
-const { TALK_SHEET } = require('../../../src/constantes/constantes')
+const { verifyedCompletetData } = require('@/utils/veryfiedCompletData')
+const { TALK_SHEET } = require('@/constantes/constantes')
 
 const talksWithUndefinedValue = [
   {
@@ -131,35 +131,23 @@ const resultTestIndex = [14, 15]
 
 describe('validate completeness of data', () => {
   test('should render two arrays', () => {
-    const result = complet.verifyedCompletetData(
-      talksWithUndefinedValue,
-      TALK_SHEET
-    )
+    const result = verifyedCompletetData(talksWithUndefinedValue, TALK_SHEET)
     expect(result).toHaveLength(2)
   })
   test('should render the second array with a length of 2', () => {
-    const result = complet.verifyedCompletetData(
-      talksWithUndefinedValue,
-      TALK_SHEET
-    )
+    const result = verifyedCompletetData(talksWithUndefinedValue, TALK_SHEET)
     expect(result[1]).toHaveLength(2)
   })
   test('should render the second array with values of 14 & 15', () => {
-    const result = complet.verifyedCompletetData(
-      talksWithUndefinedValue,
-      TALK_SHEET
-    )
+    const result = verifyedCompletetData(talksWithUndefinedValue, TALK_SHEET)
     expect(result[1]).toEqual(resultTestIndex)
   })
   test('should return only one array with 6 objects', () => {
-    const result = complet.verifyedCompletetData(
-      talksWithNoUndefinedValue,
-      TALK_SHEET
-    )
+    const result = verifyedCompletetData(talksWithNoUndefinedValue, TALK_SHEET)
     expect(result[0]).toHaveLength(6)
   })
   test('should return one array with length = 0', () => {
-    const result = complet.verifyedCompletetData(TALK_SHEET)
+    const result = verifyedCompletetData(TALK_SHEET)
     expect(result).toHaveLength(0)
   })
 })
