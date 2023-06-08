@@ -86,14 +86,12 @@ describe('TalkForm', () => {
         const [primaryBtn] = wrapper.findAllComponents('.primary-btn')
         await primaryBtn.trigger('click')
       })
-      xit('should reveal the recap modal component', () => {
+      it('should reveal the recap modal component', () => {
         const [modal] = wrapper.findAllComponents('.recap-modal')
         expect(modal).toBeDefined()
 
         expect(modal.props('template')).toBe(dataInRecapModal.chosenTemplate.label)
         expect(modal.props('dates')).toStrictEqual(dataInRecapModal.period)
-        // To do when the store is removed
-        expect(modal.props('eventsTitle')).toBe(dataInRecapModal.talks)
       })
       it('should blur the body except for the recap modal component', () => {
         const body = wrapper.find('main')

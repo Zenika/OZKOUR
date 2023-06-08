@@ -110,7 +110,7 @@ export default {
     changeTemplate (newTemplate) {
       this.chosenTemplate = newTemplate
     },
-    sort (sortData) {
+    async sort (sortData) {
       this.talks.sort(sortData)
     },
     changeSelectionTalk (changedSelectionTalk) {

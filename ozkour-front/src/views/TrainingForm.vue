@@ -96,7 +96,7 @@ export default {
     changeTemplate (newTemplate) {
       this.chosenTemplate = newTemplate
     },
-    sort (sortData) {
+    async sort (sortData) {
       this.trainings.sort(sortData)
     },
     changeSelectionTraining (changedSelectionTraining) {

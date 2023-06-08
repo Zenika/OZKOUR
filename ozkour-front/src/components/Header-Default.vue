@@ -2,15 +2,16 @@
   <header>
     <div id="header">
       <div id="header-logo">
-        <a
-          href="/"
+        <router-link
+          :to="'/'"
+          class="navigation-link"
         >
           <img
             id="logoZenika"
             alt="Zenika logo"
             src="../assets/images/logoZenika.png"
           >
-        </a>
+        </router-link>
       </div>
       <AuthenticationDefault />
     </div>

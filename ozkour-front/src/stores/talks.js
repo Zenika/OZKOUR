@@ -1,6 +1,6 @@
 import qs from 'qs'
 import { defineStore } from 'pinia'
-import { api } from '@/api/apiConfig'
+import { useApi } from '@/api/apiConfig'
 import { isEqual } from 'lodash'
 
 export const useTalkStore = defineStore({
@@ -22,14 +22,15 @@ export const useTalkStore = defineStore({
       this.retrieved = newTalks
     },
     async generateVisualForSelectedTalks (templateName) {
+      const instanceAxios = await useApi()
       switch (templateName) {
       case 'QuoiDeNeuf': {
-        const { data } = await api
+        const { data } = await instanceAxios
           .post('/talk/quoiDeNeuf', this.getSelectedTalks)
         return { link: data.link, message: data.message }
       }
       case 'E-mailing': {
-        const { data } = await api
+        const { data } = await instanceAxios
           .post('/talk/emailing', this.getSelectedTalks)
         return { link: data.link, message: data.message }
       }
@@ -48,7 +49,8 @@ export const useTalkStore = defineStore({
     async getTalks (dateStart, dateEnd) {
       this.retreivingTalks = true
       try {
-        const { data } = await api
+        const instanceAxios = await useApi()
+        const { data } = await instanceAxios
           .get('/talk', {
             params: {
               start: dateStart,
@@ -69,7 +71,8 @@ export const useTalkStore = defineStore({
       }
     },
     async sort (dataSort) {
-      const { data } = await api
+      const instanceAxios = await useApi()
+      const { data } = await instanceAxios
         .post('/talk/sort', dataSort.events, {
           params: {
             key: dataSort.selectedColumnKey,

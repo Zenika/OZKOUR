@@ -20,7 +20,6 @@ module.exports = [
       return getTalk(request.query.start, request.query.end)
     }
   },
-
   {
     method: 'POST',
     path: '/talk/quoiDeNeuf',
