@@ -1,7 +1,7 @@
 const {
   convDateToMonthInLetterWithDeterminer,
   convDateAndDurationToDateIntervalInLetter
-} = require('../../utils/dateUtils')
+} = require('@/utils/dateUtils')
 const wrapper = require('./docsWrapper')
 
 function getSuccessMessage (documentId, message) {
