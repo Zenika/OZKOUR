@@ -31,6 +31,8 @@ jobs:
         steps:
         - checkout:
             path: ~/OZKOUR
+        - run: pwd 
+        - run: ls -alt
         - run:
             command: npm install
             name: Install dependencies
