@@ -37,11 +37,9 @@ function verifyedCompletetData (array, variables) {
         }
       })
     }
-
-    if (incompletArrayOfData.length > 0) { return [completArrayOfData, incompletArrayOfData] }
-    return [completArrayOfData]
+    return { res: completArrayOfData, warn: incompletArrayOfData }
   }
-  return []
+  return {}
 }
 
 module.exports = {

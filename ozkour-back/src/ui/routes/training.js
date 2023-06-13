@@ -1,14 +1,11 @@
 // @ts-check
-const { logger } = require('../logger')
-const { DocService } = require('../services/docsService')
-const { sortArrayByKeyAndOrder } = require('../utils/arrayUtils')
-const { sendCustomError } = require('../Error/customeError')
-const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
-const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
-const commun = require('../controller/common')
-const { TRAINING_SHEET } = require('../constantes/constantes')
-
-const INDEX_INCOMPLETE_DATA = 1
+const { logger } = require('../../logger.js')
+const { DocService } = require('../../services/docsService')
+const { sortArrayByKeyAndOrder } = require('../../utils/arrayUtils')
+const googleDocRepository = require('../../infrastructure/googledocs/googleDocRepository')
+const googleDriveRepository = require('../../infrastructure/googledrive/googleDriveRepository')
+const { getTalkOrTraining } = require('../getTrainingOrTalks')
+const { TRAINING_SHEET } = require('../../constantes/constantes')
 
 module.exports = [
   {
@@ -18,17 +15,7 @@ module.exports = [
       logger.info({
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      try {
-        const { start, end } = request.query
-        const res = await commun.getTalkOrTraining(start, end, TRAINING_SHEET)
-        if (res[INDEX_INCOMPLETE_DATA] || res.length === 0) {
-          return h.response(res).code(206)
-        } else {
-          return h.response(res).code(200)
-        }
-      } catch (error) {
-        return sendCustomError(error, h)
-      }
+      return await getTalkOrTraining(request, TRAINING_SHEET, h)
     }
   },
   {
@@ -39,8 +26,8 @@ module.exports = [
         message: `request generate emaling (${request.path})`
       })
       const trainings = request.payload
-      /** @type {import ("../domain/type/doc").DocRepository} */
-      /** @type {import ("../domain/type/drive").DriveRepository} */
+      /** @type {import ("../../domain/type/doc").DocRepository} */
+      /** @type {import ("../../domain/type/drive").DriveRepository} */
       const docServiceRepository = googleDocRepository
       const driveServiceRepository = googleDriveRepository
       const docService = new DocService(

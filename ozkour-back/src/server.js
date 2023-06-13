@@ -1,10 +1,9 @@
 'use strict'
-
 require('dotenv').config()
 const Hapi = require('@hapi/hapi')
-const routes = require('./routes')
+const routes = require('./ui/routes')
 const Qs = require('qs')
-const { logger } = require('./logger')
+const { logger } = require('../src/logger')
 
 const port = process.env.PORT
 

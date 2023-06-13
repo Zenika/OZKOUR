@@ -1,63 +1,63 @@
-const { v4: uuidv4 } = require('uuid')
-const dateUtils = require('@/utils/dateUtils')
-const dayjs = require('dayjs')
-const customParseFormat = require('dayjs/plugin/customParseFormat')
-const slideDataOrganizer = require('@/domain/quoiDe9Organizer')
-const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
-dayjs.extend(customParseFormat)
-const { logger } = require('../../logger')
+const { v4: uuidv4 } = require("uuid");
+const dateUtils = require("../../utils/dateUtils");
+const dayjs = require("dayjs");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+const slideDataOrganizer = require("@/domain/quoiDe9Organizer");
+const { presentationId, getSlides, sendRequest } = require("./slideWrapper");
+dayjs.extend(customParseFormat);
+const { logger } = require("../../logger");
 
-const pictogram = new Map()
+const pictogram = new Map();
 pictogram.set(
-  'Conférence',
-  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png'
-)
+  "Conférence",
+  "https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png"
+);
 pictogram.set(
-  'Matinale',
-  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png'
-)
+  "Matinale",
+  "https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png"
+);
 pictogram.set(
-  'Meetup',
-  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png'
-)
+  "Meetup",
+  "https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png"
+);
 pictogram.set(
-  'NightClazz',
-  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png'
-)
+  "NightClazz",
+  "https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png"
+);
 pictogram.set(
-  'Webinar',
-  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png'
-)
+  "Webinar",
+  "https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png"
+);
 
 const defaultForegroundColor = {
   opaqueColor: {
     rgbColor: {
       blue: 1.0,
       green: 1.0,
-      red: 1.0
-    }
-  }
-}
+      red: 1.0,
+    },
+  },
+};
 
-const ImagePromiseList = []
+const ImagePromiseList = [];
 
-const unit = 'PT'
+const unit = "PT";
 
 const greyForegroundColor = {
   opaqueColor: {
     rgbColor: {
       blue: 0.7,
       green: 0.7,
-      red: 0.7
-    }
-  }
-}
+      red: 0.7,
+    },
+  },
+};
 
-function getSuccessMessage () {
+function getSuccessMessage() {
   return {
-    message: 'Created !',
-    link: 'https://docs.google.com/presentation/d/' + presentationId + '/'
-  }
+    message: "Created !",
+    link: "https://docs.google.com/presentation/d/" + presentationId + "/",
+  };
 }
 
 /**
@@ -67,45 +67,45 @@ function getSuccessMessage () {
  * @param {int} the place (only axis y) where we need put the date
  * @return {Array} return an array of the requests
  */
-function addDateTextWithStyle (idPage, date, objectId, Y) {
+function addDateTextWithStyle(idPage, date, objectId, Y) {
   const pt350 = {
     magnitude: 350,
-    unit
-  }
+    unit,
+  };
   const pt30 = {
     magnitude: slideDataOrganizer.slideSpacing.DATE,
-    unit
-  }
+    unit,
+  };
 
   return [
     {
       // create a shape to put text in it
       createShape: {
         objectId,
-        shapeType: 'TEXT_BOX',
+        shapeType: "TEXT_BOX",
         elementProperties: {
           pageObjectId: idPage,
           size: {
             height: pt30,
-            width: pt350
+            width: pt350,
           },
           transform: {
             scaleX: 1,
             scaleY: 1,
             translateX: 140,
             translateY: Y,
-            unit
-          }
-        }
-      }
+            unit,
+          },
+        },
+      },
     },
     {
       insertText: {
         // add date to the text
         objectId,
         insertionIndex: 0,
-        text: date
-      }
+        text: date,
+      },
     },
     {
       updateTextStyle: {
@@ -113,35 +113,35 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
         objectId,
         style: {
           underline: true,
-          fontFamily: 'Nunito',
+          fontFamily: "Nunito",
           fontSize: {
             magnitude: 24,
-            unit
+            unit,
           },
-          foregroundColor: defaultForegroundColor
+          foregroundColor: defaultForegroundColor,
         },
-        fields: 'underline,foregroundColor,fontFamily,fontSize'
-      }
+        fields: "underline,foregroundColor,fontFamily,fontSize",
+      },
     },
     {
       // center the date
       updateParagraphStyle: {
         objectId,
         style: {
-          alignment: 'CENTER'
+          alignment: "CENTER",
         },
-        fields: 'alignment'
-      }
-    }
-  ]
+        fields: "alignment",
+      },
+    },
+  ];
 }
 
-function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
-  const objectId = dateId + '-table'
+function createTableWithStyleForAllEventsInDate(idPage, dateId, Y, data) {
+  const objectId = dateId + "-table";
   // calculate size of Table
-  let nbTalkForDate = data.length
+  let nbTalkForDate = data.length;
   for (let i = 0; i < data.length; i++) {
-    nbTalkForDate += data[i].talks.length
+    nbTalkForDate += data[i].talks.length;
   }
   return [
     {
@@ -154,17 +154,17 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
             scaleY: 1,
             translateY: Y,
             translateX: 20,
-            unit
-          }
+            unit,
+          },
         },
         rows: nbTalkForDate,
-        columns: 2
-      }
+        columns: 2,
+      },
     },
     {
       updateTableBorderProperties: {
         objectId,
-        borderPosition: 'ALL',
+        borderPosition: "ALL",
         tableBorderProperties: {
           tableBorderFill: {
             solidFill: {
@@ -172,15 +172,15 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
                 rgbColor: {
                   red: 0,
                   green: 0,
-                  blue: 0
-                }
+                  blue: 0,
+                },
               },
-              alpha: 0
-            }
-          }
+              alpha: 0,
+            },
+          },
         },
-        fields: 'tableBorderFill'
-      }
+        fields: "tableBorderFill",
+      },
     },
     // Set the size of the first column of the table
     {
@@ -190,11 +190,11 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
         tableColumnProperties: {
           columnWidth: {
             magnitude: 410,
-            unit
-          }
+            unit,
+          },
         },
-        fields: 'columnWidth'
-      }
+        fields: "columnWidth",
+      },
     },
     // Set the size of the second column of the table
     {
@@ -204,70 +204,70 @@ function createTableWithStyleForAllEventsInDate (idPage, dateId, Y, data) {
         tableColumnProperties: {
           columnWidth: {
             magnitude: 180,
-            unit
-          }
+            unit,
+          },
         },
-        fields: 'columnWidth'
-      }
-    }
-  ]
+        fields: "columnWidth",
+      },
+    },
+  ];
 }
 
-function addEventNameWithStyleToTable (
+function addEventNameWithStyleToTable(
   dateId,
   eventName,
   IndexRowInTableToInsert
 ) {
-  const objectId = dateId + '-table'
+  const objectId = dateId + "-table";
   return [
     {
       insertText: {
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0
+          columnIndex: 0,
         },
         insertionIndex: 0,
-        text: eventName
-      }
+        text: eventName,
+      },
     },
     {
       updateTextStyle: {
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0
+          columnIndex: 0,
         },
         style: {
-          fontFamily: 'Nunito',
+          fontFamily: "Nunito",
           bold: true,
           fontSize: {
             magnitude: 28,
-            unit
+            unit,
           },
-          foregroundColor: defaultForegroundColor
+          foregroundColor: defaultForegroundColor,
         },
-        fields: 'bold,foregroundColor,fontFamily,fontSize',
+        fields: "bold,foregroundColor,fontFamily,fontSize",
         textRange: {
-          type: 'ALL'
-        }
-      }
-    }
-  ]
+          type: "ALL",
+        },
+      },
+    },
+  ];
 }
 
-function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
-  const objectId = date + '-table'
+function addTalkTitleWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  const objectId = date + "-table";
   return [
     {
       insertText: {
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0
+          columnIndex: 0,
         },
-        text: talk.talkTitle
-      }
+        text: talk.talkTitle,
+      },
     },
     {
       updateTextStyle: {
@@ -275,81 +275,81 @@ function addTalkTitleWithStyleToTable (date, talk, IndexRowInTableToInsert) {
 
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0
+          columnIndex: 0,
         },
         style: {
-          fontFamily: 'Nunito',
+          fontFamily: "Nunito",
           bold: true,
           fontSize: {
             magnitude: 20,
-            unit
+            unit,
           },
-          foregroundColor: defaultForegroundColor
+          foregroundColor: defaultForegroundColor,
         },
-        fields: 'bold,foregroundColor,fontFamily,fontSize'
-      }
+        fields: "bold,foregroundColor,fontFamily,fontSize",
+      },
     },
     {
       createParagraphBullets: {
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 0
-        }
-      }
-    }
-  ]
+          columnIndex: 0,
+        },
+      },
+    },
+  ];
 }
 
-function addSpeakersWithStyleToTable (date, talk, IndexRowInTableToInsert) {
-  const objectId = date + '-table'
+function addSpeakersWithStyleToTable(date, talk, IndexRowInTableToInsert) {
+  const objectId = date + "-table";
   return [
     {
       insertText: {
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 1
+          columnIndex: 1,
         },
         insertionIndex: 0,
-        text: talk.speakers
-      }
+        text: talk.speakers,
+      },
     },
     {
       updateTextStyle: {
         objectId,
         cellLocation: {
           rowIndex: IndexRowInTableToInsert,
-          columnIndex: 1
+          columnIndex: 1,
         },
         style: {
-          fontFamily: 'Nunito',
+          fontFamily: "Nunito",
           bold: false,
           fontSize: {
             magnitude: 18,
-            unit
+            unit,
           },
-          foregroundColor: greyForegroundColor
+          foregroundColor: greyForegroundColor,
         },
-        fields: 'bold,foregroundColor,fontFamily,fontSize',
+        fields: "bold,foregroundColor,fontFamily,fontSize",
         textRange: {
-          type: 'ALL'
-        }
-      }
-    }
-  ]
+          type: "ALL",
+        },
+      },
+    },
+  ];
 }
 
 /**
  * Adds an image to a presentation.
  */
 
-function createImage (idPage, eventType, yNextElmt) {
-  const imageUrl = pictogram.get(eventType)
+function createImage(idPage, eventType, yNextElmt) {
+  const imageUrl = pictogram.get(eventType);
   const imgSize = {
     magnitude: 110,
-    unit
-  }
+    unit,
+  };
   const requests = [
     {
       createImage: {
@@ -358,176 +358,176 @@ function createImage (idPage, eventType, yNextElmt) {
           pageObjectId: idPage,
           size: {
             height: imgSize,
-            width: imgSize
+            width: imgSize,
           },
           transform: {
             scaleX: 1,
             scaleY: 1,
             translateX: 658,
             translateY: yNextElmt,
-            unit
-          }
-        }
-      }
-    }
-  ]
+            unit,
+          },
+        },
+      },
+    },
+  ];
   try {
-    return sendRequest(requests)
+    return sendRequest(requests);
   } catch (error) {
     logger.error({
-      message: `error on loading image for event : ${eventType}`
-    })
+      message: `error on loading image for event : ${eventType}`,
+    });
   }
 }
 
 /**
  * get the id of the template (supposed to be the first slide)
  */
-async function getIdSlideTemplate () {
-  const res = await getSlides()
-  return res[0].objectId
+async function getIdSlideTemplate() {
+  const res = await getSlides();
+  return res[0].objectId;
 }
 
 /**
  * add a table to the slides files with data
  */
-function fillSlideWithData (idPage, dataOrganized) {
-  const requests = []
-  let IndexRowInTableToInsert = 0
-  let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX
+function fillSlideWithData(idPage, dataOrganized) {
+  const requests = [];
+  let IndexRowInTableToInsert = 0;
+  let yNextElmt = slideDataOrganizer.DEFAULT_START_Y_INDEX;
 
   dataOrganized.forEach((events, date) => {
     // add date
-    const dateId = uuidv4()
-    const dateFormated = dateUtils.displayFullDateWithWords(date)
+    const dateId = uuidv4();
+    const dateFormated = dateUtils.displayFullDateWithWords(date);
     requests.push(
       addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
-    )
+    );
 
     // create table
-    yNextElmt += slideDataOrganizer.slideSpacing.DATE
+    yNextElmt += slideDataOrganizer.slideSpacing.DATE;
     requests.push(
       createTableWithStyleForAllEventsInDate(idPage, dateId, yNextElmt, events)
-    )
+    );
 
     // fill table
-    IndexRowInTableToInsert = 0
-    const nbEvent = events.length
+    IndexRowInTableToInsert = 0;
+    const nbEvent = events.length;
     for (let i = 0; i < nbEvent; i++) {
       // add event
-      const arrayOfTalksForAnEvent = events[i]
+      const arrayOfTalksForAnEvent = events[i];
       requests.push(
         addEventNameWithStyleToTable(
           dateId,
           arrayOfTalksForAnEvent.eventName,
           IndexRowInTableToInsert
         )
-      )
+      );
       ImagePromiseList.push(
         createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
-      )
-      IndexRowInTableToInsert++
-      yNextElmt += slideDataOrganizer.slideSpacing.EVENT
+      );
+      IndexRowInTableToInsert++;
+      yNextElmt += slideDataOrganizer.slideSpacing.EVENT;
 
       // add all talk for the event
       for (let j = 0; j < arrayOfTalksForAnEvent.talks.length; j++) {
-        const talk = arrayOfTalksForAnEvent.talks[j]
+        const talk = arrayOfTalksForAnEvent.talks[j];
         requests.push(
           addTalkTitleWithStyleToTable(dateId, talk, IndexRowInTableToInsert),
           addSpeakersWithStyleToTable(dateId, talk, IndexRowInTableToInsert)
-        )
-        yNextElmt += slideDataOrganizer.slideSpacing.TALK
-        IndexRowInTableToInsert++
+        );
+        yNextElmt += slideDataOrganizer.slideSpacing.TALK;
+        IndexRowInTableToInsert++;
       }
     }
-  })
+  });
   try {
-    const imagesPromises = Promise.allSettled(ImagePromiseList)
-    const allPromises = Promise.all([imagesPromises, sendRequest(requests)])
-    return allPromises
+    const imagesPromises = Promise.allSettled(ImagePromiseList);
+    const allPromises = Promise.all([imagesPromises, sendRequest(requests)]);
+    return allPromises;
   } catch (e) {
-    throw new Error(`error encountered while trying to fill a slide (${e})`)
+    throw new Error(`error encountered while trying to fill a slide (${e})`);
   }
 }
 
 /**
  * delete the elements copied from the model used for the style of the data
  */
-async function deleteTemplateInfo (idPage) {
-  const res = await getSlides()
-  const slide = await res.find((slide) => slide.objectId === idPage)
+async function deleteTemplateInfo(idPage) {
+  const res = await getSlides();
+  const slide = await res.find((slide) => slide.objectId === idPage);
   if (!slide) {
     throw new Error(
-      'cannot find the slide on which we want to delete the template info'
-    )
+      "cannot find the slide on which we want to delete the template info"
+    );
   }
   // if the page is the one we're looking for
-  const pageElements = slide.pageElements
+  const pageElements = slide.pageElements;
 
-  const requests = []
+  const requests = [];
   try {
     requests.push({
       deleteObject: {
         // delete icon
-        objectId: pageElements[pageElements.length - 1].objectId
-      }
-    })
+        objectId: pageElements[pageElements.length - 1].objectId,
+      },
+    });
     requests.push({
       deleteObject: {
         // delete table event
-        objectId: pageElements[pageElements.length - 2].objectId
-      }
-    })
+        objectId: pageElements[pageElements.length - 2].objectId,
+      },
+    });
     requests.push({
       deleteObject: {
         // delete date
-        objectId: pageElements[pageElements.length - 3].objectId
-      }
-    })
-    return sendRequest(requests)
+        objectId: pageElements[pageElements.length - 3].objectId,
+      },
+    });
+    return sendRequest(requests);
   } catch (e) {
-    throw new Error(`missing element(s) on template slide (${e})`)
+    throw new Error(`missing element(s) on template slide (${e})`);
   }
 }
 
 /**
  * duplicate the first slide
  */
-async function copySlide (idPage) {
-  const newIdPage = uuidv4()
+async function copySlide(idPage) {
+  const newIdPage = uuidv4();
   const requests = [
     {
       duplicateObject: {
         objectId: idPage,
         objectIds: {
-          [idPage]: newIdPage
-        }
-      }
-    }
-  ]
+          [idPage]: newIdPage,
+        },
+      },
+    },
+  ];
   try {
-    await sendRequest(requests)
-    return newIdPage
+    await sendRequest(requests);
+    return newIdPage;
   } catch (e) {
-    throw new Error(`error encounterred while trying to copy a slide (${e})`)
+    throw new Error(`error encounterred while trying to copy a slide (${e})`);
   }
 }
 
-async function deleteLastSlide () {
-  const res = await getSlides()
-  const indexAddedSlide = 1
-  const idPage = res[indexAddedSlide].objectId
+async function deleteLastSlide() {
+  const res = await getSlides();
+  const indexAddedSlide = 1;
+  const idPage = res[indexAddedSlide].objectId;
   const requests = [
     {
       deleteObject: {
-        objectId: idPage
-      }
-    }
-  ]
+        objectId: idPage,
+      },
+    },
+  ];
   try {
-    await sendRequest(requests)
+    await sendRequest(requests);
   } catch (e) {
-    throw new Error(`error encounterred while trying to delete a slide (${e})`)
+    throw new Error(`error encounterred while trying to delete a slide (${e})`);
   }
 }
 
@@ -543,5 +543,5 @@ module.exports = {
   copySlide,
   getIdSlideTemplate,
   getSuccessMessage,
-  deleteLastSlide
-}
+  deleteLastSlide,
+};

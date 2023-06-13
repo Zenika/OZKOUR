@@ -1,21 +1,13 @@
-const dayjs = require('dayjs')
-const customParseFormat = require('dayjs/plugin/customParseFormat')
 const { logger } = require('../logger')
-dayjs.extend(customParseFormat)
 const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
-const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
 const { CustomeError } = require('../Error/customeError')
-dayjs.extend(customParseFormat)
-dayjs.extend(isSameOrAfter)
-dayjs.extend(isSameOrBefore)
 const utilsCluster = require('../utils/veryfiedCompletData')
 const utilsArray = require('../utils/filterArrayByDateUtils')
 
 const getTraining = async (start, end, auth, variables) => {
   try {
-    const formatedDateStart = dayjs(start).format('DD/MM/YYYY')
-    const formatedDateEnd = dayjs(end).format('DD/MM/YYYY')
+    const formatedDateStart = start
+    const formatedDateEnd = end
 
     const validateDateStart = dayjs(
       formatedDateStart,
