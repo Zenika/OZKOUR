@@ -1,5 +1,5 @@
-const { logger } = require('../logger')
-const slideDataOrganizer = require('../domain/quoiDe9Organizer')
+const { logger } = require('../../logger')
+const slideDataOrganizer = require('../quoiDe9Organizer')
 
 class SlideService {
   constructor (slideServiceRepository) {

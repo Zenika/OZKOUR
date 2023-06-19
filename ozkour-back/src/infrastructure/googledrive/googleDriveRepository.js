@@ -1,5 +1,5 @@
 const driveWrapper = require('./driveWrapper')
-const { isYearBetweenDates } = require('@/utils/dateUtils')
+const { isYearBetweenDates } = require('../../domain/utils/dateUtils')
 
 const folderTalksId = process.env.GOOGLE_FOLDER_TALK_ID
 const folderTalkEmailingId = process.env.GOOGLE_FOLDER_EMAILING_TALK_ID

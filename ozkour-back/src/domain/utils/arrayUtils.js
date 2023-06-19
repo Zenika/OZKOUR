@@ -1,4 +1,3 @@
-
 function sortArrayByKeyAndOrder (arrayOfObject, key, isAscending) {
   if (isAscending) {
     return arrayOfObject.sort((a, b) => compareByKey(a, b, key))

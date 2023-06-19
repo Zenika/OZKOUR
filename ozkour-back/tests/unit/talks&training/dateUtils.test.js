@@ -4,21 +4,29 @@ const {
   getYear,
   convDateAndDurationToDateIntervalInLetter,
   isYearBetweenDates
-} = require('../../../src/utils/dateUtils')
+} = require('@/domain/utils/dateUtils')
 
 describe('dateUtils', () => {
   describe('Test on date', () => {
     it('should return true when the year is between two dates', () => {
       // lower bound
-      expect(isYearBetweenDates('2021', '2021-03-21', '2022-03-21')).toBeTruthy()
+      expect(
+        isYearBetweenDates('2021', '2021-03-21', '2022-03-21')
+      ).toBeTruthy()
       // upper bound
-      expect(isYearBetweenDates('2022', '2021-03-21', '2022-03-21')).toBeTruthy()
+      expect(
+        isYearBetweenDates('2022', '2021-03-21', '2022-03-21')
+      ).toBeTruthy()
     })
     it('should return false when the year is not between two dates', () => {
       // lower bound
-      expect(isYearBetweenDates('2020', '2021-03-21', '2022-03-21')).toBeFalsy()
+      expect(
+        isYearBetweenDates('2020', '2021-03-21', '2022-03-21')
+      ).toBeFalsy()
       // upper bound
-      expect(isYearBetweenDates('2023', '2021-03-21', '2022-03-21')).toBeFalsy()
+      expect(
+        isYearBetweenDates('2023', '2021-03-21', '2022-03-21')
+      ).toBeFalsy()
     })
     it('should return the year of a date', () => {
       expect(getYear('11/03/2022')).toBe('2022')
