@@ -63,6 +63,7 @@ module.exports = [
         message: `request sort ${order ? 'ascending' : 'descending'} 
         talks by ${request.query.key}(${request.path})`
       })
+
       const talks = request.payload
       const res = sortArrayByKeyAndOrder(talks, request.query.key, order)
       return h.response(res)

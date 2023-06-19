@@ -2,8 +2,7 @@ const dayjs = require('dayjs')
 const { logger } = require('../logger')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
-const { verifyedCompletetData } = require('./utils/veryfiedCompletData')
-const { dateFilter } = require('./utils/filterArrayByDateUtils')
+const { dateAndCompletDataFilter } = require('./utils/veryfiedCompletData')
 const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
 const { CustomeError } = require('../Error/customeError')
 const {
@@ -63,7 +62,7 @@ const getTalk = async (start, end, auth, variables) => {
     } else {
       const param = { start: formatedDateStart, end: formatedDateEnd }
       const talks = await getTalkFromDate(param, auth)
-      return dateFilter(verifyedCompletetData(talks, variables), start, end)
+      return dateAndCompletDataFilter(talks, variables, start, end)
     }
   } catch (error) {
     logger.error({ message: error.message })

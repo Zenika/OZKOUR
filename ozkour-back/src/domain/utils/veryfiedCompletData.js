@@ -1,4 +1,12 @@
-function verifyedCompletetData (array, variables) {
+const dayjs = require('dayjs')
+const customParseFormat = require('dayjs/plugin/customParseFormat')
+dayjs.extend(customParseFormat)
+const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
+dayjs.extend(isSameOrAfter)
+dayjs.extend(isSameOrBefore)
+
+function dateAndCompletDataFilter (array, variables, start, end) {
   const TRAINING_SHEET_CONST = 'training_sheet'
   const TALK_SHEET_CONST = 'talk_sheet'
   const incompletArrayOfData = []
@@ -8,7 +16,12 @@ function verifyedCompletetData (array, variables) {
   if (Array.isArray(array) && array.length > 0) {
     const filteredArray = filterArrayOfData(arrayOfData)
     if (variables === TRAINING_SHEET_CONST) {
-      filteredArray.forEach(function (el) {
+      const talkfOrFormationFiltered = talkOrFormationFiltered(
+        filteredArray,
+        start,
+        end
+      )
+      talkfOrFormationFiltered.forEach(function (el) {
         completArrayOfData.push(el)
         if (
           !el.title ||
@@ -23,7 +36,12 @@ function verifyedCompletetData (array, variables) {
       })
     }
     if (variables === TALK_SHEET_CONST) {
-      filteredArray.forEach(function (el) {
+      const talkfOrFormationFiltered = talkOrFormationFiltered(
+        filteredArray,
+        start,
+        end
+      )
+      talkfOrFormationFiltered.forEach(function (el) {
         completArrayOfData.push(el)
         if (
           !el.date ||
@@ -48,6 +66,19 @@ function filterArrayOfData (array) {
   return filterArray
 }
 
+function talkOrFormationFiltered (array, startDate, endDate) {
+  const start = dayjs(startDate, 'DD/MM/YYYY')
+  const end = dayjs(endDate, 'DD/MM/YYYY')
+  const arrayFilter = array.filter((el) => {
+    const formationDate = dayjs(el.date, 'DD/MM/YYYY')
+    return (
+      formationDate.isSameOrAfter(start, 'day') &&
+      formationDate.isSameOrBefore(end, 'day')
+    )
+  })
+  return arrayFilter
+}
+
 module.exports = {
-  verifyedCompletetData
+  dateAndCompletDataFilter
 }
