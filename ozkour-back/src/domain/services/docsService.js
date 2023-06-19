@@ -1,6 +1,6 @@
-const emailingOrganizer = require('../domain/emailingOrganizer')
+const emailingOrganizer = require('../emailingOrganizer')
 const dateUtils = require('../utils/dateUtils')
-const { logger } = require('../logger')
+const { logger } = require('../../logger')
 class DocService {
   constructor (docServiceRepository, driveServiceRepository) {
     this.docServiceRepository = docServiceRepository

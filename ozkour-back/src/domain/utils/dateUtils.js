@@ -11,7 +11,6 @@ function convDateToMonthInLetter (date) {
   // format of date used in google sheets : 'DD/MM/YYYY'
   // format of date expected by dayjs : 'YYYY/MM/DD'
   const monthInLetter = dayjs(date, 'DD-MM-YYYY', 'fr').format('MMMM')
-
   // the month is in uppercase in the googlesheet
   return capitalizeFirstLetter(monthInLetter)
 }

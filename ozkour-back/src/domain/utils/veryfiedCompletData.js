@@ -3,11 +3,12 @@ function verifyedCompletetData (array, variables) {
   const TALK_SHEET_CONST = 'talk_sheet'
   const incompletArrayOfData = []
   const completArrayOfData = []
-  const arrayReceived = array
+  const arrayOfData = array
 
   if (Array.isArray(array) && array.length > 0) {
+    const filteredArray = filterArrayOfData(arrayOfData)
     if (variables === TRAINING_SHEET_CONST) {
-      arrayReceived.forEach(function (el) {
+      filteredArray.forEach(function (el) {
         completArrayOfData.push(el)
         if (
           !el.title ||
@@ -22,7 +23,7 @@ function verifyedCompletetData (array, variables) {
       })
     }
     if (variables === TALK_SHEET_CONST) {
-      arrayReceived.forEach(function (el) {
+      filteredArray.forEach(function (el) {
         completArrayOfData.push(el)
         if (
           !el.date ||
@@ -40,6 +41,11 @@ function verifyedCompletetData (array, variables) {
     return { res: completArrayOfData, warn: incompletArrayOfData }
   }
   return {}
+}
+
+function filterArrayOfData (array) {
+  const filterArray = array.filter((el) => el.date !== undefined)
+  return filterArray
 }
 
 module.exports = {

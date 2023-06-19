@@ -1,11 +1,12 @@
 const { logger } = require('../../logger')
-const { SlideService } = require('../../services/slideService')
-const { DocService } = require('../../services/docsService')
-const { sortArrayByKeyAndOrder } = require('../../utils/arrayUtils')
+const { SlideService } = require('../../domain/services/slideService')
+const { DocService } = require('../../domain/services/docsService')
+const { sortArrayByKeyAndOrder } = require('../../domain/utils/arrayUtils')
+const { getTalkOrTraining } = require('../getTrainingOrTalks')
 const googleSlideRepository = require('../../infrastructure/googleslide/googleSlideRepository')
 const googleDocRepository = require('../../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../../infrastructure/googledrive/googleDriveRepository')
-const { TALK_SHEET } = require('../../constantes/constantes')
+const { TALK_SHEET } = require('../utils/constantes')
 
 module.exports = [
   {

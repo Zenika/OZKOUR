@@ -1,38 +1,17 @@
-const { logger } = require('../logger')
-const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
+const { getTrainings } = require('../infrastructure/googlesheets/sheetWrapper')
+const { verifyedCompletetData } = require('./utils/veryfiedCompletData')
+const { dateFilter } = require('./utils/filterArrayByDateUtils')
 const { CustomeError } = require('../Error/customeError')
-const utilsCluster = require('../utils/veryfiedCompletData')
-const utilsArray = require('../utils/filterArrayByDateUtils')
 
 const getTraining = async (start, end, auth, variables) => {
   try {
-    const formatedDateStart = start
-    const formatedDateEnd = end
-
-    const validateDateStart = dayjs(
-      formatedDateStart,
-      'DD/MM/YYYY',
-      true
-    ).isValid()
-    const validateEndStart = dayjs(
-      formatedDateEnd,
-      'DD/MM/YYYY',
-      true
-    ).isValid()
-
-    if (!validateDateStart || !validateEndStart) {
-      throw new CustomeError('Erreur pendant la transformation des dates', 500)
-    } else {
-      const training = await sheetsWrapper.getTrainings(auth)
-      return utilsArray.dateFilter(
-        utilsCluster.verifyedCompletetData(training, variables),
-        formatedDateStart,
-        formatedDateEnd
-      )
-    }
-  } catch (error) {
-    logger.error({ message: error.message })
-    throw error
+    const training = await getTrainings(auth)
+    return dateFilter(verifyedCompletetData(training, variables), start, end)
+  } catch (e) {
+    throw new CustomeError(
+      'Error while trying to retrieved trainings data from google sheet, please contact support service',
+      400
+    )
   }
 }
 

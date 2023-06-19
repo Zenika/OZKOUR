@@ -12,7 +12,7 @@ function isArrayDescending (arr) {
 const {
   sortArrayByKeyAndOrder,
   compareByKey
-} = require('../../../src/utils/arrayUtils')
+} = require('@/domain/utils/arrayUtils')
 
 describe('arrayUtils', () => {
   describe('compareByKey', () => {

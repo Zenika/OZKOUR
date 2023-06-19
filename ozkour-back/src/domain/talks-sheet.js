@@ -2,19 +2,15 @@ const dayjs = require('dayjs')
 const { logger } = require('../logger')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(customParseFormat)
+const { verifyedCompletetData } = require('./utils/veryfiedCompletData')
+const { dateFilter } = require('./utils/filterArrayByDateUtils')
 const sheetsWrapper = require('../infrastructure/googlesheets/sheetWrapper')
 const { CustomeError } = require('../Error/customeError')
 const {
   getIdOfTalkFileByYear
 } = require('../infrastructure/googledrive/googleDriveRepository')
-const utils = require('../utils/dateUtils')
-const utilsArray = require('../utils/filterArrayByDateUtils')
-const utilsCluster = require('../utils/veryfiedCompletData')
-const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-const isSameOrBefore = require('dayjs/plugin/isSameOrBefore')
+const utils = require('./utils/dateUtils')
 dayjs.extend(customParseFormat)
-dayjs.extend(isSameOrAfter)
-dayjs.extend(isSameOrBefore)
 
 async function getTalkFromDate (params, auth) {
   try {
@@ -54,20 +50,20 @@ async function getTalkFromDate (params, auth) {
   }
 }
 
-const getTalk = async (start, end = dayjs(), auth, variables) => {
+const getTalk = async (start, end, auth, variables) => {
   try {
-    const formatedDateStart = dayjs(start)
-    const formatedDateEnd = dayjs(end)
+    const reformatStartdate = dayjs(start, 'DD/MM/YYYY').format('YYYY-MM-DD')
+    const reformatEnddate = dayjs(end, 'DD/MM/YYYY').format('YYYY-MM-DD')
+
+    const formatedDateStart = dayjs(reformatStartdate)
+    const formatedDateEnd = dayjs(reformatEnddate)
+
     if (!formatedDateStart || !formatedDateEnd) {
       throw new CustomeError('Erreur pendant la transformation des dates', 500)
     } else {
       const param = { start: formatedDateStart, end: formatedDateEnd }
       const talks = await getTalkFromDate(param, auth)
-      return utilsArray.dateFilter(
-        utilsCluster.verifyedCompletetData(talks, variables),
-        formatedDateStart,
-        formatedDateEnd
-      )
+      return dateFilter(verifyedCompletetData(talks, variables), start, end)
     }
   } catch (error) {
     logger.error({ message: error.message })

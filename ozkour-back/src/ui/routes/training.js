@@ -1,11 +1,11 @@
 // @ts-check
 const { logger } = require('../../logger.js')
-const { DocService } = require('../../services/docsService')
-const { sortArrayByKeyAndOrder } = require('../../utils/arrayUtils')
+const { DocService } = require('../../domain/services/docsService')
+const { sortArrayByKeyAndOrder } = require('../../domain/utils/arrayUtils')
 const googleDocRepository = require('../../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../../infrastructure/googledrive/googleDriveRepository')
 const { getTalkOrTraining } = require('../getTrainingOrTalks')
-const { TRAINING_SHEET } = require('../../constantes/constantes')
+const { TRAINING_SHEET } = require('../utils/constantes')
 
 module.exports = [
   {

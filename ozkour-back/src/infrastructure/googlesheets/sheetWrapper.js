@@ -11,7 +11,6 @@ async function getTalks (month, year, spreadsheetId, auth) {
       range: `${month} ${year}!A2:I`
     })
     const talkArray = []
-    const findFirstIndex = parseInt(res.data.range.match(/\d+/)[0])
     res.data.values.forEach(
       (
         [
@@ -35,7 +34,7 @@ async function getTalks (month, year, spreadsheetId, auth) {
           talkTitle,
           speakers,
           url,
-          indexLine: findFirstIndex + index
+          indexLine: 2 + index
         }
         talkArray.push(new Talk(newTalk))
       }
@@ -49,7 +48,7 @@ async function getTalks (month, year, spreadsheetId, auth) {
   }
 }
 
-async function getTrainings (auth) {
+async function getTrainings (auth, h) {
   const sheets = google.sheets({ version: 'v4', auth })
   const spreadsheetId = process.env.GOOGLE_TRAINING_FILE_SHEET_ID
   const sheetName = 'Training'
@@ -59,7 +58,6 @@ async function getTrainings (auth) {
       range: `${sheetName}!A7:F`
     })
     const trainingArray = []
-    const findFirstIndex = parseInt(res.data.range.match(/\d+/)[0])
     res.data.values.forEach(
       ([title, universe, duration, price, url, date], index) => {
         const newTraining = {
@@ -69,9 +67,9 @@ async function getTrainings (auth) {
           price,
           url,
           date,
-          indexLine: findFirstIndex + index
+          indexLine: 7 + index
         }
-        if (date !== undefined) trainingArray.push(new Training(newTraining))
+        trainingArray.push(new Training(newTraining))
       }
     )
     return trainingArray
