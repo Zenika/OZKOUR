@@ -6,6 +6,7 @@ import RecapModal from '@/components/RecapModal.vue'
 import { useTalkStore } from '@/stores/talks'
 import PopUp from '../components/PopUp.vue'
 import EventArray from '@/components/EventArray.vue'
+import EventWarningArray from '@/components/EventWarningArray.vue'
 
 const eventsTemplate = {
   QUOI_DE_9: {
@@ -54,7 +55,8 @@ export default {
     PrimaryBtn,
     RecapModal,
     PopUp,
-    EventArray
+    EventArray,
+    EventWarningArray
   },
   data () {
     return {
@@ -140,6 +142,11 @@ export default {
         @on-search-event="handleSearchTalk"
       />
     </section>
+
+    <EventWarningArray
+      v-if="talks.retrievedWarning.length>0"
+      :retrieving-warning="talks.retrievedWarning"
+    />
 
     <section class="container__eventList">
       <EventArray

@@ -7,6 +7,7 @@ export const useTrainingStore = defineStore({
   id: 'training',
   state: () => ({
     retrieved: [],
+    retrievedWarning: [],
     retreivingTrainings: false
   }),
   getters: {
@@ -15,7 +16,7 @@ export const useTrainingStore = defineStore({
         return training.checked
       }),
     getSelectedTrainingsTitle: (state) =>
-      state.getSelectedTrainings.map((training) => training.trainingTitle)
+      state.getSelectedTrainings.map((training) => training.title)
   },
   actions: {
     updateTrainings (newTrainings) {
@@ -24,8 +25,10 @@ export const useTrainingStore = defineStore({
     async generateVisualForSelectedTrainings (templateName) {
       switch (templateName) {
       case 'E-mailing': {
-        const { data } = await api
-          .post('/training/emailing', this.getSelectedTrainings)
+        const { data } = await api.post(
+          '/training/emailing',
+          this.getSelectedTrainings
+        )
         return { link: data.link, message: data.message }
       }
       default:
@@ -35,43 +38,52 @@ export const useTrainingStore = defineStore({
     },
     changeSelectionTraining (selected) {
       const { checked, ...selectedTraining } = selected
-      this.retrieved.find(training => {
-        const { checked: tempTrainingChecked, ...tempSelectedTraining } = training
+      this.retrieved.find((training) => {
+        const { checked: tempTrainingChecked, ...tempSelectedTraining } =
+          training
         return isEqual(tempSelectedTraining, selectedTraining)
       }).checked = !checked
     },
     async getTrainings (dateStart, dateEnd) {
       this.retreivingTrainings = true
       try {
-        const { data } = await api
-          .get('/training', {
-            params: {
-              start: dateStart,
-              end: dateEnd
-            },
-            paramsSerializer: (params) => qs.stringify(params, { encode: false })
-          })
-        const res = data.map((training) => {
-          return {
-            ...training,
-            checked: true
-          }
+        const { data, status } = await api.get('/training', {
+          params: {
+            start: dateStart,
+            end: dateEnd
+          },
+          paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
-        this.updateTrainings(res)
-        return res
+        if (status === 200) {
+          this.retrieved = data.map((talk) => {
+            return {
+              ...talk,
+              checked: true
+            }
+          })
+          this.retrievedWarning = []
+        }
+        if (status === 206) {
+          this.retrieved = data.res.map((talk) => {
+            return {
+              ...talk,
+              checked: true
+            }
+          })
+          this.retrievedWarning = data.warn
+        }
       } finally {
         this.retreivingTrainings = false
       }
     },
     async sort (dataSort) {
-      const { data } = await api
-        .post('/training/sort', dataSort.events, {
-          params: {
-            key: dataSort.selectedColumnKey,
-            orderIsAscending: dataSort.orderIsAscending
-          },
-          paramsSerializer: (params) => qs.stringify(params, { encode: false })
-        })
+      const { data } = await api.post('/training/sort', dataSort.events, {
+        params: {
+          key: dataSort.selectedColumnKey,
+          orderIsAscending: dataSort.orderIsAscending
+        },
+        paramsSerializer: (params) => qs.stringify(params, { encode: false })
+      })
       const res = data
       this.updateTrainings(res)
       return res

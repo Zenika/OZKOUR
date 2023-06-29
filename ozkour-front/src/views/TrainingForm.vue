@@ -6,6 +6,7 @@ import EventArray from '@/components/EventArray.vue'
 import RecapModal from '@/components/RecapModal.vue'
 import { useTrainingStore } from '@/stores/trainings'
 import PopUp from '../components/PopUp.vue'
+import EventWarningArray from '@/components/EventWarningArray.vue'
 
 const eventsTemplate = {
   EMAILING: {
@@ -27,7 +28,7 @@ const eventsTemplate = {
 
 const columnsValues = [
   { key: 'date', label: 'DATE' },
-  { key: 'trainingTitle', label: 'TITRE' },
+  { key: 'title', label: 'TITRE' },
   { key: 'universe', label: 'UNIVERS' },
   { key: 'duration', label: 'DURÉE' },
   { key: 'price', label: 'PRIX' }
@@ -40,7 +41,8 @@ export default {
     PrimaryBtn,
     EventArray,
     RecapModal,
-    PopUp
+    PopUp,
+    EventWarningArray
   },
   data () {
     return {
@@ -126,6 +128,11 @@ export default {
         @on-search-event="handleSearchTraining"
       />
     </section>
+
+    <EventWarningArray
+      v-if="trainings.retrievedWarning.length>0"
+      :retrieving-warning="trainings.retrievedWarning"
+    />
 
     <section class="container__eventList">
       <EventArray
