@@ -1,20 +1,21 @@
 // @ts-check
-const { logger } = require('../logger')
-const { getTraining } = require('../domain/trainings-sheet')
-const { DocService } = require('../domain/docsService')
-const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
-const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
-const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
+const { logger } = require('../../logger.js')
+const { DocService } = require('../../domain/services/docsService')
+const { sortArrayByKeyAndOrder } = require('../../domain/utils/arrayUtils')
+const googleDocRepository = require('../../infrastructure/googledocs/googleDocRepository')
+const googleDriveRepository = require('../../infrastructure/googledrive/googleDriveRepository')
+const { getTalkOrTraining } = require('../getTrainingOrTalks')
+const { TRAINING_SHEET } = require('../utils/constantes')
 
 module.exports = [
   {
     method: 'GET',
     path: '/training',
-    handler: function (request, h) {
+    handler: async function (request, h) {
       logger.info({
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return getTraining(request.query.start, request.query.end)
+      return await getTalkOrTraining(request, TRAINING_SHEET, h)
     }
   },
   {
@@ -25,11 +26,14 @@ module.exports = [
         message: `request generate emaling (${request.path})`
       })
       const trainings = request.payload
-      /** @type {import ("../domain/type/doc").DocRepository} */
+      /** @type {import ("../../domain/type/doc").DocRepository} */
+      /** @type {import ("../../domain/type/drive").DriveRepository} */
       const docServiceRepository = googleDocRepository
-      /** @type {import ("../domain/type/drive").DriveRepository} */
       const driveServiceRepository = googleDriveRepository
-      const docService = new DocService(docServiceRepository, driveServiceRepository)
+      const docService = new DocService(
+        docServiceRepository,
+        driveServiceRepository
+      )
       const res = await docService.createEmailingTrainingDocs(trainings)
       return h.response(res)
     }
@@ -40,7 +44,9 @@ module.exports = [
     handler: async function (request, h) {
       const order = request.query.orderIsAscending === 'true'
       logger.info({
-        message: `request sort ${order ? 'ascending' : 'descending'} training by ${request.query.key}(${request.path})`
+        message: `request sort ${
+          order ? 'ascending' : 'descending'
+        } training by ${request.query.key}(${request.path})`
       })
       const trainings = request.payload
       const res = sortArrayByKeyAndOrder(trainings, request.query.key, order)

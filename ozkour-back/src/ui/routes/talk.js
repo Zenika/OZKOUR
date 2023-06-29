@@ -1,26 +1,24 @@
-// @ts-check
-const { sortArrayByKeyAndOrder } = require('../Utils/arrayUtils')
-const { logger } = require('../logger')
-const { getTalk } = require('../domain/talks-sheet')
-
-const { SlideService } = require('../domain/slideService')
-const { DocService } = require('../domain/docsService')
-const googleSlideRepository = require('../infrastructure/googleslide/googleSlideRepository')
-const googleDocRepository = require('../infrastructure/googledocs/googleDocRepository')
-const googleDriveRepository = require('../infrastructure/googledrive/googleDriveRepository')
+const { logger } = require('../../logger')
+const { SlideService } = require('../../domain/services/slideService')
+const { DocService } = require('../../domain/services/docsService')
+const { sortArrayByKeyAndOrder } = require('../../domain/utils/arrayUtils')
+const { getTalkOrTraining } = require('../getTrainingOrTalks')
+const googleSlideRepository = require('../../infrastructure/googleslide/googleSlideRepository')
+const googleDocRepository = require('../../infrastructure/googledocs/googleDocRepository')
+const googleDriveRepository = require('../../infrastructure/googledrive/googleDriveRepository')
+const { TALK_SHEET } = require('../utils/constantes')
 
 module.exports = [
   {
     method: 'GET',
     path: '/talk',
-    handler: function (request, h) {
+    handler: async function (request, h) {
       logger.info({
         message: `request get Talks (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return getTalk(request.query.start, request.query.end)
+      return await getTalkOrTraining(request, TALK_SHEET, h)
     }
   },
-
   {
     method: 'POST',
     path: '/talk/quoiDeNeuf',
@@ -48,7 +46,10 @@ module.exports = [
       const docServiceRepository = googleDocRepository
       /** @type {import ("../domain/type/drive").DriveRepository} */
       const driveServiceRepository = googleDriveRepository
-      const docService = new DocService(docServiceRepository, driveServiceRepository)
+      const docService = new DocService(
+        docServiceRepository,
+        driveServiceRepository
+      )
       const res = await docService.createEmailingDocs(talks)
       return h.response(res)
     }
@@ -62,6 +63,7 @@ module.exports = [
         message: `request sort ${order ? 'ascending' : 'descending'} 
         talks by ${request.query.key}(${request.path})`
       })
+
       const talks = request.payload
       const res = sortArrayByKeyAndOrder(talks, request.query.key, order)
       return h.response(res)

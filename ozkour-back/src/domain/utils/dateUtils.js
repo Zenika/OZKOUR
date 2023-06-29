@@ -11,7 +11,6 @@ function convDateToMonthInLetter (date) {
   // format of date used in google sheets : 'DD/MM/YYYY'
   // format of date expected by dayjs : 'YYYY/MM/DD'
   const monthInLetter = dayjs(date, 'DD-MM-YYYY', 'fr').format('MMMM')
-
   // the month is in uppercase in the googlesheet
   return capitalizeFirstLetter(monthInLetter)
 }
@@ -19,30 +18,61 @@ function convDateToMonthInLetter (date) {
 function convDateToMonthInLetterWithDeterminer (date) {
   const monthInLetter = dayjs(date, 'DD-MM-YYYY', 'fr').format('MMMM')
   switch (monthInLetter) {
-  case 'avril' : case 'août':case 'octobre':
-    return 'd\'' + monthInLetter
+  case 'avril':
+  case 'août':
+  case 'octobre':
+    return "d'" + monthInLetter
   default:
     return 'de ' + monthInLetter
   }
 }
 
 function convDateAndDurationToDateIntervalInLetter (date, duration) {
-  const monthFirstDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr').format('MMMM')
+  const monthFirstDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr').format(
+    'MMMM'
+  )
   const dayFirstDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr').format('DD')
   if (duration === 1) {
-    return 'le ' + formatDay(dayFirstDayOfInterval) +
-    ' ' + monthFirstDayOfInterval
+    return (
+      'le ' + formatDay(dayFirstDayOfInterval) + ' ' + monthFirstDayOfInterval
+    )
   }
-  const monthLastDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr').add(duration - 1, 'days').format('MMMM')
-  const dayLastDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr').add(duration - 1, 'days').format('DD')
+  const monthLastDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr')
+    .add(duration - 1, 'days')
+    .format('MMMM')
+  const dayLastDayOfInterval = dayjs(date, 'DD-MM-YYYY', 'fr')
+    .add(duration - 1, 'days')
+    .format('DD')
   if (monthLastDayOfInterval !== monthFirstDayOfInterval) {
-    return 'du ' + formatDay(dayFirstDayOfInterval) + ' ' + monthFirstDayOfInterval +
-    ' au ' + formatDay(dayLastDayOfInterval) + ' ' + monthLastDayOfInterval
+    return (
+      'du ' +
+      formatDay(dayFirstDayOfInterval) +
+      ' ' +
+      monthFirstDayOfInterval +
+      ' au ' +
+      formatDay(dayLastDayOfInterval) +
+      ' ' +
+      monthLastDayOfInterval
+    )
   }
   if (duration === 2) {
-    return 'les ' + formatDay(dayFirstDayOfInterval) + ' et ' + formatDay(dayLastDayOfInterval) + ' ' + monthFirstDayOfInterval
+    return (
+      'les ' +
+      formatDay(dayFirstDayOfInterval) +
+      ' et ' +
+      formatDay(dayLastDayOfInterval) +
+      ' ' +
+      monthFirstDayOfInterval
+    )
   }
-  return 'du ' + formatDay(dayFirstDayOfInterval) + ' au ' + formatDay(dayLastDayOfInterval) + ' ' + monthFirstDayOfInterval
+  return (
+    'du ' +
+    formatDay(dayFirstDayOfInterval) +
+    ' au ' +
+    formatDay(dayLastDayOfInterval) +
+    ' ' +
+    monthFirstDayOfInterval
+  )
 }
 
 function formatDay (day) {
