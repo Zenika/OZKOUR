@@ -7,20 +7,27 @@ export const useTalkStore = defineStore({
   id: 'talk',
   state: () => ({
     retrieved: [],
-    retrievedWarning: [],
+    warning: [],
     retreivingTalks: false
   }),
   getters: {
-    getSelectedTalks: (state) =>
-      state.retrieved.filter((talk) => {
-        return talk.checked
-      }),
+    getSelectedTalks: (state) => state.retrieved.filter((talk) => talk.checked),
     getSelectedTalksTitle: (state) =>
       state.getSelectedTalks.map((talk) => talk.talkTitle)
   },
   actions: {
-    updateTalks (newTalks) {
-      this.retrieved = newTalks
+    updateTalks (newTalks, warning, status) {
+      if (status === 200) {
+        this.retrieved = newTalks
+        this.warning = []
+      }
+      if (status === 206) {
+        this.retrieved = newTalks
+        this.warning = warning
+      }
+    },
+    sortTalks (sortTalks) {
+      this.retrieved = sortTalks
     },
     async generateVisualForSelectedTalks (templateName) {
       switch (templateName) {
@@ -61,22 +68,24 @@ export const useTalkStore = defineStore({
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
         if (status === 200) {
-          this.retrieved = data.map((talk) => {
+          const res = data.map((talk) => {
             return {
               ...talk,
               checked: true
             }
           })
-          this.retrievedWarning = []
+          this.updateTalks(res, undefined, status)
+          return res
         }
         if (status === 206) {
-          this.retrieved = data.res.map((talk) => {
+          const res = data.res.map((talk) => {
             return {
               ...talk,
               checked: true
             }
           })
-          this.retrievedWarning = data.warn
+          this.updateTalks(res, data.warn, status)
+          return res
         }
       } finally {
         this.retreivingTalks = false
@@ -91,7 +100,7 @@ export const useTalkStore = defineStore({
         paramsSerializer: (params) => qs.stringify(params, { encode: false })
       })
       const res = data
-      this.updateTalks(res)
+      this.sortTalks(res)
       return res
     }
   }

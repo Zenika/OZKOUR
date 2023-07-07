@@ -128,11 +128,12 @@ export default {
         @on-search-event="handleSearchTraining"
       />
     </section>
-
-    <EventWarningArray
-      v-if="trainings.retrievedWarning.length>0"
-      :retrieving-warning="trainings.retrievedWarning"
-    />
+    <section class="container__warning">
+      <EventWarningArray
+        v-if="trainings?.warning?.length"
+        :warning="trainings.warning"
+      />
+    </section>
 
     <section class="container__eventList">
       <EventArray

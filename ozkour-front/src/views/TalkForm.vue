@@ -142,11 +142,12 @@ export default {
         @on-search-event="handleSearchTalk"
       />
     </section>
-
-    <EventWarningArray
-      v-if="talks.retrievedWarning.length>0"
-      :retrieving-warning="talks.retrievedWarning"
-    />
+    <section class="container__warning">
+      <EventWarningArray
+        v-if="talks?.warning?.length"
+        :warning="talks.warning"
+      />
+    </section>
 
     <section class="container__eventList">
       <EventArray

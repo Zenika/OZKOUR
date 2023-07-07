@@ -1,25 +1,34 @@
 <script setup>
 const props = defineProps({
-  retrievingWarning: {
+  warning: {
     type: Array,
     required: true
   }
 })
+const warning = (array) => {
+  let conjugation = ''
+  const indexGoogleSheet = array.map((el, index) => {
+    if (index !== array.length - 1) {
+      return el + ','
+    } else {
+      return ' ' + el
+    }
+  }).join('')
 
-const Warning = (array) => {
-  let warning = ''
-  for (let i = 0; i <= array.length - 1; i++) {
-    if (i !== array.length - 1) warning += array[i] + ','
-    if (i === array.length - 1) warning += ' ' + array[i]
+  if (array.length > 1) {
+    conjugation = 'les lignes'
+  } else {
+    conjugation = 'la ligne'
   }
-  return ' WARNING : Données manquantes sur les lignes excel suivantes : ' + warning + '.'
+
+  return ' WARNING : Données manquantes sur ' + conjugation + ' du google sheet : ' + indexGoogleSheet + '.'
 }
 
 </script>
 
 <template>
   <p>
-    {{ Warning(props.retrievingWarning) }}
+    {{ warning(props.warning) }}
   </p>
 </template>
 

@@ -7,7 +7,7 @@ export const useTrainingStore = defineStore({
   id: 'training',
   state: () => ({
     retrieved: [],
-    retrievedWarning: [],
+    warning: [],
     retreivingTrainings: false
   }),
   getters: {
@@ -19,8 +19,18 @@ export const useTrainingStore = defineStore({
       state.getSelectedTrainings.map((training) => training.title)
   },
   actions: {
-    updateTrainings (newTrainings) {
-      this.retrieved = newTrainings
+    updateTrainings (newTrainings, warning, status) {
+      if (status === 200) {
+        this.retrieved = newTrainings
+        this.warning = []
+      }
+      if (status === 206) {
+        this.retrieved = newTrainings
+        this.warning = warning
+      }
+    },
+    sortTrainings (sortTraining) {
+      this.retrieved = sortTraining
     },
     async generateVisualForSelectedTrainings (templateName) {
       switch (templateName) {
@@ -55,22 +65,24 @@ export const useTrainingStore = defineStore({
           paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
         if (status === 200) {
-          this.retrieved = data.map((talk) => {
+          const res = data.map((talk) => {
             return {
               ...talk,
               checked: true
             }
           })
-          this.retrievedWarning = []
+          this.updateTrainings(res, undefined, status)
+          return res
         }
         if (status === 206) {
-          this.retrieved = data.res.map((talk) => {
+          const res = data.res.map((talk) => {
             return {
               ...talk,
               checked: true
             }
           })
-          this.retrievedWarning = data.warn
+          this.updateTrainings(res, data.warn, status)
+          return res
         }
       } finally {
         this.retreivingTrainings = false
@@ -85,7 +97,7 @@ export const useTrainingStore = defineStore({
         paramsSerializer: (params) => qs.stringify(params, { encode: false })
       })
       const res = data
-      this.updateTrainings(res)
+      this.sortTrainings(res)
       return res
     }
   }
