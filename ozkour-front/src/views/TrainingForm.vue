@@ -16,14 +16,28 @@ const eventsTemplate = {
     frequency: 'month',
     validated: true
   },
-  SLIDE:
-  {
-    id: 'slide',
-    label: 'SLIDE',
-    value: 'Slide',
+  FORMEZ_VOUS: {
+    id: 'formezvous',
+    label: 'FORMEZ-VOUS',
+    value: 'Formez-vous',
     frequency: 'month',
     validated: false
-  }
+  },
+  TRAIN_WITH_US: {
+    id: 'trainwithus',
+    label: 'TRAIN-WITH-US',
+    value: 'Train-with-us',
+    frequency: 'month',
+    validated: true
+  },
+  TRAIN_WITH_US_GREEN:
+{
+  id: 'trainwithusgreen',
+  label: 'TRAIN-WITH-US-GREEN',
+  value: 'Train-with-us-green',
+  frequency: 'month',
+  validated: true
+}
 }
 
 const columnsValues = [
