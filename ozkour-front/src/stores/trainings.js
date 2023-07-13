@@ -41,6 +41,27 @@ export const useTrainingStore = defineStore({
         )
         return { link: data.link, message: data.message }
       }
+      case 'Train-with-us': {
+        const { data } = await api.post(
+          '/training/Train-with-us',
+          this.getSelectedTrainings
+        )
+        return { link: data.link, message: data.message }
+      }
+      case 'Train-with-us-green': {
+        const { data } = await api.post(
+          '/training/Train-with-us-green',
+          this.getSelectedTrainings
+        )
+        return { link: data.link, message: data.message }
+      }
+      case 'Formez-vous': {
+        const { data } = await api.post(
+          '/training/Formez-vous',
+          this.getSelectedTrainings
+        )
+        return { link: data.link, message: data.message }
+      }
       default:
         console.error('template :"', templateName, "\" n'est pas reconnu")
         return null

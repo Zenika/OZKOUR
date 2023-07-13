@@ -36,7 +36,7 @@ const eventsTemplate = {
   label: 'TRAIN-WITH-US-GREEN',
   value: 'Train-with-us-green',
   frequency: 'month',
-  validated: true
+  validated: false
 }
 }
 

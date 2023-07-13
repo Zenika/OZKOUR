@@ -20,6 +20,42 @@ module.exports = [
   },
   {
     method: 'POST',
+    path: '/training/Train-with-us',
+    handler: async function (request, h) {
+      logger.info({
+        message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+      })
+      return h
+        .response(`message : connexion réussite pour la route ${request.path}`)
+        .code(200)
+    }
+  },
+  {
+    method: 'POST',
+    path: '/training/Train-with-us-green',
+    handler: async function (request, h) {
+      logger.info({
+        message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+      })
+      return h
+        .response(`message : connexion réussite pour la route ${request.path}`)
+        .code(200)
+    }
+  },
+  {
+    method: 'POST',
+    path: '/training/Formez-vous',
+    handler: async function (request, h) {
+      logger.info({
+        message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+      })
+      return h
+        .response(`message : connexion réussite pour la route ${request.path}`)
+        .code(200)
+    }
+  },
+  {
+    method: 'POST',
     path: '/training/emailing',
     handler: async function (request, h) {
       logger.info({
