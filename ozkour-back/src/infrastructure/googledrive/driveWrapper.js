@@ -52,7 +52,26 @@ async function copyDocument (fileId, name, parents) {
   return data.id
 }
 
+async function getUrls (auth) {
+  const IMAGES_FOLDER_ID = process.env.IMAGES_FOLDER_ID
+  try {
+    const driveService = google.drive({ version: 'v3', auth })
+    const fileResponse = await driveService.files.list({
+      q: `mimeType='image/PNG' and parents='${IMAGES_FOLDER_ID}'`,
+      fields: 'files(thumbnailLink)'
+    })
+    const arrayOfUrl = fileResponse.data.files
+    return arrayOfUrl
+  } catch (error) {
+    logger.error({
+      message: `error while trying to retrieved urls of the drive folder : ${IMAGES_FOLDER_ID}, (${error})`
+    })
+    throw error
+  }
+}
+
 module.exports = {
+  getUrls,
   listFileInFolder,
   copyDocument,
   findIdOfFileByNameAndFolder

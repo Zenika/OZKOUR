@@ -5,7 +5,13 @@ const { sortArrayByKeyAndOrder } = require('../../domain/utils/arrayUtils')
 const googleDocRepository = require('../../infrastructure/googledocs/googleDocRepository')
 const googleDriveRepository = require('../../infrastructure/googledrive/googleDriveRepository')
 const { getTalkOrTraining } = require('../getTrainingOrTalks')
-const { TRAINING_SHEET } = require('../utils/constantes')
+const { createSlidesTrainings } = require('../createSlidesTrainings.js')
+const {
+  TRAINING_SHEET,
+  TRAINING_WITH_US,
+  TRAINING_WITH_US_GREEN,
+  FORMEZ_VOUS
+} = require('../utils/constantes')
 
 module.exports = [
   {
@@ -25,9 +31,7 @@ module.exports = [
       logger.info({
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return h
-        .response(`message : connexion réussite pour la route ${request.path}`)
-        .code(200)
+      return await createSlidesTrainings(request, TRAINING_WITH_US, h)
     }
   },
   {
@@ -37,9 +41,7 @@ module.exports = [
       logger.info({
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return h
-        .response(`message : connexion réussite pour la route ${request.path}`)
-        .code(200)
+      return await createSlidesTrainings(request, TRAINING_WITH_US_GREEN, h)
     }
   },
   {
@@ -49,9 +51,7 @@ module.exports = [
       logger.info({
         message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
       })
-      return h
-        .response(`message : connexion réussite pour la route ${request.path}`)
-        .code(200)
+      return await createSlidesTrainings(request, FORMEZ_VOUS, h)
     }
   },
   {
