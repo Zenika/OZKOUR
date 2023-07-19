@@ -39,6 +39,22 @@ const sendRequestTraining = async (auth, requests, presentationId) => {
     return data
   } catch (error) {
     logger.error({ message: `${error}` })
+    throw error
+  }
+}
+
+const getNewSlidePagesElements = async (auth, newSlideId, presentationId) => {
+  try {
+    const slidesService = google.slides({ version: 'v1', auth })
+    const getNewSlide = await slidesService.presentations.pages.get({
+      presentationId,
+      pageObjectId: newSlideId
+    })
+    const allPageElements = getNewSlide.data.pageElements
+    return allPageElements
+  } catch (error) {
+    logger.error({ message: `${error}` })
+    throw error
   }
 }
 
@@ -46,5 +62,6 @@ module.exports = {
   getSlides,
   sendRequest,
   sendRequestTraining,
+  getNewSlidePagesElements,
   presentationId
 }

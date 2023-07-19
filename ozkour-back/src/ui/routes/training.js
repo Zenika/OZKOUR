@@ -29,7 +29,7 @@ module.exports = [
     path: '/training/Train-with-us',
     handler: async function (request, h) {
       logger.info({
-        message: `request get trainings (${request.path}) with parameters '${request.payload}'`
+        message: `request get trainings (${request.path}) with parameters '${request.payload[0]}' as first element of the array of datas`
       })
       return await createSlidesTrainings(request, TRAINING_WITH_US, h)
     }

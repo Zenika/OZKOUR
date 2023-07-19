@@ -7,7 +7,8 @@ const {
   getSlides,
   sendRequest,
   sendRequestTraining,
-  presentationId
+  presentationId,
+  getNewSlidePagesElements
 } = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 const { logger } = require('../../logger')
@@ -591,18 +592,30 @@ const getCopySlideIdTraining = async (auth, template) => {
     return newIdPage
   } catch (error) {
     logger.error({ message: error.message })
+    throw error
+  }
+}
+
+const getCopySlidePageElements = async (auth, newSlideId, template) => {
+  try {
+    return await getNewSlidePagesElements(
+      auth,
+      newSlideId,
+      getIdOftheFilePresentation(template)
+    )
+  } catch (error) {
+    logger.error({ message: error.message })
+    throw error
   }
 }
 
 const getIdOftheFilePresentation = (template) => {
   let presentationId = ''
-
   if (
     [TRAINING_WITH_US, TRAINING_WITH_US_GREEN, FORMEZ_VOUS].includes(template)
   ) {
     presentationId = PRESENTATION_TRAINING_ID
   } else if (template === QUOI_DE_NEUF) presentationId = PRESENTATION_TALKS_ID
-
   return presentationId
 }
 
@@ -617,6 +630,7 @@ module.exports = {
   fillSlideWithData,
   copySlide,
   getIdSlideTemplate,
+  getCopySlidePageElements,
   getSuccessMessage,
   getSuccessMessageTrainings,
   deleteLastSlide,

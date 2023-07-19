@@ -5,27 +5,38 @@ class SlideTrainingService {
     this.slideServiceRepository = slideServiceRepository
   }
 
-  async createSlides (auth, training, template, imagesUrls) {
-    try {
-      if (!this.verifyTraining(training) && imagesUrls && template) {
-        const idTemplate =
-          await this.slideServiceRepository.getCopySlideIdTraining(
+  async createSlides (auth, training, template, imagesUrls, h) {
+    if (!this.verifyTraining(training) && imagesUrls && template) {
+      const idTemplate =
+        await this.slideServiceRepository.getCopySlideIdTraining(
+          auth,
+          template
+        )
+      logger.info({
+        message: `id received for the new slide template :${idTemplate}`
+      })
+      if (idTemplate) {
+        const copySlidePageElements =
+          await this.slideServiceRepository.getCopySlidePageElements(
             auth,
+            idTemplate,
             template
           )
-        if (idTemplate) {
-          logger.info({
-            message: `id received for the new slide template :${idTemplate}`
-          })
+        logger.info({
+          message: `copy slide Elements received :${copySlidePageElements}`
+        })
+        if (copySlidePageElements) {
           return this.slideServiceRepository.getSuccessMessageTrainings(
             template
           )
         }
-      } else {
-        throw new Error('wrong format of training for the template')
       }
-    } catch (error) {
-      logger.error({ message: error.message })
+    } else {
+      return h
+        .response(
+          'Données manquantes pour se connecter au service google, veuillez contacter le service support.'
+        )
+        .code(400)
     }
   }
 
