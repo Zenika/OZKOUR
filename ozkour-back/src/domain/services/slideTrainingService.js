@@ -26,10 +26,14 @@ class SlideTrainingService {
           message: `copy slide Elements received :${copySlidePageElements}`
         })
         if (copySlidePageElements) {
-          return this.slideServiceRepository.getSuccessMessageTrainings(
-            template
+          await this.slideServiceRepository.updateNewCopySlide(
+            auth,
+            template,
+            copySlidePageElements,
+            imagesUrls
           )
         }
+        return this.slideServiceRepository.getSuccessMessageTrainings(template)
       }
     } else {
       return h

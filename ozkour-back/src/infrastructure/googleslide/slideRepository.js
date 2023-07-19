@@ -25,6 +25,11 @@ const TRAIN_WITH_US_SLIDE_ID = process.env.SLIDE_TEMPLATE_TRAIN_WITH_US_ID
 const FORMEZ_VOUS_SLIDE_ID = process.env.SLIDE_TEMPLATE_FORMEZ_VOUS_ID
 const TRAIN_WITH_US_GREEN_SLIDE_ID = process.env.SLIDE_TRAIN_WITH_US_GREEN_ID
 
+const INDEX_FIRST_IMAGE_TO_REPLACE_TRAINING_WITH_US = 8
+const INDEX_SECOND_IMAGE_TO_REPLACE_TRAINING_WITH_US = 9
+const INDEX_FIRST_IMAGE_TO_REPLACE_FORMEZ_VOUS = 9
+const INDEX_SECOND_IMAGE_TO_REPLACE_FORMEZ_VOUS = 9
+
 const pictogram = new Map()
 pictogram.set(
   'Conférence',
@@ -619,6 +624,96 @@ const getIdOftheFilePresentation = (template) => {
   return presentationId
 }
 
+const updateNewCopySlide = async (
+  auth,
+  template,
+  copySlidePageElements,
+  imagesUrls
+) => {
+  const request = []
+  try {
+    const idFirstImage = getIdForTheFirstImageToReplace(
+      template,
+      copySlidePageElements
+    )
+    const idSecondImage = getIdOfTheSecondImageToReplace(
+      template,
+      copySlidePageElements
+    )
+
+    request.push(
+      replaceExistingImageRequest(imagesUrls, idFirstImage, idSecondImage)
+    )
+
+    return await sendRequestTraining(
+      auth,
+      request,
+      getIdOftheFilePresentation(template)
+    )
+  } catch (error) {
+    logger.error({ message: error.message })
+    throw error
+  }
+}
+
+const replaceExistingImageRequest = (
+  arrOfTwoUrl,
+  idFirstImage,
+  idSecondImage
+) => {
+  if (Array.isArray(arrOfTwoUrl) && arrOfTwoUrl.length > 0) {
+    const res = []
+    const [firstUrl, secondUrl] = arrOfTwoUrl
+    if (firstUrl && idFirstImage) {
+      res.push({
+        replaceImage: {
+          imageObjectId: idFirstImage,
+          imageReplaceMethod: 'CENTER_INSIDE',
+          url: firstUrl
+        }
+      })
+    }
+    if (secondUrl && idFirstImage) {
+      res.push({
+        replaceImage: {
+          imageObjectId: idSecondImage,
+          imageReplaceMethod: 'CENTER_INSIDE',
+          url: secondUrl
+        }
+      })
+    }
+    return res
+  }
+  return []
+}
+
+const getIdForTheFirstImageToReplace = (template, getNewSlide) => {
+  let idOfTheFirstImageToReplace = ''
+
+  if ([TRAINING_WITH_US, TRAINING_WITH_US_GREEN].includes(template)) {
+    idOfTheFirstImageToReplace =
+      getNewSlide[INDEX_FIRST_IMAGE_TO_REPLACE_TRAINING_WITH_US].objectId
+  } else if (template === FORMEZ_VOUS) {
+    idOfTheFirstImageToReplace =
+      getNewSlide[INDEX_FIRST_IMAGE_TO_REPLACE_FORMEZ_VOUS].objectId
+  }
+
+  return idOfTheFirstImageToReplace
+}
+
+const getIdOfTheSecondImageToReplace = (template, getNewSlide) => {
+  let idOfTheSecondImageToReplace = ''
+
+  if ([TRAINING_WITH_US, TRAINING_WITH_US].includes(template)) {
+    idOfTheSecondImageToReplace =
+      getNewSlide[INDEX_SECOND_IMAGE_TO_REPLACE_TRAINING_WITH_US].objectId
+  } else if (template === FORMEZ_VOUS) {
+    idOfTheSecondImageToReplace =
+      getNewSlide[INDEX_SECOND_IMAGE_TO_REPLACE_FORMEZ_VOUS].objectId
+  }
+  return idOfTheSecondImageToReplace
+}
+
 module.exports = {
   addDateTextWithStyle,
   createTableWithStyleForAllEventsInDate,
@@ -634,5 +729,6 @@ module.exports = {
   getSuccessMessage,
   getSuccessMessageTrainings,
   deleteLastSlide,
-  getCopySlideIdTraining
+  getCopySlideIdTraining,
+  updateNewCopySlide
 }
