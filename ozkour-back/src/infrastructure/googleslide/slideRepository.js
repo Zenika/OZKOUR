@@ -3,9 +3,26 @@ const dateUtils = require('../../domain/utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
 const slideDataOrganizer = require('@/domain/quoiDe9Organizer')
-const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
+const {
+  getSlides,
+  sendRequest,
+  sendRequestTraining,
+  presentationId
+} = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 const { logger } = require('../../logger')
+const {
+  TRAINING_WITH_US,
+  TRAINING_WITH_US_GREEN,
+  FORMEZ_VOUS,
+  QUOI_DE_NEUF
+} = require('../../ui/utils/constantes')
+
+const PRESENTATION_TRAINING_ID = process.env.PRESENTATION_FILE_TRAINING_ID
+const PRESENTATION_TALKS_ID = process.env.PRESENTATION_FILE_TALKS_ID
+const TRAIN_WITH_US_SLIDE_ID = process.env.SLIDE_TEMPLATE_TRAIN_WITH_US_ID
+const FORMEZ_VOUS_SLIDE_ID = process.env.SLIDE_TEMPLATE_FORMEZ_VOUS_ID
+const TRAIN_WITH_US_GREEN_SLIDE_ID = process.env.SLIDE_TRAIN_WITH_US_GREEN_ID
 
 const pictogram = new Map()
 pictogram.set(
@@ -54,6 +71,14 @@ const greyForegroundColor = {
 }
 
 function getSuccessMessage () {
+  return {
+    message: 'Created !',
+    link: 'https://docs.google.com/presentation/d/' + presentationId + '/'
+  }
+}
+
+const getSuccessMessageTrainings = (template) => {
+  const presentationId = getIdOftheFilePresentation(template)
   return {
     message: 'Created !',
     link: 'https://docs.google.com/presentation/d/' + presentationId + '/'
@@ -453,7 +478,7 @@ function fillSlideWithData (idPage, dataOrganized) {
 /**
  * delete the elements copied from the model used for the style of the data
  */
-async function deleteTemplateInfo (idPage) {
+async function deleteTemplateInfo (idPage, template) {
   const res = await getSlides()
   const slide = await res.find((slide) => slide.objectId === idPage)
   if (!slide) {
@@ -463,7 +488,6 @@ async function deleteTemplateInfo (idPage) {
   }
   // if the page is the one we're looking for
   const pageElements = slide.pageElements
-
   const requests = []
   try {
     requests.push({
@@ -531,6 +555,57 @@ async function deleteLastSlide () {
   }
 }
 
+const getCopySlideIdTraining = async (auth, template) => {
+  const newIdPage = uuidv4()
+  const requests = []
+  const idFilePresentation = getIdOftheFilePresentation(template)
+  if (template === TRAINING_WITH_US) {
+    requests.push({
+      duplicateObject: {
+        objectId: TRAIN_WITH_US_SLIDE_ID,
+        objectIds: { [TRAIN_WITH_US_SLIDE_ID]: newIdPage }
+      }
+    })
+  }
+
+  if (template === TRAINING_WITH_US_GREEN) {
+    requests.push({
+      duplicateObject: {
+        objectId: TRAIN_WITH_US_GREEN_SLIDE_ID,
+        objectIds: { [TRAIN_WITH_US_GREEN_SLIDE_ID]: newIdPage }
+      }
+    })
+  }
+
+  if (template === FORMEZ_VOUS) {
+    requests.push({
+      duplicateObject: {
+        objectId: FORMEZ_VOUS_SLIDE_ID,
+        objectIds: { [FORMEZ_VOUS_SLIDE_ID]: newIdPage }
+      }
+    })
+  }
+
+  try {
+    await sendRequestTraining(auth, requests, idFilePresentation)
+    return newIdPage
+  } catch (error) {
+    logger.error({ message: error.message })
+  }
+}
+
+const getIdOftheFilePresentation = (template) => {
+  let presentationId = ''
+
+  if (
+    [TRAINING_WITH_US, TRAINING_WITH_US_GREEN, FORMEZ_VOUS].includes(template)
+  ) {
+    presentationId = PRESENTATION_TRAINING_ID
+  } else if (template === QUOI_DE_NEUF) presentationId = PRESENTATION_TALKS_ID
+
+  return presentationId
+}
+
 module.exports = {
   addDateTextWithStyle,
   createTableWithStyleForAllEventsInDate,
@@ -543,5 +618,7 @@ module.exports = {
   copySlide,
   getIdSlideTemplate,
   getSuccessMessage,
-  deleteLastSlide
+  getSuccessMessageTrainings,
+  deleteLastSlide,
+  getCopySlideIdTraining
 }

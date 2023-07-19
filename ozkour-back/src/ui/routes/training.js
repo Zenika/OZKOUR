@@ -29,7 +29,7 @@ module.exports = [
     path: '/training/Train-with-us',
     handler: async function (request, h) {
       logger.info({
-        message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+        message: `request get trainings (${request.path}) with parameters '${request.payload}'`
       })
       return await createSlidesTrainings(request, TRAINING_WITH_US, h)
     }
@@ -39,7 +39,7 @@ module.exports = [
     path: '/training/Train-with-us-green',
     handler: async function (request, h) {
       logger.info({
-        message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+        message: `request get trainings (${request.path}) with parameters '${request.payload}'`
       })
       return await createSlidesTrainings(request, TRAINING_WITH_US_GREEN, h)
     }
@@ -49,7 +49,7 @@ module.exports = [
     path: '/training/Formez-vous',
     handler: async function (request, h) {
       logger.info({
-        message: `request get trainings (${request.path}) with parameters '${request.query.start}' and '${request.query.end}'`
+        message: `request get trainings (${request.path}) with parameters '${request.payload}'`
       })
       return await createSlidesTrainings(request, FORMEZ_VOUS, h)
     }

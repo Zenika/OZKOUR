@@ -1,11 +1,16 @@
 const { logger } = require('../logger')
 const { DriveService } = require('../domain/services/driveService')
+const {
+  SlideTrainingService
+} = require('../domain/services/slideTrainingService')
 const { getAuthentication } = require('../infrastructure/connect')
 const googleDriveRepository = require('../infrastructure/googledrive/driveWrapper')
+const googleSlideRepository = require('../infrastructure/googleslide/slideRepository')
 const { sendCustomError } = require('../Error/customeError')
 
-async function createSlidesTrainings (request, variable, h) {
+async function createSlidesTrainings (request, template, h) {
   try {
+    const training = request.payload
     const auth = await getAuthentication()
     if (!auth) {
       logger.error({ message: 'connexion échouée' })
@@ -14,8 +19,18 @@ async function createSlidesTrainings (request, variable, h) {
       logger.info({ message: 'connexion réussite' })
       const driveService = new DriveService(googleDriveRepository)
       const imageUrls = await driveService.getUrls(auth)
-      if (imageUrls) {
-        return imageUrls
+      const slideServiceRepository = googleSlideRepository
+      const slideTrainingService = new SlideTrainingService(
+        slideServiceRepository
+      )
+      const response = await slideTrainingService.createSlides(
+        auth,
+        training,
+        template,
+        imageUrls
+      )
+      if (response) {
+        return h.response(response).code(200)
       }
     }
   } catch (error) {

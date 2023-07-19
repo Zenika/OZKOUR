@@ -1,7 +1,7 @@
 const { google } = require('googleapis')
 const connect = require('../connect.js')
 const util = require('util')
-
+const { logger } = require('../../logger.js')
 const presentationId = process.env.GOOGLE_SLIDE_LINK
 
 async function getSlides () {
@@ -29,8 +29,22 @@ async function sendRequest (requests) {
   return data
 }
 
+const sendRequestTraining = async (auth, requests, presentationId) => {
+  try {
+    const slidesService = google.slides({ version: 'v1', auth })
+    const { data } = await slidesService.presentations.batchUpdate({
+      presentationId,
+      resource: { requests }
+    })
+    return data
+  } catch (error) {
+    logger.error({ message: `${error}` })
+  }
+}
+
 module.exports = {
   getSlides,
   sendRequest,
+  sendRequestTraining,
   presentationId
 }

@@ -1,4 +1,4 @@
-const googleSlideRepository = require('@/infrastructure/googleslide/googleSlideRepository')
+const googleSlideRepository = require('@/infrastructure/googleslide/slideRepository')
 const { SlideService } = require('@/domain/services/slideService')
 
 const slideServiceRepository = googleSlideRepository
