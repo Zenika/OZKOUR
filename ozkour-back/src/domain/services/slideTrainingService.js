@@ -1,4 +1,5 @@
 const { logger } = require('../../logger')
+const { trainingDataOrganizer } = require('../trainingOrganizer')
 
 class SlideTrainingService {
   constructor (slideServiceRepository) {
@@ -7,6 +8,8 @@ class SlideTrainingService {
 
   async createSlides (auth, training, template, imagesUrls, h) {
     if (!this.verifyTraining(training) && imagesUrls && template) {
+      const dataOrganised = trainingDataOrganizer(training)
+
       const idTemplate =
         await this.slideServiceRepository.getCopySlideIdTraining(
           auth,
@@ -25,8 +28,9 @@ class SlideTrainingService {
         logger.info({
           message: `copy slide Elements received :${copySlidePageElements}`
         })
-        if (copySlidePageElements) {
+        if (copySlidePageElements && dataOrganised) {
           await this.slideServiceRepository.updateNewCopySlide(
+            dataOrganised,
             auth,
             template,
             copySlidePageElements,
