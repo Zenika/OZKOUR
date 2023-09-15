@@ -1,4 +1,5 @@
 'use strict'
+require('module-alias/register')
 const server = require('./server')
 
 const start = async () => {

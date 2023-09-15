@@ -1,7 +1,10 @@
-const googleSlideRepository = require('../../src/infrastructure/googleslide/googleSlideRepository')
-const { presentationId, getSlides } = require('../../src/infrastructure/googleslide/slideWrapper')
-const { SlideService } = require('../../src/domain/slideService')
-const connect = require('../../src/infrastructure/connect.js')
+const googleSlideRepository = require('@/infrastructure/googleslide/slideRepository')
+const {
+  presentationId,
+  getSlides
+} = require('@/infrastructure/googleslide/slideWrapper')
+const { SlideService } = require('@/domain/services/slideService')
+const connect = require('@/infrastructure/connect.js')
 
 const slideServiceRepository = googleSlideRepository
 const slideService = new SlideService(slideServiceRepository)
@@ -13,26 +16,33 @@ describe('Integration test slides', () => {
     })
 
     it('should generate expected Google Slide file', async () => {
-    // given
+      // given
       const talks = [_createValidTalk()]
       try {
-      // when
-        connect.createAuth()
+        // when
+        connect.getAuthentication()
         const res = await slideService.createSlides(talks)
         const slides = await getSlides()
         // then
         expect(res).toStrictEqual({
           message: 'Created !',
-          link: 'https://docs.google.com/presentation/d/' +
-            presentationId +
-            '/'
+          link:
+            'https://docs.google.com/presentation/d/' + presentationId + '/'
         })
-        expect(JSON.stringify(slides[1])
-          .replace(/"objectId":".*?",/g, '"objectId":"id",')
-          .replace(/"speakerNotesObjectId":".*?"/g, '"speakerNotesObjectId":"id"')
-          .replace(/"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g, '"lien",')
-          .replace(/"listId":".*?"/g, '"listId":"listId"')
-          .replace(/"lists":{".*?"/g, '"lists":"lists"')).toMatchSnapshot()
+        expect(
+          JSON.stringify(slides[1])
+            .replace(/"objectId":".*?",/g, '"objectId":"id",')
+            .replace(
+              /"speakerNotesObjectId":".*?"/g,
+              '"speakerNotesObjectId":"id"'
+            )
+            .replace(
+              /"https:\/\/lh[1-9].googleusercontent.com\/.*?",/g,
+              '"lien",'
+            )
+            .replace(/"listId":".*?"/g, '"listId":"listId"')
+            .replace(/"lists":{".*?"/g, '"lists":"lists"')
+        ).toMatchSnapshot()
       } catch (e) {
         console.error(e)
         throw e

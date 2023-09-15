@@ -43,7 +43,11 @@ import { useAuth0 } from '@auth0/auth0-vue'
 const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0()
 
 const login = () => {
-  loginWithRedirect()
+  loginWithRedirect({
+    authorizationParams: {
+      connection: 'google-oauth2'
+    }
+  })
 }
 
 const doLogout = () => {
@@ -51,27 +55,27 @@ const doLogout = () => {
 }
 </script>
 <style lang="scss">
-  .auth-container{
-      display: flex;
-      align-items: center;
-      gap:20px;
+.auth-container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 
-    &__img{
-      width: 2rem;
-      height: 2rem;
-      cursor: pointer;
+  &__img {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
 
-      &--profile{
-        border-radius:50%;
-        cursor: initial;
-      }
+    &--profile {
+      border-radius: 50%;
+      cursor: initial;
     }
   }
-  span{
-    @include body;
-      height:100px;
-      line-height : 100px;
-      font-weight: 600;
-      display: inline-block;
-  }
+}
+span {
+  @include body;
+  height: 100px;
+  line-height: 100px;
+  font-weight: 600;
+  display: inline-block;
+}
 </style>

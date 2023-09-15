@@ -1,5 +1,5 @@
-const { logger } = require('../logger')
-const slideDataOrganizer = require('./quoiDe9Organizer')
+const { logger } = require('../../logger')
+const slideDataOrganizer = require('../quoiDe9Organizer')
 
 class SlideService {
   constructor (slideServiceRepository) {
@@ -8,7 +8,7 @@ class SlideService {
 
   async createSlides (talks) {
     if (!this.verifyTalks(talks)) {
-      throw (new Error('wrong format of talk for "quoi de 9"'))
+      throw new Error('wrong format of talk for "quoi de 9"')
     }
     const dataOrganizedBySlide = slideDataOrganizer.clusterByDate(talks)
     logger.verbose({
@@ -20,16 +20,18 @@ class SlideService {
     })
     const unorderedPromises = []
     for (const dataOrganized of dataOrganizedBySlide) {
-      try { // le try est là pour empecher la suite du traitement si la slide n'a pas pu être copié
+      try {
         const newIdPage = await this.copySlide(idTemplate)
         logger.verbose({
           message: `created new slide with id ${newIdPage}`
         })
-        unorderedPromises.push(new Promise((resolve) => {
-          this.deleteTemplateInfo(newIdPage)
-            .then(this.addTableData(newIdPage, dataOrganized))
-            .then(resolve())
-        }))
+        unorderedPromises.push(
+          new Promise((resolve) => {
+            this.deleteTemplateInfo(newIdPage)
+              .then(this.addTableData(newIdPage, dataOrganized))
+              .then(resolve())
+          })
+        )
       } catch (e) {
         logger.error(e)
       }
@@ -48,10 +50,10 @@ class SlideService {
     return talks.some(
       ({ date, eventType, eventName, talkTitle, speakers }) =>
         Boolean(date) &&
-          Boolean(eventType) &&
-          Boolean(eventName) &&
-          Boolean(talkTitle) &&
-          Boolean(speakers)
+        Boolean(eventType) &&
+        Boolean(eventName) &&
+        Boolean(talkTitle) &&
+        Boolean(speakers)
     )
   }
 

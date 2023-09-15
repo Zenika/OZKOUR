@@ -6,6 +6,7 @@ import EventArray from '@/components/EventArray.vue'
 import RecapModal from '@/components/RecapModal.vue'
 import { useTrainingStore } from '@/stores/trainings'
 import PopUp from '../components/PopUp.vue'
+import EventWarningArray from '@/components/EventWarningArray.vue'
 
 const eventsTemplate = {
   EMAILING: {
@@ -15,19 +16,33 @@ const eventsTemplate = {
     frequency: 'month',
     validated: true
   },
-  SLIDE:
-  {
-    id: 'slide',
-    label: 'SLIDE',
-    value: 'Slide',
+  FORMEZ_VOUS: {
+    id: 'formezvous',
+    label: 'FORMEZ-VOUS',
+    value: 'Formez-vous',
     frequency: 'month',
     validated: false
-  }
+  },
+  TRAIN_WITH_US: {
+    id: 'trainwithus',
+    label: 'TRAIN-WITH-US',
+    value: 'Train-with-us',
+    frequency: 'month',
+    validated: true
+  },
+  TRAIN_WITH_US_GREEN:
+{
+  id: 'trainwithusgreen',
+  label: 'TRAIN-WITH-US-GREEN',
+  value: 'Train-with-us-green',
+  frequency: 'month',
+  validated: false
+}
 }
 
 const columnsValues = [
   { key: 'date', label: 'DATE' },
-  { key: 'trainingTitle', label: 'TITRE' },
+  { key: 'title', label: 'TITRE' },
   { key: 'universe', label: 'UNIVERS' },
   { key: 'duration', label: 'DURÉE' },
   { key: 'price', label: 'PRIX' }
@@ -40,7 +55,8 @@ export default {
     PrimaryBtn,
     EventArray,
     RecapModal,
-    PopUp
+    PopUp,
+    EventWarningArray
   },
   data () {
     return {
@@ -124,6 +140,12 @@ export default {
       <ChoosingDate
         :chosen-template="chosenTemplate"
         @on-search-event="handleSearchTraining"
+      />
+    </section>
+    <section class="container__warning">
+      <EventWarningArray
+        v-if="trainings?.warning?.length"
+        :warning="trainings.warning"
       />
     </section>
 

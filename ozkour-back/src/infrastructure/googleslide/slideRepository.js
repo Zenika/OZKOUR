@@ -1,18 +1,56 @@
 const { v4: uuidv4 } = require('uuid')
-const dateUtils = require('../../Utils/dateUtils')
+const dateUtils = require('../../domain/utils/dateUtils')
 const dayjs = require('dayjs')
 const customParseFormat = require('dayjs/plugin/customParseFormat')
-const slideDataOrganizer = require('../../domain/quoiDe9Organizer')
-const { presentationId, getSlides, sendRequest } = require('./slideWrapper')
+const slideDataOrganizer = require('@/domain/quoiDe9Organizer')
+const {
+  getSlides,
+  sendRequest,
+  sendRequestTraining,
+  presentationId,
+  getNewSlidePagesElements
+} = require('./slideWrapper')
 dayjs.extend(customParseFormat)
 const { logger } = require('../../logger')
+const {
+  TRAINING_WITH_US,
+  TRAINING_WITH_US_GREEN,
+  FORMEZ_VOUS,
+  QUOI_DE_NEUF
+} = require('../../ui/utils/constantes')
+
+const PRESENTATION_TRAINING_ID = process.env.PRESENTATION_FILE_TRAINING_ID
+const PRESENTATION_TALKS_ID = process.env.PRESENTATION_FILE_TALKS_ID
+const TRAIN_WITH_US_SLIDE_ID = process.env.SLIDE_TEMPLATE_TRAIN_WITH_US_ID
+const FORMEZ_VOUS_SLIDE_ID = process.env.SLIDE_TEMPLATE_FORMEZ_VOUS_ID
+const TRAIN_WITH_US_GREEN_SLIDE_ID = process.env.SLIDE_TRAIN_WITH_US_GREEN_ID
+
+const INDEX_FIRST_IMAGE_TO_REPLACE_TRAINING_WITH_US = 8
+const INDEX_SECOND_IMAGE_TO_REPLACE_TRAINING_WITH_US = 9
+const INDEX_FIRST_IMAGE_TO_REPLACE_FORMEZ_VOUS = 9
+const INDEX_SECOND_IMAGE_TO_REPLACE_FORMEZ_VOUS = 9
 
 const pictogram = new Map()
-pictogram.set('Conférence', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png')
-pictogram.set('Matinale', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png')
-pictogram.set('Meetup', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png')
-pictogram.set('NightClazz', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png')
-pictogram.set('Webinar', 'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png')
+pictogram.set(
+  'Conférence',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20conference.png'
+)
+pictogram.set(
+  'Matinale',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20matinale.png'
+)
+pictogram.set(
+  'Meetup',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20meetup.png'
+)
+pictogram.set(
+  'NightClazz',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20nightclazz.png'
+)
+pictogram.set(
+  'Webinar',
+  'https://19927536.fs1.hubspotusercontent-na1.net/hubfs/19927536/picto%20webinar.png'
+)
 
 const defaultForegroundColor = {
   opaqueColor: {
@@ -41,10 +79,15 @@ const greyForegroundColor = {
 function getSuccessMessage () {
   return {
     message: 'Created !',
-    link:
-      'https://docs.google.com/presentation/d/' +
-      presentationId +
-      '/'
+    link: 'https://docs.google.com/presentation/d/' + presentationId + '/'
+  }
+}
+
+const getSuccessMessageTrainings = (template) => {
+  const presentationId = getIdOftheFilePresentation(template)
+  return {
+    message: 'Created !',
+    link: 'https://docs.google.com/presentation/d/' + presentationId + '/'
   }
 }
 
@@ -87,7 +130,6 @@ function addDateTextWithStyle (idPage, date, objectId, Y) {
         }
       }
     },
-
     {
       insertText: {
         // add date to the text
@@ -388,8 +430,7 @@ function fillSlideWithData (idPage, dataOrganized) {
   dataOrganized.forEach((events, date) => {
     // add date
     const dateId = uuidv4()
-    const dateFormated =
-    dateUtils.displayFullDateWithWords(date)
+    const dateFormated = dateUtils.displayFullDateWithWords(date)
     requests.push(
       addDateTextWithStyle(idPage, dateFormated, dateId, yNextElmt)
     )
@@ -397,12 +438,7 @@ function fillSlideWithData (idPage, dataOrganized) {
     // create table
     yNextElmt += slideDataOrganizer.slideSpacing.DATE
     requests.push(
-      createTableWithStyleForAllEventsInDate(
-        idPage,
-        dateId,
-        yNextElmt,
-        events
-      )
+      createTableWithStyleForAllEventsInDate(idPage, dateId, yNextElmt, events)
     )
 
     // fill table
@@ -418,7 +454,9 @@ function fillSlideWithData (idPage, dataOrganized) {
           IndexRowInTableToInsert
         )
       )
-      ImagePromiseList.push(createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt))
+      ImagePromiseList.push(
+        createImage(idPage, arrayOfTalksForAnEvent.eventType, yNextElmt)
+      )
       IndexRowInTableToInsert++
       yNextElmt += slideDataOrganizer.slideSpacing.EVENT
 
@@ -446,17 +484,16 @@ function fillSlideWithData (idPage, dataOrganized) {
 /**
  * delete the elements copied from the model used for the style of the data
  */
-async function deleteTemplateInfo (idPage) {
+async function deleteTemplateInfo (idPage, template) {
   const res = await getSlides()
-  const slide = await res.find(
-    (slide) => slide.objectId === idPage
-  )
+  const slide = await res.find((slide) => slide.objectId === idPage)
   if (!slide) {
-    throw (new Error('cannot find the slide on which we want to delete the template info'))
+    throw new Error(
+      'cannot find the slide on which we want to delete the template info'
+    )
   }
   // if the page is the one we're looking for
   const pageElements = slide.pageElements
-
   const requests = []
   try {
     requests.push({
@@ -479,7 +516,7 @@ async function deleteTemplateInfo (idPage) {
     })
     return sendRequest(requests)
   } catch (e) {
-    throw (new Error(`missing element(s) on template slide (${e})`))
+    throw new Error(`missing element(s) on template slide (${e})`)
   }
 }
 
@@ -524,6 +561,159 @@ async function deleteLastSlide () {
   }
 }
 
+const getCopySlideIdTraining = async (auth, template) => {
+  const newIdPage = uuidv4()
+  const requests = []
+  const idFilePresentation = getIdOftheFilePresentation(template)
+  if (template === TRAINING_WITH_US) {
+    requests.push({
+      duplicateObject: {
+        objectId: TRAIN_WITH_US_SLIDE_ID,
+        objectIds: { [TRAIN_WITH_US_SLIDE_ID]: newIdPage }
+      }
+    })
+  }
+
+  if (template === TRAINING_WITH_US_GREEN) {
+    requests.push({
+      duplicateObject: {
+        objectId: TRAIN_WITH_US_GREEN_SLIDE_ID,
+        objectIds: { [TRAIN_WITH_US_GREEN_SLIDE_ID]: newIdPage }
+      }
+    })
+  }
+
+  if (template === FORMEZ_VOUS) {
+    requests.push({
+      duplicateObject: {
+        objectId: FORMEZ_VOUS_SLIDE_ID,
+        objectIds: { [FORMEZ_VOUS_SLIDE_ID]: newIdPage }
+      }
+    })
+  }
+
+  try {
+    await sendRequestTraining(auth, requests, idFilePresentation)
+    return newIdPage
+  } catch (error) {
+    logger.error({ message: error.message })
+    throw error
+  }
+}
+
+const getCopySlidePageElements = async (auth, newSlideId, template) => {
+  try {
+    return await getNewSlidePagesElements(
+      auth,
+      newSlideId,
+      getIdOftheFilePresentation(template)
+    )
+  } catch (error) {
+    logger.error({ message: error.message })
+    throw error
+  }
+}
+
+const getIdOftheFilePresentation = (template) => {
+  let presentationId = ''
+  if (
+    [TRAINING_WITH_US, TRAINING_WITH_US_GREEN, FORMEZ_VOUS].includes(template)
+  ) {
+    presentationId = PRESENTATION_TRAINING_ID
+  } else if (template === QUOI_DE_NEUF) presentationId = PRESENTATION_TALKS_ID
+  return presentationId
+}
+
+const updateNewCopySlide = async (
+  auth,
+  template,
+  copySlidePageElements,
+  imagesUrls
+) => {
+  const request = []
+  try {
+    const idFirstImage = getIdForTheFirstImageToReplace(
+      template,
+      copySlidePageElements
+    )
+    const idSecondImage = getIdOfTheSecondImageToReplace(
+      template,
+      copySlidePageElements
+    )
+
+    request.push(
+      replaceExistingImageRequest(imagesUrls, idFirstImage, idSecondImage)
+    )
+
+    return await sendRequestTraining(
+      auth,
+      request,
+      getIdOftheFilePresentation(template)
+    )
+  } catch (error) {
+    logger.error({ message: error.message })
+    throw error
+  }
+}
+
+const replaceExistingImageRequest = (
+  arrOfTwoUrl,
+  idFirstImage,
+  idSecondImage
+) => {
+  if (Array.isArray(arrOfTwoUrl) && arrOfTwoUrl.length > 0) {
+    const res = []
+    const [firstUrl, secondUrl] = arrOfTwoUrl
+    if (firstUrl && idFirstImage) {
+      res.push({
+        replaceImage: {
+          imageObjectId: idFirstImage,
+          imageReplaceMethod: 'CENTER_INSIDE',
+          url: firstUrl
+        }
+      })
+    }
+    if (secondUrl && idFirstImage) {
+      res.push({
+        replaceImage: {
+          imageObjectId: idSecondImage,
+          imageReplaceMethod: 'CENTER_INSIDE',
+          url: secondUrl
+        }
+      })
+    }
+    return res
+  }
+  return []
+}
+
+const getIdForTheFirstImageToReplace = (template, getNewSlide) => {
+  let idOfTheFirstImageToReplace = ''
+
+  if ([TRAINING_WITH_US, TRAINING_WITH_US_GREEN].includes(template)) {
+    idOfTheFirstImageToReplace =
+      getNewSlide[INDEX_FIRST_IMAGE_TO_REPLACE_TRAINING_WITH_US].objectId
+  } else if (template === FORMEZ_VOUS) {
+    idOfTheFirstImageToReplace =
+      getNewSlide[INDEX_FIRST_IMAGE_TO_REPLACE_FORMEZ_VOUS].objectId
+  }
+
+  return idOfTheFirstImageToReplace
+}
+
+const getIdOfTheSecondImageToReplace = (template, getNewSlide) => {
+  let idOfTheSecondImageToReplace = ''
+
+  if ([TRAINING_WITH_US, TRAINING_WITH_US].includes(template)) {
+    idOfTheSecondImageToReplace =
+      getNewSlide[INDEX_SECOND_IMAGE_TO_REPLACE_TRAINING_WITH_US].objectId
+  } else if (template === FORMEZ_VOUS) {
+    idOfTheSecondImageToReplace =
+      getNewSlide[INDEX_SECOND_IMAGE_TO_REPLACE_FORMEZ_VOUS].objectId
+  }
+  return idOfTheSecondImageToReplace
+}
+
 module.exports = {
   addDateTextWithStyle,
   createTableWithStyleForAllEventsInDate,
@@ -535,6 +725,10 @@ module.exports = {
   fillSlideWithData,
   copySlide,
   getIdSlideTemplate,
+  getCopySlidePageElements,
   getSuccessMessage,
-  deleteLastSlide
+  getSuccessMessageTrainings,
+  deleteLastSlide,
+  getCopySlideIdTraining,
+  updateNewCopySlide
 }
