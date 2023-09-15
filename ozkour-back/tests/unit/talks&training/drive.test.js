@@ -1,4 +1,7 @@
-const { filterFilesBetween2Dates } = require('../../src/infrastructure/googledrive/googleDriveRepository')
+const {
+  filterFilesBetween2Dates
+} = require('../../../src/infrastructure/googledrive/googleDriveRepository')
+
 describe('google drive', () => {
   describe('talk file filter', () => {
     describe('when no file match', () => {
@@ -15,7 +18,9 @@ describe('google drive', () => {
           }
         ]
         // then
-        expect(() => { filterFilesBetween2Dates('2021-12-21', '2022-12-21', files) }).toThrow('no talk file for those dates in the folder')
+        expect(() => {
+          filterFilesBetween2Dates('2021-12-21', '2022-12-21', files)
+        }).toThrow('no talk file for those dates in the folder')
       })
     })
     describe('when file match', () => {
@@ -40,7 +45,9 @@ describe('google drive', () => {
         // when
         const res = filterFilesBetween2Dates('2021-12-21', '2022-12-21', files)
         // then
-        expect(res[0]).toMatchObject({ name: '2022 - Les Evénements et talks Zenika  (Zenika talks and events)' })
+        expect(res[0]).toMatchObject({
+          name: '2022 - Les Evénements et talks Zenika  (Zenika talks and events)'
+        })
         expect(res).toHaveLength(1)
       })
       it('should return only objects in which the year within the name match the dates ', () => {
@@ -55,7 +62,9 @@ describe('google drive', () => {
         // when
         const res = filterFilesBetween2Dates('2021-12-21', '2022-12-21', files)
         // then
-        expect(res[0]).toMatchObject({ name: '2022 - Les Evénements et talks Zenika  (Zenika talks and events)' })
+        expect(res[0]).toMatchObject({
+          name: '2022 - Les Evénements et talks Zenika  (Zenika talks and events)'
+        })
         expect(res).toHaveLength(1)
       })
       it('should return only objects in which the name part without the year match the usual talk file name', () => {
@@ -70,7 +79,9 @@ describe('google drive', () => {
         // when
         const res = filterFilesBetween2Dates('2021-12-21', '2022-12-21', files)
         // then
-        expect(res[0]).toMatchObject({ name: '2022 - Les Evénements et talks Zenika  (Zenika talks and events)' })
+        expect(res[0]).toMatchObject({
+          name: '2022 - Les Evénements et talks Zenika  (Zenika talks and events)'
+        })
         expect(res).toHaveLength(1)
       })
     })

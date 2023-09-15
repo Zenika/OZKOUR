@@ -7,30 +7,42 @@ export const useTalkStore = defineStore({
   id: 'talk',
   state: () => ({
     retrieved: [],
+    warning: [],
     retreivingTalks: false
   }),
   getters: {
-    getSelectedTalks: (state) =>
-      state.retrieved.filter((talk) => {
-        return talk.checked
-      }),
+    getSelectedTalks: (state) => state.retrieved.filter((talk) => talk.checked),
     getSelectedTalksTitle: (state) =>
       state.getSelectedTalks.map((talk) => talk.talkTitle)
   },
   actions: {
-    updateTalks (newTalks) {
-      this.retrieved = newTalks
+    updateTalks (newTalks, warning, status) {
+      if (status === 200) {
+        this.retrieved = newTalks
+        this.warning = []
+      }
+      if (status === 206) {
+        this.retrieved = newTalks
+        this.warning = warning
+      }
+    },
+    sortTalks (sortTalks) {
+      this.retrieved = sortTalks
     },
     async generateVisualForSelectedTalks (templateName) {
       switch (templateName) {
       case 'QuoiDeNeuf': {
-        const { data } = await api
-          .post('/talk/quoiDeNeuf', this.getSelectedTalks)
+        const { data } = await api.post(
+          '/talk/quoiDeNeuf',
+          this.getSelectedTalks
+        )
         return { link: data.link, message: data.message }
       }
       case 'E-mailing': {
-        const { data } = await api
-          .post('/talk/emailing', this.getSelectedTalks)
+        const { data } = await api.post(
+          '/talk/emailing',
+          this.getSelectedTalks
+        )
         return { link: data.link, message: data.message }
       }
       default:
@@ -40,7 +52,7 @@ export const useTalkStore = defineStore({
     },
     changeSelectionTalk (selected) {
       const { checked, ...selectedTalk } = selected
-      this.retrieved.find(talk => {
+      this.retrieved.find((talk) => {
         const { checked: tempTalkChecked, ...tempSelectedTalk } = talk
         return isEqual(tempSelectedTalk, selectedTalk)
       }).checked = !checked
@@ -48,37 +60,47 @@ export const useTalkStore = defineStore({
     async getTalks (dateStart, dateEnd) {
       this.retreivingTalks = true
       try {
-        const { data } = await api
-          .get('/talk', {
-            params: {
-              start: dateStart,
-              end: dateEnd
-            },
-            paramsSerializer: (params) => qs.stringify(params, { encode: false })
-          })
-        const res = data.map((talk) => {
-          return {
-            ...talk,
-            checked: true
-          }
+        const { data, status } = await api.get('/talk', {
+          params: {
+            start: dateStart,
+            end: dateEnd
+          },
+          paramsSerializer: (params) => qs.stringify(params, { encode: false })
         })
-        this.updateTalks(res)
-        return res
+        if (status === 200) {
+          const res = data.map((talk) => {
+            return {
+              ...talk,
+              checked: true
+            }
+          })
+          this.updateTalks(res, undefined, status)
+          return res
+        }
+        if (status === 206) {
+          const res = data.res.map((talk) => {
+            return {
+              ...talk,
+              checked: true
+            }
+          })
+          this.updateTalks(res, data.warn, status)
+          return res
+        }
       } finally {
         this.retreivingTalks = false
       }
     },
     async sort (dataSort) {
-      const { data } = await api
-        .post('/talk/sort', dataSort.events, {
-          params: {
-            key: dataSort.selectedColumnKey,
-            orderIsAscending: dataSort.orderIsAscending
-          },
-          paramsSerializer: (params) => qs.stringify(params, { encode: false })
-        })
+      const { data } = await api.post('/talk/sort', dataSort.events, {
+        params: {
+          key: dataSort.selectedColumnKey,
+          orderIsAscending: dataSort.orderIsAscending
+        },
+        paramsSerializer: (params) => qs.stringify(params, { encode: false })
+      })
       const res = data
-      this.updateTalks(res)
+      this.sortTalks(res)
       return res
     }
   }
