@@ -3,9 +3,10 @@
 // }
 
 const config = {
-  preset: '@vue/cli-plugin-unit-jest',
-  transformIgnorePatterns: ['/node_modules/(?!dateformat)'],
-  reporters: ['default', ['jest-junit', { outputDirectory: 'test-results' }]]
-}
+  preset: "@vue/cli-plugin-unit-jest",
+  transformIgnorePatterns: ["/node_modules/(?!dateformat)"],
+  reporters: ["default", ["jest-junit", { outputDirectory: "test-results" }]],
+  setupFilesAfterEnv: ["<rootDir>/jest-setup.js"],
+};
 
-module.exports = config
+module.exports = config;
