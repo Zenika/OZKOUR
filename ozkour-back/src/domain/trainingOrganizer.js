@@ -6,28 +6,30 @@ dayjs.extend(customParseFormat)
 dayjs.locale('fr')
 
 const clusterCommonUniverseAndDate = (training) => {
-  const convertInObject = {}
-  const groupedByDate = {}
+  const groupedByUniverse = {}
 
   training.forEach((obj) => {
-    const { universe, date } = obj
-    if (!(universe in convertInObject)) {
-      convertInObject[universe] = []
+    const { universe, date, title } = obj
+
+    if (!groupedByUniverse[universe]) {
+      groupedByUniverse[universe] = []
     }
 
-    if (date in groupedByDate) {
-      convertInObject[universe].push(groupedByDate[date])
+    const existingDateObject = groupedByUniverse[universe].find(
+      (item) => item.date === date
+    )
+
+    if (existingDateObject) {
+      existingDateObject.events.push(title)
     } else {
-      const newObj = { date, events: [] }
-      groupedByDate[date] = newObj
-      convertInObject[universe].push(newObj)
+      groupedByUniverse[universe].push({
+        date,
+        events: [title]
+      })
     }
-    groupedByDate[date].events.push(obj.title)
   })
-  logger.info({
-    message: 'Each trainings are now cluster by date and universe'
-  })
-  return convertInObject
+
+  return groupedByUniverse
 }
 
 const sortByDate = (data) => {
