@@ -28,7 +28,6 @@ const clusterCommonUniverseAndDate = (training) => {
       })
     }
   })
-
   return groupedByUniverse
 }
 
@@ -37,7 +36,7 @@ const sortByDate = (data) => {
   return data
 }
 
-const transformDate = (data) => {
+const transformDateAndSelectData = (data) => {
   const dataUpdated = []
   data.forEach((obj) => {
     const startDate = dayjs(obj.date, 'DD-MM-YYYY').format('DD MMMM')
@@ -68,7 +67,7 @@ const transformDate = (data) => {
 const trainingDataOrganizer = (data) => {
   if (data) {
     const trainingSortedByDate = sortByDate(data)
-    const tranformDate = transformDate(trainingSortedByDate)
+    const tranformDate = transformDateAndSelectData(trainingSortedByDate)
     const clusterUnivers = clusterCommonUniverseAndDate(tranformDate)
     return clusterUnivers
   } else {
@@ -80,5 +79,8 @@ const trainingDataOrganizer = (data) => {
 }
 
 module.exports = {
+  sortByDate,
+  transformDateAndSelectData,
+  clusterCommonUniverseAndDate,
   trainingDataOrganizer
 }
